@@ -29,8 +29,9 @@ export const login = async (req: Request, res: Response) => {
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
-    const { email, firstName, lastName, password, job_title } = req.body;
-
+    const { data } = req.body;
+    const { email, firstName, lastName, password, job_title } = data;
+    console.log(email, firstName, lastName, password, job_title);
     if (!firstName || !lastName || !email || !password || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
