@@ -7,6 +7,7 @@ import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 import {
   Form,
   FormControl,
@@ -29,6 +30,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 // import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
+import { apiUrl } from '@/lib/utils';
+
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -97,20 +100,21 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
       setLoading(true);
 
       const res = await axios.post(
-        `/api/products/edit-product/${initialData._id}`,
+        `${apiUrl}auth/create/employee/${data}`,
         data
       );
 
-      const res = await axios.post(`/api/products/create-product`, data);
-      console.log('product', res);
+      // router.refresh();
+      // router.push(`/dashboard/products`);
 
-      router.refresh();
-      router.push(`/dashboard/products`);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      });
+      if (res.status === 200) {
+        console.log(res);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.'
+        });
+      }
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -122,6 +126,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
     }
   };
   const onSubmit = (data: ProductFormValues) => {
+    createEmployee(data);
     console.log('first', data);
   };
 

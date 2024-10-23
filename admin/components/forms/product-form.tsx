@@ -161,17 +161,34 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
+          <FormField
+            control={form.control}
+            name="imgUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <FileUpload
+                    onChange={field.onChange}
+                    value={field.value}
+                    onRemove={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="First name"
+                      placeholder="Product name"
                       {...field}
                     />
                   </FormControl>
@@ -181,14 +198,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="name"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Last name"
+                      placeholder="Product description"
                       {...field}
                     />
                   </FormControl>
@@ -198,41 +215,23 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="name"
+              name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Email" {...field} />
+                    <Input type="number" disabled={loading} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone number</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Phone number"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Job title</FormLabel>
+                  <FormLabel>Category</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
