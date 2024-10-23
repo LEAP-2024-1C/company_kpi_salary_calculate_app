@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { EmployeeForm } from '@/components/forms/employee-form';
 import { ProductForm } from '@/components/forms/product-form';
 import PageContainer from '@/components/layout/page-container';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,10 +15,11 @@ export default function Page() {
     <PageContainer scrollable={true}>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
-        <ProductForm
+        <EmployeeForm
           categories={[
-            { _id: 'shirts', name: 'shirts' },
-            { _id: 'pants', name: 'pants' }
+            { _id: '1', name: 'esguurchin' },
+            { _id: '2', name: 'oydolchin' },
+            { _id: '3', name: 'gar ajilgaanii ajiltan' }
           ]}
           initialData={null}
           key={null}

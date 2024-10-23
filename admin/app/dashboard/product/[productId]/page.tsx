@@ -16,8 +16,9 @@ export default function Page() {
         <Breadcrumbs items={breadcrumbItems} />
         <ProductForm
           categories={[
-            { _id: 'shirts', name: 'shirts' },
-            { _id: 'pants', name: 'pants' }
+            { _id: 'esguurchin', name: 'shirts' },
+            { _id: 'oydolchin', name: 'pants' },
+            { _id: 'gar ajilgaani ajiltan', name: 'pants' }
           ]}
           initialData={null}
           key={null}

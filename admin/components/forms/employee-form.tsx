@@ -1,15 +1,23 @@
 'use client';
+import * as z from 'zod';
+import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Trash } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -17,15 +25,10 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import FileUpload from '../file-upload';
+import { Checkbox } from '@/components/ui/checkbox';
+// import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
+import FileUpload from '../file-upload';
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -38,17 +41,17 @@ const ImgSchema = z.object({
 });
 export const IMG_MAX_LIMIT = 3;
 const formSchema = z.object({
-  name: z
+  lastName: z
     .string()
     .min(3, { message: 'Product Name must be at least 3 characters' }),
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
-  description: z
+  firstName: z
+    .string()
+    .min(3, { message: 'Product Name must be at least 3 characters' }),
+
+  email: z
     .string()
     .min(3, { message: 'Product description must be at least 3 characters' }),
-  price: z.coerce.number(),
+  phoneNumber: z.coerce.number(),
   category: z.string().min(1, { message: 'Please select a category' })
 });
 
@@ -68,6 +71,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
@@ -88,15 +92,18 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
     defaultValues
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const createEmployee = async (data: ProductFormValues) => {
     try {
       setLoading(true);
-      if (initialData) {
-        // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
-      } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
-      }
+
+      const res = await axios.post(
+        `/api/products/edit-product/${initialData._id}`,
+        data
+      );
+
+      const res = await axios.post(`/api/products/create-product`, data);
+      console.log('product', res);
+
       router.refresh();
       router.push(`/dashboard/products`);
       toast({
@@ -114,6 +121,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
       setLoading(false);
     }
   };
+  const onSubmit = (data: ProductFormValues) => {
+    console.log('first', data);
+  };
 
   const onDelete = async () => {
     try {
@@ -128,7 +138,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  const triggerImgUrlValidation = () => form.trigger('imgUrl');
+  // const triggerImgUrlValidation = () => form.trigger('imgUrl');
 
   return (
     <>
@@ -157,34 +167,17 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product name"
+                      placeholder="First name"
                       {...field}
                     />
                   </FormControl>
@@ -194,14 +187,14 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="description"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product description"
+                      placeholder="Last name"
                       {...field}
                     />
                   </FormControl>
@@ -211,23 +204,41 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="price"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
+                    <Input disabled={loading} placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Phone number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Job title</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
