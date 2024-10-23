@@ -4,23 +4,21 @@ import bcrypt from "bcrypt";
 interface ITask {
   taskName: string;
   quantity: number;
-  price: number;
-  unit: number;
+  status: number;
+  unitPrice: number;
 }
 interface ICategory {
   _id: Schema.Types.ObjectId;
   categoryName: String;
   procedures: ITask[];
-  design_img?: String;
   created_at: Date;
   updated_at: Date;
 }
 const categorySchema = new Schema<ICategory>({
   categoryName: {
     type: String,
-    required: [true, "Хэрэглэгчийн нэрийг оруулах"],
+    required: [true, "Ажлын нэрийг оруулах"],
   },
-
   procedures: [
     {
       taskName: {
@@ -31,24 +29,20 @@ const categorySchema = new Schema<ICategory>({
         type: String,
         required: [true],
       },
-      price: {
+      status: {
         type: String,
-        required: [true],
+        enum: ["pending", "progress", "done", "review"],
+        default: "pending",
       },
-      unit: {
+      unitPrice: {
         type: String,
         required: [true],
       },
     },
   ],
-  design_img: {
-    type: String,
-    default:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D",
-  },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
 
-const Category = model("Employee", categorySchema);
+const Category = model("Category", categorySchema);
 export default Category;
