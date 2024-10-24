@@ -3,10 +3,20 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Trash } from 'lucide-react';
+import { CloudCog, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import {
   Form,
   FormControl,
@@ -29,6 +39,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 // import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
+import axios from 'axios';
+import { apiUrl } from '@/lib/utils';
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -47,14 +59,9 @@ const formSchema = z.object({
   taskName: z
     .string()
     .min(3, { message: 'Task Name must be at least 3 characters' }),
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
   description: z
     .string()
     .min(3, { message: 'Product description must be at least 3 characters' }),
-  category: z.string().min(1, { message: 'Please select a category' }),
   unit: z.coerce.number(),
   unitPrice: z.coerce.number()
 });
@@ -80,6 +87,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
+  const [procedure, setProcedure] = useState<ProductFormValues[]>([]);
 
   const defaultValues = initialData
     ? initialData
@@ -97,14 +105,14 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     defaultValues
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmitt = async (data: ProductFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
         // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
       } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
+        const res = await axios.post(`${apiUrl}/create/category`, data);
+        console.log('product', res);
       }
       router.refresh();
       router.push(`/dashboard/products`);
@@ -136,8 +144,10 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
       setOpen(false);
     }
   };
-
-  const triggerImgUrlValidation = () => form.trigger('imgUrl');
+  const onSubmit = (data: ProductFormValues) => {
+    console.log(data);
+  };
+  //   const triggerImgUrlValidation = () => form.trigger('imgUrl');
 
   return (
     <>
@@ -166,7 +176,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <div className="gap-8 md:grid md:grid-cols-3">
+          <div className="">
             <FormField
               control={form.control}
               name="categoryName"
@@ -184,109 +194,93 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="taskName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Task name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Task Name"
-                      {...field}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-1/3">Task Name</TableHead>
+                  <TableHead className="w-[100px]">Unit</TableHead>
+                  <TableHead className="w-[200px]">Unit Price</TableHead>
+                  <TableHead className="w-1/3">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    <FormField
+                      control={form.control}
+                      name="taskName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              disabled={loading}
+                              placeholder="Task Name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="unit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quantity</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Quantity"
-                      {...field}
+                  </TableCell>
+                  <TableCell>
+                    <FormField
+                      control={form.control}
+                      name="unit"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              disabled={loading}
+                              placeholder="Quantity"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="unitPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Unit Price"
-                      type="number"
-                      disabled={loading}
-                      {...field}
+                  </TableCell>
+                  <TableCell>
+                    <FormField
+                      control={form.control}
+                      name="unitPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder="Unit Price"
+                              type="number"
+                              disabled={loading}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product description"
-                      {...field}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              disabled={loading}
+                              placeholder="Product description"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a category"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      @ts-ignore 
-                      {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

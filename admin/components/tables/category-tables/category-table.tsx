@@ -38,19 +38,23 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Task Name</TableHead>
+                    <TableHead className="w-[200px]">Task Name</TableHead>
                     <TableHead>Unit</TableHead>
                     <TableHead>Unit Price</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {product.procedures.map((task) => (
                     <TableRow key={product.id}>
-                      <TableCell>{task.taskName}</TableCell>
+                      <TableCell className="w-[200px]">
+                        {task.taskName}
+                      </TableCell>
                       <TableCell>{task.unit}</TableCell>
                       <TableCell>{task.unitPrice}$</TableCell>
-                      <TableCell>{task.status}</TableCell>
+                      <TableCell className="text-right">
+                        {task.status}
+                      </TableCell>
 
                       <TableCell>
                         <CellAction id={product.id} />
