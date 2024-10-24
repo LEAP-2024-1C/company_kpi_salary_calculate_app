@@ -41,9 +41,12 @@ const ImgSchema = z.object({
 });
 export const IMG_MAX_LIMIT = 3;
 const formSchema = z.object({
-  name: z
+  categoryName: z
     .string()
-    .min(3, { message: 'Product Name must be at least 3 characters' }),
+    .min(3, { message: 'Category Name must be at least 3 characters' }),
+  taskName: z
+    .string()
+    .min(3, { message: 'Task Name must be at least 3 characters' }),
   imgUrl: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
@@ -51,8 +54,9 @@ const formSchema = z.object({
   description: z
     .string()
     .min(3, { message: 'Product description must be at least 3 characters' }),
-  price: z.coerce.number(),
-  category: z.string().min(1, { message: 'Please select a category' })
+  category: z.string().min(1, { message: 'Please select a category' }),
+  unit: z.coerce.number(),
+  unitPrice: z.coerce.number()
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -62,7 +66,7 @@ interface ProductFormProps {
   categories: any;
 }
 
-export const ProductForm: React.FC<ProductFormProps> = ({
+export const CategoryForm: React.FC<ProductFormProps> = ({
   initialData,
   categories
 }) => {
@@ -80,11 +84,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData
     ? initialData
     : {
-        name: '',
-        description: '',
-        price: 0,
-        imgUrl: [],
-        category: ''
+        categoryName: '',
+        taskName: '',
+        quantity: '',
+        unitPrice: '',
+        status: '',
+        description: ''
       };
 
   const form = useForm<ProductFormValues>({
@@ -161,34 +166,69 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          {/* <FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
-              name="name"
+              name="categoryName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Category Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product name"
+                      placeholder="Category name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="taskName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Task name</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Task Name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="unit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Quantity"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="unitPrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Unit Price"
+                      type="number"
+                      disabled={loading}
                       {...field}
                     />
                   </FormControl>
@@ -213,20 +253,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
+
+            {/* <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
@@ -236,18 +264,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     disabled={loading}
                     onValueChange={field.onChange}
                     value={field.value}
-                    // defaultValue={field.value}
+                    defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue
-                          // defaultValue={field.value}
+                          defaultValue={field.value}
                           placeholder="Select a category"
                         />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {/* @ts-ignore  */}
+                      @ts-ignore 
                       {categories.map((category) => (
                         <SelectItem key={category._id} value={category._id}>
                           {category.name}
@@ -258,7 +286,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
