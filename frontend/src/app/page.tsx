@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { apiUrl } from "@/lib/utils";
 
 export default function Login() {
   const router = useRouter();
@@ -20,21 +21,17 @@ export default function Login() {
     const { email, password } = userData;
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/auth/login",
-        {
-          email,
-          password,
-        }
-      );
-
+      const response = await axios.post(`${apiUrl}auth/login`, {
+        email,
+        password,
+      });
 
       if (response.status === 200) {
         toast.success("User successfully signed in", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
 
-        // router.push("/dashboard");
+        router.push("/dashboard");
       }
       console.log("medeelel", userData);
     } catch (error) {
