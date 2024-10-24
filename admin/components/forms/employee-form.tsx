@@ -56,7 +56,7 @@ const formSchema = z.object({
     .min(3, { message: 'Product description must be at least 3 characters' }),
   phoneNumber: z.coerce.number(),
   password: z.string(),
-  category: z.string().min(1, { message: 'Please select a category' })
+  job_title: z.string()
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -100,10 +100,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        `${apiUrl}auth/create/employee/${data}`,
-        data
-      );
+      const res = await axios.post(`${apiUrl}auth/create/employee`, { data });
 
       // router.refresh();
       // router.push(`/dashboard/products`);
@@ -127,8 +124,8 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
     }
   };
   const onSubmit = (data: ProductFormValues) => {
-    createEmployee(data);
     console.log('first', data);
+    createEmployee(data);
   };
 
   const onDelete = async () => {
@@ -176,7 +173,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
-              name="firstName"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
@@ -193,7 +190,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
@@ -258,7 +255,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
 
             <FormField
               control={form.control}
-              name="category"
+              name="job_title"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Job title</FormLabel>
@@ -277,9 +274,8 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {/* @ts-ignore  */}
-                      {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
+                      {categories.map((category: any) => (
+                        <SelectItem key={category._id} value={category.name}>
                           {category.name}
                         </SelectItem>
                       ))}

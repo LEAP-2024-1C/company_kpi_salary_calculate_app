@@ -17,9 +17,9 @@ export default function Page() {
         <Breadcrumbs items={breadcrumbItems} />
         <EmployeeForm
           categories={[
-            { _id: '1', name: 'esguurchin' },
-            { _id: '2', name: 'oydolchin' },
-            { _id: '3', name: 'gar ajilgaanii ajiltan' }
+            { _id: '1', name: 'Fabric preparation' },
+            { _id: '2', name: 'Cutting' },
+            { _id: '3', name: 'Quality control' }
           ]}
           initialData={null}
           key={null}
