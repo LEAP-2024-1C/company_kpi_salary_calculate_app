@@ -4,16 +4,26 @@ export type User = {
   id: number;
   name: string;
   company: string;
-  role: string;
+  job_title: string;
   verified: boolean;
   status: string;
 };
+export interface IUser {
+  id: number;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phoneNumber: number;
+  job_title: string;
+  verified: boolean;
+  status: string;
+}
 export const users: User[] = [
   {
     id: 1,
     name: 'Candice Schiner',
     company: 'Dell',
-    role: 'Frontend Developer',
+    job_title: 'Frontend Developer',
     verified: false,
     status: 'Active'
   },
@@ -21,7 +31,7 @@ export const users: User[] = [
     id: 2,
     name: 'John Doe',
     company: 'TechCorp',
-    role: 'Backend Developer',
+    job_title: 'Backend Developer',
     verified: true,
     status: 'Active'
   },
@@ -29,7 +39,7 @@ export const users: User[] = [
     id: 3,
     name: 'Alice Johnson',
     company: 'WebTech',
-    role: 'UI Designer',
+    job_title: 'UI Designer',
     verified: true,
     status: 'Active'
   },
@@ -37,7 +47,7 @@ export const users: User[] = [
     id: 4,
     name: 'David Smith',
     company: 'Innovate Inc.',
-    role: 'Fullstack Developer',
+    job_title: 'Fullstack Developer',
     verified: false,
     status: 'Inactive'
   },
@@ -45,7 +55,7 @@ export const users: User[] = [
     id: 5,
     name: 'Emma Wilson',
     company: 'TechGuru',
-    role: 'Product Manager',
+    job_title: 'Product Manager',
     verified: true,
     status: 'Active'
   },
@@ -53,7 +63,7 @@ export const users: User[] = [
     id: 6,
     name: 'James Brown',
     company: 'CodeGenius',
-    role: 'QA Engineer',
+    job_title: 'QA Engineer',
     verified: false,
     status: 'Active'
   },
@@ -61,7 +71,7 @@ export const users: User[] = [
     id: 7,
     name: 'Laura White',
     company: 'SoftWorks',
-    role: 'UX Designer',
+    job_title: 'UX Designer',
     verified: true,
     status: 'Active'
   },
@@ -69,7 +79,7 @@ export const users: User[] = [
     id: 8,
     name: 'Michael Lee',
     company: 'DevCraft',
-    role: 'DevOps Engineer',
+    job_title: 'DevOps Engineer',
     verified: false,
     status: 'Active'
   },
@@ -77,7 +87,7 @@ export const users: User[] = [
     id: 9,
     name: 'Olivia Green',
     company: 'WebSolutions',
-    role: 'Frontend Developer',
+    job_title: 'Frontend Developer',
     verified: true,
     status: 'Active'
   },
@@ -85,7 +95,7 @@ export const users: User[] = [
     id: 10,
     name: 'Robert Taylor',
     company: 'DataTech',
-    role: 'Data Analyst',
+    job_title: 'Data Analyst',
     verified: false,
     status: 'Active'
   }

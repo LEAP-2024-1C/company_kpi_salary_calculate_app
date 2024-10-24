@@ -72,6 +72,7 @@ export const createEmployee = async (req: Request, res: Response) => {
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await Employee.find();
+    console.log("employee", employees);
 
     res.status(200).json({ message: "success", employees });
   } catch (error) {
