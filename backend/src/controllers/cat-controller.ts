@@ -2,20 +2,24 @@ import { Request, Response } from "express";
 import Category from "../models/category.model";
 
 export const createCategory = async (req: Request, res: Response) => {
-  const { data, id } = req.body;
+  const { data } = req.body;
   try {
-    const { categoryName, taskName, quantity, unitPrice } = data;
-    if (!categoryName || !taskName || !quantity || !unitPrice) {
+    const { categoryName, procedures } = data;
+    if (!categoryName || !procedures) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
-    const category = await Category.create({
-      categoryName,
-      procedures: { taskName, quantity, unitPrice },
-    });
-
-    console.log("category", category);
-
-    res.status(200).json({ message: "success", category });
+    const findCategory = await Category.findOne({ categoryName });
+    if (!findCategory) {
+      const category = await Category.create({
+        categoryName,
+        procedures,
+      });
+      return res.status(200).json({
+        message: "created new category",
+        category,
+      });
+    } else {
+    }
   } catch (error) {
     res.status(401).json({ error });
   }
