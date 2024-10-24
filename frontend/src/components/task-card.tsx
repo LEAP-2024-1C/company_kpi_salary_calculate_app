@@ -36,7 +36,7 @@ const TaskTracker: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           />
           <p>Pocket</p>
           <p>
-            {completedTasks} / {totalTasks}
+            ({completedTasks} / {totalTasks})
           </p>
         </li>
       </ul>

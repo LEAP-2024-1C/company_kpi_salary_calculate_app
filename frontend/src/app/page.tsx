@@ -30,7 +30,6 @@ export default function Login() {
         toast.success("User successfully signed in", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
-
         router.push("/dashboard");
       }
       console.log("medeelel", userData);

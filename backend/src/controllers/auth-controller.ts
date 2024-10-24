@@ -26,23 +26,24 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
-// export const getCurrentUser = async (req: Request, res: Response) => {
-//   const { id } = req.user;
-//   try {
-//     const user = await Employee.findById(id);
-//     if (!user) {
-//       return res.status(400).json({ message: "Not found user" });
-//     }
-//     const { email, profile_img, firstName, lastName, address, phoneNumber } =
-//       user;
-//     res.status(200).json({
-//       message: "success",
-//       user: { email, profile_img, firstName, lastName, address, phoneNumber },
-//     });
-//   } catch (error) {
-//     res.status(401).json({ error });
-//   }
-// };
+export const getCurrentUser = async (req: Request, res: Response) => {
+  const { id } = req.user;
+  console.log(id)
+  try {
+    const user = await Employee.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "Not found user" });
+    }
+    const { email, profile_img, firstName, lastName, address, phoneNumber } =
+      user;
+    res.status(200).json({
+      message: "success",
+      user: { email, profile_img, firstName, lastName, address, phoneNumber },
+    });
+  } catch (error) {
+    res.status(401).json({ error });
+  }
+};
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
