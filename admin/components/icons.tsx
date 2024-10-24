@@ -28,7 +28,8 @@ import {
   UserX2Icon,
   UserPlus,
   PackagePlus,
-  X
+  X,
+  ChartBarStacked
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -46,6 +47,7 @@ export const Icons = {
   trash: Trash,
   employee: UserX2Icon,
   product: PackagePlus,
+  category: ChartBarStacked,
   post: FileText,
   page: File,
   media: Image,

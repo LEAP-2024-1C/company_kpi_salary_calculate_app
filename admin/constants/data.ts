@@ -101,6 +101,16 @@ export type Product = {
   description: string;
 };
 
+export type Category = {
+  id: number;
+  categoryName: string;
+  procedureName: string[];
+  unitPrice: number;
+  price: number;
+  qty: number;
+  description: string;
+};
+
 export const products: Product[] = [
   {
     id: 1,
@@ -224,6 +234,12 @@ export const navItems: NavItem[] = [
     label: 'product'
   },
   {
+    title: 'Category',
+    href: '/dashboard/category',
+    icon: 'category',
+    label: 'category'
+  },
+  {
     title: 'Profile',
     href: '/dashboard/profile',
     icon: 'profile',
@@ -234,5 +250,87 @@ export const navItems: NavItem[] = [
     href: '/',
     icon: 'login',
     label: 'login'
+  }
+];
+export const categories: Category[] = [
+  {
+    id: 1,
+    categoryName: 'таг харма бэлтгэл',
+    procedureName: [
+      'энгэр харманы 0.1',
+      'э.харманы хагалбар цахилгаантай бэлдэх',
+      'харма хадах',
+      'уутан харма бэлдэх',
+      'уут_харма оёх'
+    ],
+    qty: 150,
+    unitPrice: 10,
+    price: 1500,
+    description:
+      'Ergonomic wireless mouse with adjustable DPI settings and long battery life.'
+  },
+  {
+    id: 2,
+    categoryName: 'урд гуя',
+    procedureName: [
+      'м_арлын суртай бэлдэх',
+      'м_арал  энгэрт тогтоох',
+      'ташаа 5 см  цац',
+      'өвдгөвч оёх хос хавчуурга',
+      'элгэвчийг у_гуятай холбох 1-р'
+    ],
+    unitPrice: 12,
+    price: 1200,
+    qty: 100,
+    description:
+      'Mechanical gaming keyboard with customizable RGB lighting and tactile keys.'
+  },
+  {
+    id: 3,
+    categoryName: 'ар',
+    procedureName: [
+      'бөгсөвч хадах хос',
+      'ар суудал 1-р',
+      'ар суудал лавчик хос',
+      'ард резин тогтоох',
+      'ард мөрөвч тогтоох'
+    ],
+    unitPrice: 13,
+    price: 2600,
+    qty: 200,
+    description:
+      'Lightweight running shoes designed for comfort and durability.'
+  },
+  {
+    id: 4,
+    categoryName: 'холбох',
+    procedureName: [
+      'ташаа холбох 1-р',
+      'ташаа лавчик хос',
+      'харма бөхлөх ',
+      'алхам 1-р',
+      'алхам 0.6'
+    ],
+    unitPrice: 10,
+    price: 199.99,
+    qty: 75,
+    description:
+      'Water-resistant smartwatch with heart-rate monitoring and GPS tracking.'
+  },
+  {
+    id: 5,
+    categoryName: 'өмдний үндсэн дотор',
+    procedureName: [
+      'д_элгэвчинд хажлага оёх ',
+      'д_ ар нуруувч босоо холбох 1-р',
+      'д_ар_ ну-д шошго оёх',
+      'ташаа холбох /дээд биений/',
+      'д_ урд суудал 1-р'
+    ],
+    unitPrice: 10,
+    price: 249.99,
+    qty: 60,
+    description:
+      'High-fidelity noise-cancelling headphones with wireless Bluetooth connectivity.'
   }
 ];

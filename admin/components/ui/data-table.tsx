@@ -11,16 +11,73 @@ import {
 import { Input } from './input';
 import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
-import { User } from '@/constants/data';
 import { CellAction } from '../tables/user-tables/cell-action';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import axios from 'axios';
+import { apiUrl } from '@/lib/utils';
+import { toast } from './use-toast';
+import { useEffect, useState } from 'react';
 
 interface DataTableProps {
-  data: User[];
   searchKey: string;
 }
+export type User = {
+  id: number;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phoneNumber: number;
+  role: string;
+  verified: boolean;
+  status: string;
+};
+export const users: User[] = [
+  {
+    id: 1,
+    lastName: 'Candice',
+    firstName: 'Schiner',
+    email: 'Schiner@gmail.com',
+    phoneNumber: 88615033,
+    role: 'Frontend Developer',
+    verified: false,
+    status: 'Active'
+  },
+  {
+    id: 2,
+    lastName: 'John',
+    firstName: 'Doe',
+    email: 'Doe@gmail.com',
+    phoneNumber: 88015033,
+    role: 'Backend Developer',
+    verified: true,
+    status: 'Active'
+  }
+];
 
-export function DataTable({ data, searchKey }: DataTableProps) {
+const getEmployee = async () => {
+  const [employeeData, setEmployeeData] = useState<User | null>(null);
+
+  try {
+    const res = await axios.get(`${apiUrl}auth/get/employee`);
+
+    if (res.status === 200) {
+      const { employee } = res.data;
+      setEmployeeData(employee);
+      toast({ title: 'successfully get employee' });
+    }
+  } catch (error) {
+    toast({
+      variant: 'destructive',
+      title: 'Uh oh! Something went wrong.',
+      description: 'There was a problem with your request.'
+    });
+  }
+  useEffect(() => {
+    // getEmployee();
+  }, []);
+};
+
+export function DataTable({ searchKey }: DataTableProps) {
   return (
     <>
       <Input
@@ -31,22 +88,25 @@ export function DataTable({ data, searchKey }: DataTableProps) {
         <Table className="relative">
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Department</TableHead>
+              <TableHead>Last Name</TableHead>
+              <TableHead>First Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Phone Number</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.company}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.status}</TableCell>
+            {users.map((employeeData) => (
+              <TableRow key={employeeData.id}>
+                <TableCell>{employeeData.lastName}</TableCell>
+                <TableCell>{employeeData.firstName}</TableCell>
+                <TableCell>{employeeData.email}</TableCell>
+                <TableCell>{employeeData.phoneNumber}</TableCell>
+                <TableCell>{employeeData.role}</TableCell>
+                <TableCell>{employeeData.status}</TableCell>
                 <TableCell>
-                  <CellAction id={user.id} />
+                  <CellAction id={employeeData.id} />
                 </TableCell>
               </TableRow>
             ))}
