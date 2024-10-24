@@ -8,7 +8,7 @@ interface ITask {
   unitPrice: number;
 }
 interface ICategory {
-  _id: Schema.Types.ObjectId;
+  cat_id: Schema.Types.ObjectId;
   categoryName: String;
   procedures: ITask[];
   created_at: Date;

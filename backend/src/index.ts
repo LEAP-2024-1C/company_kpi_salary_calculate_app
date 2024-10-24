@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoute from "./routes/authRoute";
+import catRoute from "./routes/catRoute";
 import { connectDB } from "./config/db";
 
 dotenv.config();
@@ -17,6 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/cat", catRoute);
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Welcome E-Commerce API Server");
