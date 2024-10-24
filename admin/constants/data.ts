@@ -101,13 +101,17 @@ export type Product = {
   description: string;
 };
 
+export type Procedures = {
+  taskName: string;
+  unitPrice: number;
+  unit: number;
+  status: string;
+};
+
 export type Category = {
   id: number;
   categoryName: string;
-  procedureName: string[];
-  unitPrice: number;
-  price: number;
-  qty: number;
+  procedures: Procedures[];
   description: string;
 };
 
@@ -256,80 +260,186 @@ export const categories: Category[] = [
   {
     id: 1,
     categoryName: 'таг харма бэлтгэл',
-    procedureName: [
-      'энгэр харманы 0.1',
-      'э.харманы хагалбар цахилгаантай бэлдэх',
-      'харма хадах',
-      'уутан харма бэлдэх',
-      'уут_харма оёх'
+    procedures: [
+      {
+        taskName: 'энгэр харманы 0.1',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'э.харманы хагалбар цахилгаантай бэлдэх',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'харма хадах',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уутан харма бэлдэх',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уут_харма оёх',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
     ],
-    qty: 150,
-    unitPrice: 10,
-    price: 1500,
+
     description:
       'Ergonomic wireless mouse with adjustable DPI settings and long battery life.'
   },
   {
     id: 2,
     categoryName: 'урд гуя',
-    procedureName: [
-      'м_арлын суртай бэлдэх',
-      'м_арал  энгэрт тогтоох',
-      'ташаа 5 см  цац',
-      'өвдгөвч оёх хос хавчуурга',
-      'элгэвчийг у_гуятай холбох 1-р'
+    procedures: [
+      {
+        taskName: 'м_арлын суртай бэлдэх',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'м_арал  энгэрт тогтоох',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа 5 см  цац',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'өвдгөвч оёх хос хавчуурга',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'элгэвчийг у_гуятай холбох 1-р',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
     ],
-    unitPrice: 12,
-    price: 1200,
-    qty: 100,
     description:
       'Mechanical gaming keyboard with customizable RGB lighting and tactile keys.'
   },
   {
     id: 3,
     categoryName: 'ар',
-    procedureName: [
-      'бөгсөвч хадах хос',
-      'ар суудал 1-р',
-      'ар суудал лавчик хос',
-      'ард резин тогтоох',
-      'ард мөрөвч тогтоох'
+    procedures: [
+      {
+        taskName: 'бөгсөвч хадах хос',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ар суудал 1-р',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ард резин тогтоох',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ард мөрөвч тогтоох',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'бөгсөвч хадах хос',
+        unitPrice: 13,
+        unit: 200,
+        status: 'pending'
+      }
     ],
-    unitPrice: 13,
-    price: 2600,
-    qty: 200,
     description:
       'Lightweight running shoes designed for comfort and durability.'
   },
   {
     id: 4,
     categoryName: 'холбох',
-    procedureName: [
-      'ташаа холбох 1-р',
-      'ташаа лавчик хос',
-      'харма бөхлөх ',
-      'алхам 1-р',
-      'алхам 0.6'
+    procedures: [
+      {
+        taskName: 'ташаа холбох 1-р',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа лавчик хос',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'харма бөхлөх ',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'алхам 1-р',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      { taskName: 'алхам 0.6', unitPrice: 13, unit: 200, status: 'pending' }
     ],
-    unitPrice: 10,
-    price: 199.99,
-    qty: 75,
     description:
       'Water-resistant smartwatch with heart-rate monitoring and GPS tracking.'
   },
   {
     id: 5,
     categoryName: 'өмдний үндсэн дотор',
-    procedureName: [
-      'д_элгэвчинд хажлага оёх ',
-      'д_ ар нуруувч босоо холбох 1-р',
-      'д_ар_ ну-д шошго оёх',
-      'ташаа холбох /дээд биений/',
-      'д_ урд суудал 1-р'
+    procedures: [
+      {
+        taskName: 'д_элгэвчинд хажлага оёх ',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ ар нуруувч босоо холбох 1-р',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ар_ ну-д шошго оёх',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа холбох /дээд биений/',
+        unit: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ урд суудал 1-р',
+        unitPrice: 13,
+        unit: 200,
+        status: 'pending'
+      }
     ],
-    unitPrice: 10,
-    price: 249.99,
-    qty: 60,
     description:
       'High-fidelity noise-cancelling headphones with wireless Bluetooth connectivity.'
   }

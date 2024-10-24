@@ -1,12 +1,12 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { ProductForm } from '@/components/forms/product-form';
+import { CategoryForm } from '@/components/forms/category-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'react';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
-  { title: 'Product', link: '/dashboard/product' },
-  { title: 'Create', link: '/dashboard/product/create' }
+  { title: 'Category', link: '/dashboard/category' },
+  { title: 'Create', link: '/dashboard/category/create' }
 ];
 
 export default function Page() {
@@ -14,7 +14,7 @@ export default function Page() {
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-8">
         <Breadcrumbs items={breadcrumbItems} />
-        <ProductForm
+        <CategoryForm
           categories={[
             { _id: 'pocket', name: 'pocket' },
             { _id: 'front thigh', name: 'front thigh' },
@@ -22,7 +22,7 @@ export default function Page() {
             { _id: 'back and front', name: 'back and front' },
             { _id: 'front', name: 'front' },
             { _id: 'back', name: 'back' },
-            { _id: 'sleeves', name: 'sleeves' },
+            { _id: 'sleeves', name: 'sleeves' }
           ]}
           initialData={null}
           key={null}
