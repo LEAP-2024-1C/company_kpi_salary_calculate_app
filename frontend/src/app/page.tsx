@@ -28,13 +28,12 @@ export default function Login() {
         }
       );
 
-
       if (response.status === 200) {
         toast.success("User successfully signed in", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
 
-        // router.push("/dashboard");
+        router.push("/dashboard");
       }
       console.log("medeelel", userData);
     } catch (error) {
