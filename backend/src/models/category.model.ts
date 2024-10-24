@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface ITask {
+  task_id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
   status: number;
@@ -17,6 +18,7 @@ interface ICategory {
 const categorySchema = new Schema<ICategory>({
   categoryName: {
     type: String,
+    unique: true,
     required: [true, "Ажлын нэрийг оруулах"],
   },
   procedures: [
