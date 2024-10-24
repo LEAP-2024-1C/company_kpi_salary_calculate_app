@@ -55,6 +55,7 @@ const formSchema = z.object({
     .string()
     .min(3, { message: 'Product description must be at least 3 characters' }),
   phoneNumber: z.coerce.number(),
+  password: z.string(),
   category: z.string().min(1, { message: 'Please select a category' })
 });
 
@@ -230,6 +231,23 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
                     <Input
                       disabled={loading}
                       placeholder="Phone number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Password"
                       {...field}
                     />
                   </FormControl>
