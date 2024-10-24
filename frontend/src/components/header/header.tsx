@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 
-import { CiSearch } from "react-icons/ci";
+// import { CiSearch } from "react-icons/ci";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
@@ -23,7 +23,7 @@ const Header = () => {
         <img src="" alt="company logo" />
       </div>
       <div className="flex items-center gap-3  text-center justify-center">
-        <CiSearch className="text-gray-100" />
+        {/* <CiSearch className="text-gray-100" /> */}
         <Input
           className="bg-gray-300 rounded-full text-gray-400 w-1/7 border-none"
           placeholder="Боломжит ажлуудыг хайх"
