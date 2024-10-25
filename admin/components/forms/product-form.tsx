@@ -3,7 +3,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Trash } from 'lucide-react';
+import { Check, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 // import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
+import { Category } from '@/constants/data';
+import { cn } from '@/lib/utils';
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -59,7 +61,7 @@ type ProductFormValues = z.infer<typeof formSchema>;
 
 interface ProductFormProps {
   initialData: any | null;
-  categories: any;
+  categories: Category[];
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({
@@ -161,7 +163,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          {/* <FormField
+          <FormField
             control={form.control}
             name="imgUrl"
             render={({ field }) => (
@@ -177,7 +179,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
@@ -247,11 +249,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {/* @ts-ignore  */}
-                      {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name}
-                        </SelectItem>
+                      {categories.map(({ categoryName, _id }) => (
+                        <>
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              categoryName === field.value
+                                ? 'opacity-100'
+                                : 'opacity-0'
+                            )}
+                          />
+                          <SelectItem key={_id} value={_id}>
+                            {categoryName}
+                          </SelectItem>
+                        </>
                       ))}
                     </SelectContent>
                   </Select>

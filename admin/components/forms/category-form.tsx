@@ -25,7 +25,7 @@ const formSchema = z.object({
   categoryName: z
     .string()
     .min(3, { message: 'Category Name must be at least 3 characters' }),
-  procedure: z.array(
+  procedures: z.array(
     z.object({
       taskName: z
         .string()
@@ -51,14 +51,14 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const title = initialData ? 'Edit product' : 'Create product';
+  const title = initialData ? 'Edit product' : 'Create category';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = {
     categoryName: '',
-    procedure: [{ taskName: '', quantity: 0, unitPrice: 0 }]
+    procedures: [{ taskName: '', quantity: 0, unitPrice: 0 }]
   };
 
   const form = useForm<ProductFormValues>({
@@ -68,16 +68,17 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: 'procedure'
+    name: 'procedures'
   });
 
   const createCategory = async (data: ProductFormValues) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${apiUrl}create/category`, data);
+      const res = await axios.post(`${apiUrl}cat/create/category`, { data });
       if (res.status === 200) {
         router.refresh();
-        router.push(`/dashboard/products`);
+        console.log('success');
+        // router.push(`/dashboard/products`);
         toast({ title: toastMessage });
       }
     } catch (error) {
@@ -93,6 +94,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
 
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
+    createCategory(data);
   };
 
   return (
@@ -129,11 +131,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                 <>
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.taskName`}
+                    name={`procedures.${index}.taskName`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Task Name</FormLabel>
-                        <FormControl>
+                        <FormControl className="w-[400px]">
                           <Input
                             disabled={loading}
                             placeholder="Task Name"
@@ -146,7 +148,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.quantity`}
+                    name={`procedures.${index}.quantity`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Quantity</FormLabel>
@@ -164,7 +166,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.unitPrice`}
+                    name={`procedures.${index}.unitPrice`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Unit Price</FormLabel>
@@ -186,10 +188,10 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                 <div className="flex items-end gap-3">
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.taskName`}
+                    name={`procedures.${index}.taskName`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
+                        <FormControl className="w-[400px]">
                           <Input
                             disabled={loading}
                             placeholder="Task Name"
@@ -202,7 +204,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.quantity`}
+                    name={`procedures.${index}.quantity`}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl className="w-20">
@@ -219,7 +221,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   />
                   <FormField
                     control={form.control}
-                    name={`procedure.${index}.unitPrice`}
+                    name={`procedures.${index}.unitPrice`}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl className="w-20">
