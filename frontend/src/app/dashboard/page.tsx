@@ -13,11 +13,11 @@ interface IEmployee {
 const Dashboard = () => {
   const [user, setUser] = useState<IEmployee | null>(null);
   const [loading, setLoading] = useState(true);
-  const tasks = [
-    { name: "Task 1", total: 9 },
-    { name: "Task 2", total: 5 },
-    { name: "Task 3", total: 7 },
-  ];
+  // const tasks = [
+  //   { name: "Task 1", total: 9 },
+  //   { name: "Task 2", total: 5 },
+  //   { name: "Task 3", total: 7 },
+  // ];
   const getCurrentUser = async () => {
     try {
       const token = localStorage.getItem("token");
