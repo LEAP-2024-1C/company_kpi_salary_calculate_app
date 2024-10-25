@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import {
   Table,
@@ -13,21 +13,54 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const invoices = [
-  {
-    work: "Hantsui davharlah",
-    price: "250",
-    completed: "4",
-    total: "10",
-  },
-  {
-    work: "Hantsui davharlah",
-    price: "250",
-    completed: "4",
-    total: "10",
-  },
-];
-const TaskDetailModal = () => {
+interface TaskTrackerProps {
+  totalTasks: number;
+}
+
+const TaskDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
+  const [completedTasks, setCompletedTasks] = useState(0);
+  const [completeTasks, setCompleteTasks] = useState(1);
+
+  const addTask = () => {
+    if (completedTasks < totalTasks) {
+      setCompletedTasks(completedTasks + 1);
+    }
+  };
+  const reduceTask = () => {
+    if (completeTasks < totalTasks) {
+      setCompleteTasks(completeTasks - 1);
+    }
+  };
+
+  const getDotColor = () => {
+    const percentageCompleted = completedTasks / totalTasks;
+
+    if (percentageCompleted === 1) return "gray";
+    if (percentageCompleted >= 0.5) return "orange";
+    return "red";
+  };
+  const invoices = [
+    {
+      work: "Hantsui davharlah",
+      price: "250",
+      completed: [completedTasks],
+      total: [totalTasks],
+      select: (
+        <div className="flex gap-2 ">
+          <Button
+            onClick={reduceTask}
+            style={{ backgroundColor: getDotColor() }}
+          >
+            -
+          </Button>
+          <Button onClick={addTask} style={{ backgroundColor: getDotColor() }}>
+            +
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div>
       <Table>
@@ -48,9 +81,7 @@ const TaskDetailModal = () => {
               <TableCell>{invoice.price}</TableCell>
               <TableCell>{invoice.completed}</TableCell>
               <TableCell className="text-right">{invoice.total}</TableCell>
-              <TableCell className="text-right">
-                <Button>Select</Button>
-              </TableCell>
+              <TableCell className="text-right">{invoice.select}</TableCell>
             </TableRow>
           ))}
         </TableBody>

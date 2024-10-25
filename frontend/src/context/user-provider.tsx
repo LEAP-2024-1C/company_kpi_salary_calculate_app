@@ -6,9 +6,12 @@ import React, { useContext, useState, createContext, useEffect } from "react";
 import { toast } from "react-toastify";
 
 interface IEmployee {
-  // firstname: string;
   _id: string;
   email: string;
+  profile_img: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: number;
 }
 
 interface IContext {
@@ -34,11 +37,13 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const userToken = localStorage.getItem("token");
       if (userToken) {
-        const response = await axios.get(`${apiUrl}auth`, {
+        const response = await axios.get(`${apiUrl}auth/get-employee`, {
           headers: { Authorization: `Bearer ${userToken}` },
         });
         if (response.status === 200) {
-          setUser(response.data.user);
+          const { user } = response.data;
+          setUser(user);
+          console.log(user);
         }
       } else {
         setUser(null);

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
@@ -13,18 +12,26 @@ const TaskDetail = () => {
   return (
     <div className="w-full h-full">
       <div className="p-16 flex flex-col items-start gap-5">
-        <h1 className="font-bold text-3xl">Task Name</h1>
+        <h1 className="font-bold text-3xl">Tsamts</h1>
         <div>
-          <Accordion type="single" collapsible>
+          <Accordion type="single" collapsible className=" w-[500px]">
             <AccordionItem value="item-1">
               <AccordionTrigger>Hantsui</AccordionTrigger>
               <AccordionContent>
-                <TaskDetailModal />
+                <TaskDetailModal totalTasks={9} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <div></div>
-          <ul></ul>
+        </div>
+        <div>
+          <Accordion type="single" collapsible className=" w-[500px]">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Hantsui</AccordionTrigger>
+              <AccordionContent>
+                <TaskDetailModal totalTasks={5} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>
