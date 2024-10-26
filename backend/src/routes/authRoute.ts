@@ -4,7 +4,7 @@ import {
   getAllEmployees,
   login,
 } from "../controllers/auth-controller";
-// import { auth } from "../middlewares/authentication";
+import { auth } from "../middlewares/auth";
 
 const router = Router();
 

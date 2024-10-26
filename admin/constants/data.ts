@@ -114,15 +114,15 @@ export type Product = {
 export type Procedures = {
   taskName: string;
   unitPrice: number;
-  unit: number;
-  status: string;
+  quantity: number;
+  status?: string;
+  _id?: string;
 };
 
 export type Category = {
-  id: number;
+  _id: string;
   categoryName: string;
   procedures: Procedures[];
-  description: string;
 };
 
 export const products: Product[] = [
@@ -268,189 +268,177 @@ export const navItems: NavItem[] = [
 ];
 export const categories: Category[] = [
   {
-    id: 1,
+    _id: '1',
     categoryName: 'таг харма бэлтгэл',
     procedures: [
       {
         taskName: 'энгэр харманы 0.1',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'э.харманы хагалбар цахилгаантай бэлдэх',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'харма хадах',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'уутан харма бэлдэх',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'уут_харма оёх',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       }
-    ],
-
-    description:
-      'Ergonomic wireless mouse with adjustable DPI settings and long battery life.'
+    ]
   },
   {
-    id: 2,
+    _id: '2',
     categoryName: 'урд гуя',
     procedures: [
       {
         taskName: 'м_арлын суртай бэлдэх',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'м_арал  энгэрт тогтоох',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ташаа 5 см  цац',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'өвдгөвч оёх хос хавчуурга',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'элгэвчийг у_гуятай холбох 1-р',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       }
-    ],
-    description:
-      'Mechanical gaming keyboard with customizable RGB lighting and tactile keys.'
+    ]
   },
   {
-    id: 3,
+    _id: '3',
     categoryName: 'ар',
     procedures: [
       {
         taskName: 'бөгсөвч хадах хос',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ар суудал 1-р',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ард резин тогтоох',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ард мөрөвч тогтоох',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'бөгсөвч хадах хос',
         unitPrice: 13,
-        unit: 200,
+        quantity: 200,
         status: 'pending'
       }
-    ],
-    description:
-      'Lightweight running shoes designed for comfort and durability.'
+    ]
   },
   {
-    id: 4,
+    _id: '5',
     categoryName: 'холбох',
     procedures: [
       {
         taskName: 'ташаа холбох 1-р',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ташаа лавчик хос',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'харма бөхлөх ',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'алхам 1-р',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
-      },
-      { taskName: 'алхам 0.6', unitPrice: 13, unit: 200, status: 'pending' }
-    ],
-    description:
-      'Water-resistant smartwatch with heart-rate monitoring and GPS tracking.'
+      }
+    ]
   },
   {
-    id: 5,
+    _id: '6',
     categoryName: 'өмдний үндсэн дотор',
     procedures: [
       {
         taskName: 'д_элгэвчинд хажлага оёх ',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'д_ ар нуруувч босоо холбох 1-р',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'д_ар_ ну-д шошго оёх',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'ташаа холбох /дээд биений/',
-        unit: 150,
+        quantity: 150,
         unitPrice: 10,
         status: 'pending'
       },
       {
         taskName: 'д_ урд суудал 1-р',
         unitPrice: 13,
-        unit: 200,
+        quantity: 200,
         status: 'pending'
       }
-    ],
-    description:
-      'High-fidelity noise-cancelling headphones with wireless Bluetooth connectivity.'
+    ]
   }
 ];
