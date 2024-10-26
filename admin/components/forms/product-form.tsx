@@ -3,7 +3,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Check, Trash } from 'lucide-react';
+import { Check, Divide, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -31,30 +31,34 @@ import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
 import { Category } from '@/constants/data';
 import { cn } from '@/lib/utils';
-const ImgSchema = z.object({
-  fileName: z.string(),
-  name: z.string(),
-  fileSize: z.number(),
-  size: z.number(),
-  fileKey: z.string(),
-  key: z.string(),
-  fileUrl: z.string(),
-  url: z.string()
-});
-export const IMG_MAX_LIMIT = 3;
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@radix-ui/react-accordion';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+
+// const formSchema = z.object({
+//   name: z
+//     .string()
+//     .min(3, { message: 'Product Name must be at least 3 characters' }),
+//   imgUrl: z
+//     .array(ImgSchema)
+//     .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
+//     .min(1, { message: 'At least one image must be added.' }),
+//   description: z
+//     .string()
+//     .min(3, { message: 'Product description must be at least 3 characters' }),
+//   price: z.coerce.number(),
+//   category: z
+//     .array(z.string())
+//     .min(1, { message: 'Please select at least one category' })
+// });
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: 'Product Name must be at least 3 characters' }),
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
-  description: z
-    .string()
-    .min(3, { message: 'Product description must be at least 3 characters' }),
-  price: z.coerce.number(),
-  category: z.string().min(1, { message: 'Please select a category' })
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: 'You have to select at least one item.'
+  })
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -89,12 +93,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         category: ''
       };
 
-  const form = useForm<ProductFormValues>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: {
+      items: []
+    }
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const createProject = async (data: ProductFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
@@ -133,11 +139,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       setOpen(false);
     }
   };
-
-  const triggerImgUrlValidation = () => form.trigger('imgUrl');
+  const onSubmit = (data: ProductFormValues) => {
+    console.log('data', data);
+  };
 
   return (
-    <>
+    <ScrollArea className="h-full">
       {/* <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -158,124 +165,106 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         )}
       </div>
       <Separator />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
-          <FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="gap-8 md:grid md:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product description"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    // defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          // defaultValue={field.value}
-                          placeholder="Select a category"
+      <Accordion type="single" collapsible className="mx-10">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>categories</AccordionTrigger>
+          <AccordionContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="items"
+                  render={() => (
+                    <FormItem>
+                      {categories.map(({ categoryName, _id, procedures }) => (
+                        <FormField
+                          key={_id}
+                          control={form.control}
+                          name="items"
+                          render={({ field }) => {
+                            return (
+                              <Accordion type="single" collapsible>
+                                <AccordionItem value={_id}>
+                                  <AccordionTrigger>
+                                    <FormItem
+                                      key={_id}
+                                      className="flex flex-row items-start space-x-3 space-y-0"
+                                    >
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={field.value?.includes(_id)}
+                                          onCheckedChange={(checked) => {
+                                            return checked
+                                              ? field.onChange([
+                                                  ...field.value,
+                                                  _id
+                                                ])
+                                              : field.onChange(
+                                                  field.value?.filter(
+                                                    (value) => value !== _id
+                                                  )
+                                                );
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormLabel className="font-normal">
+                                        {categoryName}
+                                      </FormLabel>
+                                    </FormItem>
+                                  </AccordionTrigger>
+
+                                  <AccordionContent>
+                                    {procedures.map(({ taskName, _id }) => (
+                                      <>
+                                        <FormItem
+                                          key={_id}
+                                          className="ml-10 flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(
+                                                _id ?? ''
+                                              )}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([
+                                                      ...field.value,
+                                                      _id
+                                                    ])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== _id
+                                                      )
+                                                    );
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="font-normal">
+                                            {taskName}
+                                          </FormLabel>
+                                        </FormItem>
+                                      </>
+                                    ))}
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
+                            );
+                          }}
                         />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map(({ categoryName, _id }) => (
-                        <>
-                          <Check
-                            className={cn(
-                              'mr-2 h-4 w-4',
-                              categoryName === field.value
-                                ? 'opacity-100'
-                                : 'opacity-0'
-                            )}
-                          />
-                          <SelectItem key={_id} value={_id}>
-                            {categoryName}
-                          </SelectItem>
-                        </>
                       ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button>
-        </form>
-      </Form>
-    </>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit">Submit</Button>
+              </form>
+            </Form>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </ScrollArea>
   );
 };
