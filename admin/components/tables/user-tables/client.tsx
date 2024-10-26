@@ -3,12 +3,13 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { User } from '@/constants/data';
+import { IUser, User } from '@/constants/data';
+import { da } from 'date-fns/locale';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface ProductsClientProps {
-  data: User[];
+  data: IUser[];
 }
 
 export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
@@ -18,7 +19,7 @@ export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Users (${data.length})`}
+          title={`Users (${data?.length ?? 0})`}
           description="Manage users (Client side table functionalities.)"
         />
         <Button
@@ -29,7 +30,7 @@ export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" />
+      <DataTable data={data} searchKey="name" />
     </>
   );
 };

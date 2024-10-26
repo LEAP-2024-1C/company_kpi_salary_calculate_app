@@ -17,67 +17,14 @@ import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 import { toast } from './use-toast';
 import { useEffect, useState } from 'react';
+import { IUser } from '@/constants/data';
 
 interface DataTableProps {
   searchKey: string;
+  data: IUser[];
 }
-export type User = {
-  id: number;
-  lastName: string;
-  firstName: string;
-  email: string;
-  phoneNumber: number;
-  role: string;
-  verified: boolean;
-  status: string;
-};
-export const users: User[] = [
-  {
-    id: 1,
-    lastName: 'Candice',
-    firstName: 'Schiner',
-    email: 'Schiner@gmail.com',
-    phoneNumber: 88615033,
-    role: 'Frontend Developer',
-    verified: false,
-    status: 'Active'
-  },
-  {
-    id: 2,
-    lastName: 'John',
-    firstName: 'Doe',
-    email: 'Doe@gmail.com',
-    phoneNumber: 88015033,
-    role: 'Backend Developer',
-    verified: true,
-    status: 'Active'
-  }
-];
 
-const getEmployee = async () => {
-  const [employeeData, setEmployeeData] = useState<User | null>(null);
-
-  try {
-    const res = await axios.get(`${apiUrl}auth/get/employee`);
-
-    if (res.status === 200) {
-      const { employee } = res.data;
-      setEmployeeData(employee);
-      toast({ title: 'successfully get employee' });
-    }
-  } catch (error) {
-    toast({
-      variant: 'destructive',
-      title: 'Uh oh! Something went wrong.',
-      description: 'There was a problem with your request.'
-    });
-  }
-  useEffect(() => {
-    // getEmployee();
-  }, []);
-};
-
-export function DataTable({ searchKey }: DataTableProps) {
+export function DataTable({ searchKey, data }: DataTableProps) {
   return (
     <>
       <Input
@@ -93,18 +40,16 @@ export function DataTable({ searchKey }: DataTableProps) {
               <TableHead>Email</TableHead>
               <TableHead>Phone Number</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((employeeData) => (
+            {data?.map((employeeData) => (
               <TableRow key={employeeData.id}>
                 <TableCell>{employeeData.lastName}</TableCell>
                 <TableCell>{employeeData.firstName}</TableCell>
                 <TableCell>{employeeData.email}</TableCell>
                 <TableCell>{employeeData.phoneNumber}</TableCell>
-                <TableCell>{employeeData.role}</TableCell>
-                <TableCell>{employeeData.status}</TableCell>
+                <TableCell>{employeeData.job_title}</TableCell>
                 <TableCell>
                   <CellAction id={employeeData.id} />
                 </TableCell>
