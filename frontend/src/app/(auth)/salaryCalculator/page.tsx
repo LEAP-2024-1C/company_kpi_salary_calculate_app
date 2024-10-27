@@ -1,7 +1,7 @@
 import React from "react";
 
 const SalaryCalculator = () => {
-  return <div>SalaryCalculator</div>;
+  return <div></div>;
 };
 
 export default SalaryCalculator;
