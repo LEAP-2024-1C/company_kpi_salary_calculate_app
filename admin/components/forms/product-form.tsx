@@ -55,10 +55,18 @@ import { ScrollArea } from '@radix-ui/react-scroll-area';
 //     .array(z.string())
 //     .min(1, { message: 'Please select at least one category' })
 // });
+// const formSchema = z.object({
+//   items: z.array(z.string()).refine((value) => value.some((item) => item), {
+//     message: 'You have to select at least one item.'
+//   })
+// });
 const formSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one item.'
-  })
+  items: z.array(
+    z.object({
+      cat_id: z.string(),
+      tasks: z.array(z.string())
+    })
+  )
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -177,84 +185,83 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormField
                   control={form.control}
                   name="items"
-                  render={() => (
+                  render={({ field }) => (
                     <FormItem>
-                      {categories.map(({ categoryName, _id, procedures }) => (
-                        <FormField
-                          key={_id}
-                          control={form.control}
-                          name="items"
-                          render={({ field }) => {
-                            return (
-                              <Accordion type="single" collapsible>
-                                <AccordionItem value={_id}>
-                                  <AccordionTrigger>
-                                    <FormItem
-                                      key={_id}
-                                      className="flex flex-row items-start space-x-3 space-y-0"
-                                    >
-                                      <FormControl>
-                                        <Checkbox
-                                          checked={field.value?.includes(_id)}
-                                          onCheckedChange={(checked) => {
-                                            return checked
-                                              ? field.onChange([
-                                                  ...field.value,
-                                                  _id
-                                                ])
-                                              : field.onChange(
-                                                  field.value?.filter(
-                                                    (value) => value !== _id
-                                                  )
-                                                );
-                                          }}
-                                        />
-                                      </FormControl>
-                                      <FormLabel className="font-normal">
-                                        {categoryName}
-                                      </FormLabel>
-                                    </FormItem>
-                                  </AccordionTrigger>
+                      {categories.map(({ categoryName, _id, procedures }) => {
+                        // Find the current category in the field value
+                        const currentCategory = field.value.find(
+                          (item) => item.cat_id === _id
+                        ) || { cat_id: _id, tasks: [] };
 
-                                  <AccordionContent>
-                                    {procedures.map(({ taskName, _id }) => (
-                                      <>
-                                        <FormItem
-                                          key={_id}
-                                          className="ml-10 flex flex-row items-start space-x-3 space-y-0"
-                                        >
-                                          <FormControl>
-                                            <Checkbox
-                                              checked={field.value?.includes(
-                                                _id ?? ''
-                                              )}
-                                              onCheckedChange={(checked) => {
-                                                return checked
-                                                  ? field.onChange([
-                                                      ...field.value,
-                                                      _id
-                                                    ])
-                                                  : field.onChange(
-                                                      field.value?.filter(
-                                                        (value) => value !== _id
-                                                      )
-                                                    );
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormLabel className="font-normal">
-                                            {taskName}
-                                          </FormLabel>
-                                        </FormItem>
-                                      </>
-                                    ))}
-                                  </AccordionContent>
-                                </AccordionItem>
-                              </Accordion>
-                            );
-                          }}
-                        />
-                      ))}
+                        return (
+                          <Accordion key={_id} type="single" collapsible>
+                            <AccordionItem value={_id}>
+                              <AccordionTrigger>
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={currentCategory.tasks.length > 0}
+                                      onCheckedChange={(checked) => {
+                                        const updatedItems = checked
+                                          ? [
+                                              ...field.value,
+                                              { cat_id: _id, tasks: [] }
+                                            ]
+                                          : field.value.filter(
+                                              (item) => item.cat_id !== _id
+                                            );
+                                        field.onChange(updatedItems);
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {categoryName}
+                                  </FormLabel>
+                                </FormItem>
+                              </AccordionTrigger>
+
+                              <AccordionContent>
+                                {procedures.map(({ taskName, _id }) => (
+                                  <FormItem
+                                    key={_id}
+                                    className="ml-10 flex flex-row items-start space-x-3 space-y-0"
+                                  >
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={currentCategory.tasks.includes(
+                                          _id
+                                        )}
+                                        onCheckedChange={(checked) => {
+                                          const updatedTasks = checked
+                                            ? [...currentCategory.tasks, taskId]
+                                            : currentCategory.tasks.filter(
+                                                (task) => task !== taskId
+                                              );
+
+                                          const updatedItems = field.value.map(
+                                            (item) =>
+                                              item.cat_id === _id
+                                                ? {
+                                                    ...item,
+                                                    tasks: updatedTasks
+                                                  }
+                                                : item
+                                          );
+
+                                          field.onChange(updatedItems);
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      {taskName}
+                                    </FormLabel>
+                                  </FormItem>
+                                ))}
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        );
+                      })}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -268,3 +275,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     </ScrollArea>
   );
 };
+
+// {
+//   items: [
+//     { cat_id: '', tasks: ['', ''] },
+//     { cat_id: '', tasks: ['', ''] }
+//   ];
+// }

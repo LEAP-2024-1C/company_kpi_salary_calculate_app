@@ -1,67 +1,73 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { categories } from '@/constants/data';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
 
 const items = [
   {
-    id: 'recents',
-    label: 'Recents',
+    _id: '1',
+    categoryName: 'таг харма бэлтгэл',
     procedures: [
-      { taskName: 'Task 1', _id: '1' },
-      { taskName: 'Task 2', _id: '2' },
-      { taskName: 'Task 3', _id: '3' }
-    ]
-  },
-  {
-    id: 'home',
-    label: 'Home',
-    procedures: [
-      { taskName: 'Task 4', _id: '4' },
-      { taskName: 'Task 5', _id: '5' },
-      { taskName: 'Task 6', _id: '6' }
-    ]
-  },
-  {
-    id: 'applications',
-    label: 'Applications',
-    procedures: [
-      { taskName: 'Task 7', _id: '7' },
-      { taskName: 'Task 8', _id: '8' },
-      { taskName: 'Task 9', _id: '9' }
+      {
+        taskName: 'энгэр харманы 0.1',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'э.харманы хагалбар цахилгаантай бэлдэх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'харма хадах',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уутан харма бэлдэх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уут_харма оёх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
     ]
   }
-];
+] as const;
 
 const FormSchema = z.object({
-  items: z.array(
-    z.object({
-      catName: z.string().optional(),
-      tasks: z.array(z.string())
+  items: z
+    .array(
+      z.object({
+        cat_id: z.string(),
+        tasks: z.array(z.string())
+      })
+    )
+    .refine((value) => value.some((item) => item), {
+      message: 'You have to select at least one item.'
     })
-  )
 });
 
-export default function AccordionDemo() {
+export default function CheckboxReactHookFormMultiple() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -70,36 +76,50 @@ export default function AccordionDemo() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('object', data);
+    console.log(data);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ml-8 space-y-8">
         <FormField
           control={form.control}
           name="items"
           render={() => (
-            <FormItem className="ml-10">
+            <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Sidebar</FormLabel>
+                <FormDescription>
+                  Select the items you want to display in the sidebar.
+                </FormDescription>
               </div>
-              {categories.map(({ categoryName, _id, procedures }, idx) => (
+              {items.map((item) => (
                 <FormField
-                  key={idx}
+                  key={item.id}
                   control={form.control}
-                  name={`items.${idx}.catName`}
+                  name="items"
                   render={({ field }) => {
                     return (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
                         <FormControl>
                           <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                            checked={field.value?.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id
+                                    )
+                                  );
+                            }}
                           />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          {categoryName}
+                          {item.label}
                         </FormLabel>
                       </FormItem>
                     );
@@ -114,15 +134,4 @@ export default function AccordionDemo() {
       </form>
     </Form>
   );
-}
-
-{
-  /* <Accordion type="single" collapsible className="w-full">
-  <AccordionItem value="item-1" className="ml-10">
-    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-    <AccordionContent>
-      Yes. It adheres to the WAI-ARIA design pattern.
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>; */
 }
