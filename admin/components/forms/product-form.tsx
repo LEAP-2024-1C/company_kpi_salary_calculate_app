@@ -18,15 +18,8 @@ import {
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+
 import { Checkbox } from '@/components/ui/checkbox';
-// import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
 import FileUpload from '../file-upload';
 import { Category } from '@/constants/data';
@@ -39,31 +32,10 @@ import {
 } from '@radix-ui/react-accordion';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 
-// const formSchema = z.object({
-//   name: z
-//     .string()
-//     .min(3, { message: 'Product Name must be at least 3 characters' }),
-//   imgUrl: z
-//     .array(ImgSchema)
-//     .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-//     .min(1, { message: 'At least one image must be added.' }),
-//   description: z
-//     .string()
-//     .min(3, { message: 'Product description must be at least 3 characters' }),
-//   price: z.coerce.number(),
-//   category: z
-//     .array(z.string())
-//     .min(1, { message: 'Please select at least one category' })
-// });
-// const formSchema = z.object({
-//   items: z.array(z.string()).refine((value) => value.some((item) => item), {
-//     message: 'You have to select at least one item.'
-//   })
-// });
 const formSchema = z.object({
   items: z.array(
     z.object({
-      cat_id: z.string(),
+      catName: z.string(),
       tasks: z.array(z.string())
     })
   )
@@ -104,7 +76,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      items: []
+      items: categories.map((item) => ({
+        catName: item.categoryName,
+        tasks: []
+      }))
     }
   });
 
@@ -150,6 +125,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const onSubmit = (data: ProductFormValues) => {
     console.log('data', data);
   };
+  console.log('form', form.formState.errors);
 
   return (
     <ScrollArea className="h-full">
@@ -185,83 +161,60 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormField
                   control={form.control}
                   name="items"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem>
-                      {categories.map(({ categoryName, _id, procedures }) => {
-                        // Find the current category in the field value
-                        const currentCategory = field.value.find(
-                          (item) => item.cat_id === _id
-                        ) || { cat_id: _id, tasks: [] };
-
-                        return (
-                          <Accordion key={_id} type="single" collapsible>
-                            <AccordionItem value={_id}>
-                              <AccordionTrigger>
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={currentCategory.tasks.length > 0}
-                                      onCheckedChange={(checked) => {
-                                        const updatedItems = checked
-                                          ? [
-                                              ...field.value,
-                                              { cat_id: _id, tasks: [] }
-                                            ]
-                                          : field.value.filter(
-                                              (item) => item.cat_id !== _id
-                                            );
-                                        field.onChange(updatedItems);
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">
-                                    {categoryName}
-                                  </FormLabel>
-                                </FormItem>
-                              </AccordionTrigger>
-
-                              <AccordionContent>
-                                {procedures.map(({ taskName, _id }) => (
-                                  <FormItem
-                                    key={_id}
-                                    className="ml-10 flex flex-row items-start space-x-3 space-y-0"
-                                  >
+                      {categories.map((item, idx) => (
+                        <div key={item._id}>
+                          <FormField
+                            control={form.control}
+                            name={`items.${idx}.catName`}
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value !== undefined}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {item.categoryName}
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+                          {item.procedures.map((procedure) => (
+                            <FormField
+                              key={procedure._id}
+                              control={form.control}
+                              name={`items.${idx}.tasks`}
+                              render={({ field }) => {
+                                const tasks = field.value || [];
+                                const isChecked = tasks.includes(procedure._id);
+                                return (
+                                  <FormItem className="ml-10 flex flex-row items-start space-x-3 space-y-0">
                                     <FormControl>
                                       <Checkbox
-                                        checked={currentCategory.tasks.includes(
-                                          _id
-                                        )}
+                                        checked={isChecked}
                                         onCheckedChange={(checked) => {
-                                          const updatedTasks = checked
-                                            ? [...currentCategory.tasks, taskId]
-                                            : currentCategory.tasks.filter(
-                                                (task) => task !== taskId
+                                          const newTasks = checked
+                                            ? [...tasks, procedure._id]
+                                            : tasks.filter(
+                                                (id) => id !== procedure._id
                                               );
-
-                                          const updatedItems = field.value.map(
-                                            (item) =>
-                                              item.cat_id === _id
-                                                ? {
-                                                    ...item,
-                                                    tasks: updatedTasks
-                                                  }
-                                                : item
-                                          );
-
-                                          field.onChange(updatedItems);
+                                          field.onChange(newTasks);
                                         }}
                                       />
                                     </FormControl>
                                     <FormLabel className="font-normal">
-                                      {taskName}
+                                      {procedure.taskName}
                                     </FormLabel>
                                   </FormItem>
-                                ))}
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        );
-                      })}
+                                );
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ))}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -275,10 +228,3 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     </ScrollArea>
   );
 };
-
-// {
-//   items: [
-//     { cat_id: '', tasks: ['', ''] },
-//     { cat_id: '', tasks: ['', ''] }
-//   ];
-// }
