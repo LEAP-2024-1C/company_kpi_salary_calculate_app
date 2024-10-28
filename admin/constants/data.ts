@@ -114,10 +114,11 @@ export type Product = {
 
 export type Procedures = {
   taskName: string;
-  unitPrice: number;
-  quantity: number;
+  unitPrice: string;
+  quantity: string;
   status?: string;
   _id: string;
+  proCheck?: boolean;
 };
 
 export type Category = {

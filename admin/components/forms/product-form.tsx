@@ -1,57 +1,28 @@
 'use client';
-import * as z from 'zod';
-import { useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Check, Divide, Trash } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
+
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
 
-import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '../ui/use-toast';
-import FileUpload from '../file-upload';
+
 import { Category } from '@/constants/data';
-import { cn } from '@/lib/utils';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@radix-ui/react-accordion';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
 
-const formSchema = z.object({
-  items: z.array(
-    z.object({
-      catName: z.string(),
-      tasks: z.array(z.string())
-    })
-  )
-});
-
-type ProductFormValues = z.infer<typeof formSchema>;
+import { Label } from '@radix-ui/react-label';
+import { Trash } from 'lucide-react';
+import { ScrollArea } from '../ui/scroll-area';
+import axios from 'axios';
+import { apiUrl } from '@/lib/utils';
 
 interface ProductFormProps {
   initialData: any | null;
-  categories: Category[];
 }
 
-export const ProductForm: React.FC<ProductFormProps> = ({
-  initialData,
-  categories
-}) => {
+export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -62,28 +33,123 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
-
-  const defaultValues = initialData
-    ? initialData
-    : {
-        name: '',
-        description: '',
-        price: 0,
-        imgUrl: [],
-        category: ''
-      };
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      items: categories.map((item) => ({
-        catName: item.categoryName,
-        tasks: []
-      }))
+  const [categories, setCategories] = useState<Category[]>([]);
+  const getAllCategories = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}cat/get/category`);
+      if (res.status === 200) {
+        const { categories } = res.data;
+        console.log('categories', categories);
+        setCatForm(categories);
+        setCategories(categories);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  });
+  };
+  useEffect(() => {
+    getAllCategories();
+  }, []);
 
-  const createProject = async (data: ProductFormValues) => {
+  const [catForm, setCatForm] = useState<Category[]>(
+    categories.map((category) => ({
+      categoryName: category.categoryName,
+      _id: category._id,
+      procedures: category.procedures.map((proc) => ({
+        taskName: proc.taskName,
+        quantity: proc.quantity,
+        unitPrice: proc.unitPrice,
+        _id: proc._id,
+        proCheck: false
+      }))
+    }))
+  );
+  console.log('catform', catForm);
+
+  const [isCheck, setIsCheck] = useState<boolean[]>(
+    new Array(categories.length).fill(false)
+  );
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    catIndex: number
+  ) => {
+    const { checked } = e.target;
+    const updated = [...isCheck];
+    updated[catIndex] = checked;
+    setIsCheck(updated);
+  };
+
+  const handleInputChange = (
+    catIndex: number,
+    procIndex: number,
+    field: 'quantity' | 'unitPrice',
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setCatForm((prev) => {
+      const newCatForm = [...prev];
+      const updatedProcedures = [...newCatForm[catIndex]?.procedures];
+
+      if (field === 'quantity') {
+        updatedProcedures[procIndex].quantity = value;
+      } else {
+        updatedProcedures[procIndex].unitPrice = value;
+      }
+
+      newCatForm[catIndex].procedures = updatedProcedures;
+      return newCatForm;
+    });
+  };
+  const handleProCheckChange = (catIndex: number, procIndex: number) => {
+    // setCatForm((prev) => {
+    //   const newCatForm = [...prev];
+    //   const updatedProcedures = [...newCatForm[catIndex].procedures];
+    //   updatedProcedures[procIndex].proCheck = true;
+    //   // updatedProcedures[procIndex].proCheck =
+    //   //   !updatedProcedures[procIndex].proCheck;
+    //   newCatForm[catIndex].procedures = updatedProcedures;
+    //   console.log('boolean', updatedProcedures[procIndex].proCheck);
+    //   return newCatForm;
+    // });
+    setCatForm((prev) => {
+      return prev.map((category, index) => {
+        if (index === catIndex) {
+          return {
+            ...category,
+            procedures: category.procedures.map((proc, procIdx) => {
+              if (procIdx === procIndex) {
+                return { ...proc, proCheck: !proc.proCheck };
+              }
+              return proc;
+            })
+          };
+        }
+        return category;
+      });
+    });
+  };
+
+  const getCheckedValues = () => {
+    const checkedValues = catForm
+      .map((category, catIndex) => {
+        if (isCheck[catIndex]) {
+          return {
+            categoryName: category.categoryName,
+            _id: category._id,
+            procedures: category.procedures.filter(
+              (item) => item.proCheck === true
+            )
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+    const value = checkedValues.filter((item) => item?.procedures.length !== 0);
+    console.log('Checked Values:', value);
+  };
+
+  const createProject = async () => {
     try {
       setLoading(true);
       if (initialData) {
@@ -122,13 +188,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       setOpen(false);
     }
   };
-  const onSubmit = (data: ProductFormValues) => {
-    console.log('data', data);
-  };
-  console.log('form', form.formState.errors);
 
   return (
-    <ScrollArea className="h-full">
+    <div className="">
       {/* <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -149,82 +211,66 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         )}
       </div>
       <Separator />
-      <Accordion type="single" collapsible className="mx-10">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>categories</AccordionTrigger>
-          <AccordionContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="items"
-                  render={() => (
-                    <FormItem>
-                      {categories.map((item, idx) => (
-                        <div key={item._id}>
-                          <FormField
-                            control={form.control}
-                            name={`items.${idx}.catName`}
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value !== undefined}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  {item.categoryName}
-                                </FormLabel>
-                              </FormItem>
-                            )}
-                          />
-                          {item.procedures.map((procedure) => (
-                            <FormField
-                              key={procedure._id}
-                              control={form.control}
-                              name={`items.${idx}.tasks`}
-                              render={({ field }) => {
-                                const tasks = field.value || [];
-                                const isChecked = tasks.includes(procedure._id);
-                                return (
-                                  <FormItem className="ml-10 flex flex-row items-start space-x-3 space-y-0">
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={isChecked}
-                                        onCheckedChange={(checked) => {
-                                          const newTasks = checked
-                                            ? [...tasks, procedure._id]
-                                            : tasks.filter(
-                                                (id) => id !== procedure._id
-                                              );
-                                          field.onChange(newTasks);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormLabel className="font-normal">
-                                      {procedure.taskName}
-                                    </FormLabel>
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                      ))}
-                      <FormMessage />
-                    </FormItem>
-                  )}
+      <div className="flex gap-2">
+        <Input placeholder="Category name" />
+        <Input placeholder="Description" />
+        <Input type="number" placeholder="Qty" className="w-20" />
+      </div>
+
+      <section className="flex h-screen flex-col">
+        <div className="ml-10 flex flex-col">
+          {categories.map(({ categoryName, procedures }, catIndex) => (
+            <div key={catIndex}>
+              <div>
+                <input
+                  value={categoryName}
+                  type="checkbox"
+                  className="mr-2"
+                  checked={isCheck[catIndex]}
+                  onChange={(e) => handleChange(e, catIndex)}
                 />
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </ScrollArea>
+                <label>{categoryName}</label>
+              </div>
+              {procedures.map(
+                ({ taskName, quantity, unitPrice }, procIndex) => (
+                  <div className="ml-20" key={procIndex}>
+                    <input
+                      checked={
+                        catForm[catIndex]?.procedures[procIndex].proCheck
+                      }
+                      value={taskName}
+                      type="checkbox"
+                      className="mr-2"
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleProCheckChange(catIndex, procIndex)
+                      }
+                    />
+                    <label>{taskName}</label>
+                    <input
+                      type="number"
+                      value={catForm[catIndex]?.procedures[procIndex].quantity}
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleInputChange(catIndex, procIndex, 'quantity', e)
+                      }
+                    />
+                    <input
+                      type="number"
+                      value={catForm[catIndex]?.procedures[procIndex].unitPrice}
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleInputChange(catIndex, procIndex, 'unitPrice', e)
+                      }
+                    />
+                  </div>
+                )
+              )}
+            </div>
+          ))}
+        </div>
+        <button onClick={getCheckedValues}>Get Checked Values</button>
+      </section>
+    </div>
   );
 };
