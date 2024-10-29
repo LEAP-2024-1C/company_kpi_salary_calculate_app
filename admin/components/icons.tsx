@@ -29,12 +29,14 @@ import {
   UserPlus,
   PackagePlus,
   X,
-  ChartBarStacked
+  ChartBarStacked,
+  SquareChartGantt
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  project: SquareChartGantt,
   dashboard: LayoutDashboardIcon,
   logo: Command,
   login: LogIn,
