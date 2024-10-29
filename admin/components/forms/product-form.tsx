@@ -21,6 +21,11 @@ import { apiUrl } from '@/lib/utils';
 interface ProductFormProps {
   initialData: any | null;
 }
+interface Product {
+  productName: string;
+  description: string;
+  quantity: string;
+}
 
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
@@ -31,11 +36,29 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const [imgLoading, setImgLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
-  const toastMessage = initialData ? 'Product updated.' : 'Product created.';
-  const action = initialData ? 'Save changes' : 'Create';
   const [categories, setCategories] = useState<Category[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [image, setImage] = useState('');
+  const [images, setImage] = useState('');
+  const [catForm, setCatForm] = useState<Category[]>(
+    categories.map((category) => ({
+      categoryName: category.categoryName,
+      procedures: category.procedures.map((proc) => ({
+        taskName: proc.taskName,
+        quantity: proc.quantity,
+        unitPrice: proc.unitPrice,
+        proCheck: false
+      }))
+    }))
+  );
+
+  const [isCheck, setIsCheck] = useState<boolean[]>(
+    new Array(categories.length).fill(false)
+  );
+  const [productForm, setProductForm] = useState<Product>({
+    productName: '',
+    description: '',
+    quantity: ''
+  });
   const getAllCategories = async () => {
     try {
       const res = await axios.get(`${apiUrl}cat/get/category`);
@@ -53,25 +76,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     getAllCategories();
   }, []);
 
-  const [catForm, setCatForm] = useState<Category[]>(
-    categories.map((category) => ({
-      categoryName: category.categoryName,
-      _id: category._id,
-      procedures: category.procedures.map((proc) => ({
-        taskName: proc.taskName,
-        quantity: proc.quantity,
-        unitPrice: proc.unitPrice,
-        _id: proc._id,
-        proCheck: false
-      }))
-    }))
-  );
-  console.log('catform', catForm);
-
-  const [isCheck, setIsCheck] = useState<boolean[]>(
-    new Array(categories.length).fill(false)
-  );
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     catIndex: number
@@ -81,7 +85,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     updated[catIndex] = checked;
     setIsCheck(updated);
   };
-
+  const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProductForm({
+      ...productForm,
+      [name]: value
+    });
+    console.log('productform', productForm);
+  };
   const handleInputChange = (
     catIndex: number,
     procIndex: number,
@@ -148,25 +159,34 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       })
       .filter(Boolean);
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
-    console.log('Checked Values:', value);
+    console.log('value', value);
+    createProject(value);
   };
 
-  const createProject = async () => {
+  const createProject = async (components: any) => {
     try {
       setLoading(true);
-      if (initialData) {
-        // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
-      } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
-      }
-      router.refresh();
-      router.push(`/dashboard/products`);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
+      const res = await axios.post(`${apiUrl}pro/product`, {
+        components,
+        productForm,
+        images
       });
+      // if (initialData) {
+      //   // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
+      // } else {
+      //   // const res = await axios.post(`/api/products/create-product`, data);
+      //   // console.log("product", res);
+      // }
+      // router.refresh();
+      // router.push(`/dashboard/products`);
+      // toast({
+      //   variant: 'destructive',
+      //   title: 'Uh oh! Something went wrong.',
+      //   description: 'There was a problem with your request.'
+      // });
+      if (res.status === 200) {
+        console.log('success');
+      }
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -194,7 +214,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'pisrslvb');
-
     try {
       console.log('check');
       setUploading(true);
@@ -204,6 +223,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       );
       setImage(response.data.secure_url);
       setUploading(false);
+      console.log('img', response.data.secure_url);
     } catch (error) {
       console.error('Error uploading image:', error);
       setUploading(false);
@@ -233,9 +253,23 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       </div>
       <Separator />
       <div className="flex gap-2">
-        <Input placeholder="Category name" />
-        <Input placeholder="Description" />
-        <Input type="number" placeholder="Qty" className="w-20" />
+        <Input
+          placeholder="Product name"
+          onChange={handleLogForm}
+          name="productName"
+        />
+        <Input
+          placeholder="Description"
+          onChange={handleLogForm}
+          name="description"
+        />
+        <Input
+          type="number"
+          placeholder="Qty"
+          className="w-20"
+          onChange={handleLogForm}
+          name="quantity"
+        />
         <div>
           <Input
             className="w-40"
@@ -304,7 +338,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             </div>
           ))}
         </div>
-        <button onClick={getCheckedValues}>Get Checked Values</button>
+        <button onClick={getCheckedValues}>sumbit</button>
       </section>
     </div>
   );
