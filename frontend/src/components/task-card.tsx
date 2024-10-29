@@ -1,10 +1,16 @@
+import { IProduct } from "@/utils/interfaces";
+import Link from "next/link";
 import React, { useState } from "react";
+import ProductDetailModal from "./productDetailModal";
 
 interface TaskTrackerProps {
   totalTasks: number;
 }
 
-const TaskTracker: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
+const TaskTracker: React.FC<TaskTrackerProps> = (
+  { totalTasks },
+  { product }: { product: IProduct }
+) => {
   const [completedTasks, setCompletedTasks] = useState(0);
 
   const completeTask = () => {
@@ -22,29 +28,30 @@ const TaskTracker: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   };
 
   return (
-    <div className="bg-gray-200 rounded-xl p-5 flex flex-col">
-      <h1 className="text-3xl font-bold ">Tsamts</h1>
-      <ul>
-        <li className="flex items-center gap-3">
-          <div
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              backgroundColor: getDotColor(),
-            }}
-          />
-          <p>Pocket</p>
-          <p>
-            {completedTasks} / {totalTasks}
-          </p>
-        </li>
-      </ul>
-      <div className="w-full flex ">
-        <p className="text-blue-500 justify-self-end">Status</p>
-        <button onClick={completeTask}>Task</button>
+    <Link
+      href={"/product-detail"}
+      // {"/" + product.id}
+    >
+      <div
+        className="bg-gray-200 rounded-xl p-5 flex flex-col border text-green-900 "
+        style={{ borderColor: getDotColor() }}
+      >
+        <h1 className="text-3xl font-bold ">Tsamts</h1>
+        <ul>
+          <li className="flex items-center gap-3">
+            <div>{/* <ProductDetailModal /> */}</div>
+            <p>
+              ({completedTasks} / {totalTasks})
+            </p>
+          </li>
+        </ul>
+        <div className="w-full flex ">
+          <p className="text-blue-500 justify-self-end">Status</p>
+          <button onClick={completeTask}>Task</button>
+        </div>
       </div>
-    </div>
+      //{" "}
+    </Link>
   );
 };
 
