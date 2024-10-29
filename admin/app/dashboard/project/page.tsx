@@ -11,14 +11,14 @@ const categories: Category[] = [
       {
         _id: '671afda11208d7373353b1a2',
         taskName: 'таг 1-р оёо хавчуургатай',
-        quantity: 2,
-        unitPrice: 350
+        quantity: '2',
+        unitPrice: '350'
       },
       {
         _id: '671afda11208d7373353b1a3',
         taskName: 'таг лавчик 0.6',
-        quantity: 2,
-        unitPrice: 200
+        quantity: '2',
+        unitPrice: '200'
       }
     ]
   },
@@ -29,14 +29,14 @@ const categories: Category[] = [
       {
         _id: '671aff3f1208d7373353b1ab',
         taskName: 'Мөр залгах 1-р',
-        quantity: 2,
-        unitPrice: 200
+        quantity: '2',
+        unitPrice: '200'
       },
       {
         _id: '671aff3f1208d7373353b1ac',
         taskName: 'Мөр лавчик ХОС ногоон',
-        quantity: 4,
-        unitPrice: 450
+        quantity: '4',
+        unitPrice: '450'
       }
     ]
   },
@@ -47,20 +47,20 @@ const categories: Category[] = [
       {
         _id: '671aff3f1208d7373353b1aa',
         taskName: 'Мөр залгах 1-р',
-        quantity: 2,
-        unitPrice: 200
+        quantity: '2',
+        unitPrice: '200'
       },
       {
         _id: '671aff3f1208d7373353b1aq',
         taskName: 'Мөр лавчик ХОС ногоон',
-        quantity: 4,
-        unitPrice: 450
+        quantity: '4',
+        unitPrice: ' 450'
       },
       {
         _id: '671aff3f1208d7373353b1aq',
         taskName: 'Мөр лавчик ХОС ногоон',
-        quantity: 4,
-        unitPrice: 450
+        quantity: '4',
+        unitPrice: '450'
       }
     ]
   }
@@ -107,9 +107,9 @@ export default function CheckboxReactHookFormMultiple() {
       const updatedProcedures = [...newCatForm[catIndex].procedures];
 
       if (field === 'quantity') {
-        updatedProcedures[procIndex].quantity = Number(value);
+        updatedProcedures[procIndex].quantity = value;
       } else {
-        updatedProcedures[procIndex].unitPrice = Number(value);
+        updatedProcedures[procIndex].unitPrice = value;
       }
 
       newCatForm[catIndex].procedures = updatedProcedures;

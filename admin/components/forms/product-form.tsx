@@ -34,6 +34,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
   const [categories, setCategories] = useState<Category[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [image, setImage] = useState('');
   const getAllCategories = async () => {
     try {
       const res = await axios.get(`${apiUrl}cat/get/category`);
@@ -188,6 +190,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       setOpen(false);
     }
   };
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'pisrslvb');
+
+    try {
+      console.log('check');
+      setUploading(true);
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
+        formData
+      );
+      setImage(response.data.secure_url);
+      setUploading(false);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="">
@@ -215,9 +236,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         <Input placeholder="Category name" />
         <Input placeholder="Description" />
         <Input type="number" placeholder="Qty" className="w-20" />
+        <div>
+          <Input
+            className="w-40"
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              e.target.files && handleImageUpload(e.target.files[0])
+            }
+          />
+          {uploading && <p>Uploading...</p>}
+        </div>
       </div>
 
-      <section className="flex h-screen flex-col">
+      <section className="flex flex-col">
         <div className="ml-10 flex flex-col">
           {categories.map(({ categoryName, procedures }, catIndex) => (
             <div key={catIndex}>
@@ -231,6 +263,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 />
                 <label>{categoryName}</label>
               </div>
+
               {procedures.map(
                 ({ taskName, quantity, unitPrice }, procIndex) => (
                   <div className="ml-20" key={procIndex}>
@@ -249,6 +282,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     <label>{taskName}</label>
                     <input
                       type="number"
+                      className="w-20 p-2"
                       value={catForm[catIndex]?.procedures[procIndex].quantity}
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
@@ -257,6 +291,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     />
                     <input
                       type="number"
+                      className="w-20 p-2"
                       value={catForm[catIndex]?.procedures[procIndex].unitPrice}
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>

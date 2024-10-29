@@ -33,11 +33,11 @@ export default function Page() {
   // }, []);
 
   return (
-    <ScrollArea className="h-full">
-      <div className="h-full">
-        <Breadcrumbs items={breadcrumbItems} />
-        <ProductForm initialData={null} key={null} />
-      </div>
+    <ScrollArea className="h-[calc(100vh-60px)] ">
+      {/* <div className=""> */}
+      {/* <Breadcrumbs items={breadcrumbItems} /> */}
+      <ProductForm initialData={null} key={null} />
+      {/* </div> */}
     </ScrollArea>
   );
 }
