@@ -58,8 +58,8 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
-  const [unit, setUnit] = useState(0);
-  const [unitPrice, setUnitPrice] = useState(0);
+  const [unit, setUnit] = useState<number[]>([0]);
+  const [unitPrice, setUnitPrice] = useState<number[]>([0]);
 
   const defaultValues = {
     categoryName: '',
@@ -97,17 +97,18 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  const addUnit = () => {
-    setUnit(unit + 1);
+  const addUnit = (index: number) => {
+    console.log(unit[index]);
+    return (unit[index] += 1);
   };
   const subtractUnit = () => {
-    setUnit(unit - 1);
+    // setUnit(unit[index] - 1);
   };
   const addUnitPrice = () => {
-    setUnitPrice(unitPrice + 50);
+    // setUnitPrice(unitPrice + 50);
   };
   const subtrtactUnitPrice = () => {
-    setUnitPrice(unitPrice - 50);
+    // setUnitPrice(unitPrice - 50);
   };
 
   const onSubmit = (data: ProductFormValues) => {
@@ -173,29 +174,31 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                         <FormItem>
                           <FormLabel>Unit</FormLabel>
                           <div className="flex gap-2">
-                            <FormControl className="w-30">
+                            <div>
+                              <Button
+                                className="rounded-full"
+                                onClick={() => subtractUnit()}
+                              >
+                                -
+                              </Button>
+                            </div>
+                            <FormControl className="w-10 rounded-full text-center">
                               <Input
                                 type="number"
                                 disabled={loading}
                                 placeholder="Unit"
                                 {...field}
                                 min={0}
-                                value={unit}
+                                value={unit[index]}
                                 className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                               />
                             </FormControl>
                             <div>
                               <Button
                                 className="rounded-full"
-                                onClick={addUnit}
+                                onClick={() => addUnit(index)}
                               >
                                 +
-                              </Button>
-                              <Button
-                                className="rounded-full"
-                                onClick={subtractUnit}
-                              >
-                                -
                               </Button>
                             </div>
                           </div>
@@ -210,29 +213,31 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                         <FormItem>
                           <FormLabel>Unit Price</FormLabel>
                           <div className="flex gap-2">
-                            <FormControl className="w-30">
+                            <div>
+                              <Button
+                                className="rounded-full"
+                                onClick={() => subtrtactUnitPrice()}
+                              >
+                                -
+                              </Button>
+                            </div>
+                            <FormControl className="w-20 rounded-full text-center">
                               <Input
                                 type="number"
                                 disabled={loading}
                                 placeholder="Unit Price"
                                 {...field}
                                 min={0}
-                                value={unitPrice}
+                                value={unitPrice[index]}
                                 className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                               />
                             </FormControl>
                             <div>
                               <Button
                                 className="rounded-full"
-                                onClick={addUnitPrice}
+                                onClick={() => addUnitPrice()}
                               >
                                 +
-                              </Button>
-                              <Button
-                                className="rounded-full"
-                                onClick={subtrtactUnitPrice}
-                              >
-                                -
                               </Button>
                             </div>
                           </div>
@@ -278,28 +283,30 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex gap-2">
-                            <FormControl className="w-30">
+                            <div>
+                              <Button
+                                className="rounded-full text-center"
+                                onClick={subtractUnit}
+                              >
+                                -
+                              </Button>
+                            </div>
+                            <FormControl className="w-10 rounded-full text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none">
                               <Input
                                 type="number"
                                 disabled={loading}
                                 placeholder="Unit"
                                 {...field}
                                 min={0}
-                                value={unit}
+                                value={unit[index]}
                               />
                             </FormControl>
                             <div>
                               <Button
+                                onClick={addUnit(index)}
                                 className="rounded-full"
-                                onClick={addUnit}
                               >
                                 +
-                              </Button>
-                              <Button
-                                className="rounded-full"
-                                onClick={subtractUnit}
-                              >
-                                -
                               </Button>
                             </div>
                           </div>
@@ -313,23 +320,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex gap-2">
-                            <FormControl className="w-30">
-                              <Input
-                                type="number"
-                                disabled={loading}
-                                placeholder="Unit Price"
-                                {...field}
-                                min={0}
-                                value={unitPrice}
-                              />
-                            </FormControl>
                             <div>
-                              <Button
-                                className="rounded-full"
-                                onClick={addUnitPrice}
-                              >
-                                +
-                              </Button>
                               <Button
                                 className="rounded-full"
                                 onClick={subtrtactUnitPrice}
@@ -337,6 +328,22 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                                 -
                               </Button>
                             </div>
+                            <FormControl className="w-20 rounded-full text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none">
+                              <Input
+                                type="number"
+                                disabled={loading}
+                                placeholder="Unit Price"
+                                {...field}
+                                min={0}
+                                value={unitPrice[index]}
+                              />
+                            </FormControl>
+                            <Button
+                              className="rounded-full"
+                              onClick={addUnitPrice}
+                            >
+                              +
+                            </Button>
                           </div>
                           <FormMessage />
                         </FormItem>
