@@ -1,128 +1,158 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
-import { categories } from '@/constants/data';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
 
-const items = [
+const categories = [
   {
-    id: 'recents',
-    label: 'Recents',
+    _id: '671afda11208d7373353b1a1',
+    categoryName: 'Харма',
     procedures: [
-      { taskName: 'Task 1', _id: '1' },
-      { taskName: 'Task 2', _id: '2' },
-      { taskName: 'Task 3', _id: '3' }
+      {
+        task_id: '671afda11208d7373353b1a2',
+        taskName: 'таг 1-р оёо хавчуургатай',
+        quantity: 2,
+        unitPrice: 350
+      },
+      {
+        task_id: '671afda11208d7373353b1a3',
+        taskName: 'таг лавчик 0.6',
+        quantity: 2,
+        unitPrice: 200
+      }
     ]
   },
   {
-    id: 'home',
-    label: 'Home',
+    _id: '671aff3f1208d7373353b1aa',
+    categoryName: 'Холбох',
     procedures: [
-      { taskName: 'Task 4', _id: '4' },
-      { taskName: 'Task 5', _id: '5' },
-      { taskName: 'Task 6', _id: '6' }
-    ]
-  },
-  {
-    id: 'applications',
-    label: 'Applications',
-    procedures: [
-      { taskName: 'Task 7', _id: '7' },
-      { taskName: 'Task 8', _id: '8' },
-      { taskName: 'Task 9', _id: '9' }
+      {
+        task_id: '671aff3f1208d7373353b1ab',
+        taskName: 'Мөр залгах 1-р',
+        quantity: 2,
+        unitPrice: 200
+      },
+      {
+        task_id: '671aff3f1208d7373353b1ac',
+        taskName: 'Мөр лавчик ХОС ногоон',
+        quantity: 4,
+        unitPrice: 450
+      }
     ]
   }
 ];
 
 const FormSchema = z.object({
-  items: z.array(
+  categories: z.array(
     z.object({
-      catName: z.string().optional(),
-      tasks: z.array(z.string())
+      cat_id: z.string(),
+      tasks: z.array(
+        z.object({
+          task_id: z.string(),
+          taskName: z.string(),
+          quantity: z.number(),
+          unitPrice: z.number(),
+          selected: z.boolean().default(false)
+        })
+      )
     })
   )
 });
 
-export default function AccordionDemo() {
+export default function CheckboxReactHookFormMultiple() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      items: []
+      categories: categories.map((item) => ({
+        cat_id: item.categoryName,
+        tasks: item.procedures.map((proc) => ({
+          task_id: proc.task_id,
+          taskName: proc.taskName,
+          quantity: proc.quantity,
+          unitPrice: proc.unitPrice,
+          selected: false
+        }))
+      }))
     }
   });
 
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'categories'
+  });
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('object', data);
+    console.log(data);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="items"
-          render={() => (
-            <FormItem className="ml-10">
-              <div className="mb-4">
-                <FormLabel className="text-base">Sidebar</FormLabel>
-              </div>
-              {categories.map(({ categoryName, _id, procedures }, idx) => (
-                <FormField
-                  key={idx}
-                  control={form.control}
-                  name={`items.${idx}.catName`}
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {categoryName}
-                        </FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ml-8 space-y-8">
+        <div className="mb-4">
+          <FormLabel className="text-base">Sidebar</FormLabel>
+          <FormDescription>
+            Select the items you want to display in the sidebar.
+          </FormDescription>
+        </div>
+        {fields.map((category, idx) => (
+          <div key={category.cat_id}>
+            <FormField
+              control={form.control}
+              name={`categories.${idx}.cat_id`}
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value !== undefined}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="font-normal">
+                    {categories[idx].categoryName}
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+            {category.tasks.map((task, taskIdx) => (
+              <FormField
+                key={task.task_id}
+                control={form.control}
+                name={`categories.${idx}.tasks.${taskIdx}.selected`}
+                render={({ field }) => (
+                  <FormItem className="ml-10 flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      {task.taskName} - Qty: {task.quantity}, Price:{' '}
+                      {task.unitPrice}
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
+        ))}
+        <FormMessage />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
-}
-
-{
-  /* <Accordion type="single" collapsible className="w-full">
-  <AccordionItem value="item-1" className="ml-10">
-    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-    <AccordionContent>
-      Yes. It adheres to the WAI-ARIA design pattern.
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>; */
 }
