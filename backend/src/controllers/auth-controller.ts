@@ -6,7 +6,6 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("first", email);
   try {
     const user = await Employee.findOne({ email });
     if (!user) {
@@ -28,7 +27,7 @@ export const login = async (req: Request, res: Response) => {
 };
 export const getCurrentUser = async (req: Request, res: Response) => {
   const { id } = req.user;
-  console.log(id)
+
   try {
     const user = await Employee.findById(id);
     if (!user) {
@@ -50,7 +49,6 @@ export const createEmployee = async (req: Request, res: Response) => {
     const { data } = req.body;
     const { email, firstName, lastName, password, job_title, phoneNumber } =
       data;
-    console.log(email, firstName, lastName, password, job_title);
     if (!firstName || !lastName || !email || !password || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
