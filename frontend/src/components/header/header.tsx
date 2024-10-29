@@ -13,13 +13,15 @@ import { DropdownMenuDemo } from "./drowdown";
 const Header = () => {
   const router = useRouter();
 
-  const handleChange = () => {
-    console.log("onclick successful");
+  const handleClick = () => {
+    router.push("/dashboard");
   };
-
   return (
     <div className="bg-black p-5 grid grid-cols-3 w-full justify-between items-center">
-      <div className="flex items-center justify-start gap-5 text-white">
+      <div
+        className="flex items-center justify-start gap-5 text-white"
+        onClick={handleClick}
+      >
         <img src="" alt="company logo" />
       </div>
       <div className="flex items-center gap-3  text-center justify-center">
