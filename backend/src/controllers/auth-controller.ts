@@ -6,7 +6,6 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("first", email);
   try {
     const user = await Employee.findOne({ email });
     if (!user) {
@@ -26,30 +25,29 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
-// export const getCurrentUser = async (req: Request, res: Response) => {
-//   const { id } = req.user;
-//   try {
-//     const user = await Employee.findById(id);
-//     if (!user) {
-//       return res.status(400).json({ message: "Not found user" });
-//     }
-//     const { email, profile_img, firstName, lastName, address, phoneNumber } =
-//       user;
-//     res.status(200).json({
-//       message: "success",
-//       user: { email, profile_img, firstName, lastName, address, phoneNumber },
-//     });
-//   } catch (error) {
-//     res.status(401).json({ error });
-//   }
-// };
+export const getCurrentUser = async (req: Request, res: Response) => {
+  const { id } = req.user;
+
+  try {
+    const user = await Employee.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "Not found user" });
+    }
+    const {  email, profile_img, firstName, lastName, address, phoneNumber } = user;
+    res.status(200).json({
+      message: "success",
+      user: { email, profile_img, firstName, lastName, address, phoneNumber },
+    });
+  } catch (error) {
+    res.status(401).json({ error });
+  }
+};
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const { data } = req.body;
     const { email, firstName, lastName, password, job_title, phoneNumber } =
       data;
-    console.log(email, firstName, lastName, password, job_title);
     if (!firstName || !lastName || !email || !password || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
@@ -72,8 +70,6 @@ export const createEmployee = async (req: Request, res: Response) => {
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await Employee.find();
-    console.log("employee", employees);
-
     res.status(200).json({ message: "success", employees });
   } catch (error) {
     res.status(401).json({ error });

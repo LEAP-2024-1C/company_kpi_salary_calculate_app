@@ -29,7 +29,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         className="w-full md:max-w-sm"
       />
       <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
           {data.map((product) => (
             <div className="flex flex-col gap-4">
               <h1 className="pl-4 text-left text-2xl font-semibold">
@@ -41,22 +41,17 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                     <TableHead className="w-[200px]">Task Name</TableHead>
                     <TableHead>Unit</TableHead>
                     <TableHead>Unit Price</TableHead>
-                    <TableHead className="text-right">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {product.procedures.map((task) => (
                     <TableRow key={product.id}>
-                      <TableCell className="w-[200px]">
+                      <TableCell className="w-[900px]">
                         {task.taskName}
                       </TableCell>
-                      <TableCell>{task.unit}</TableCell>
-                      <TableCell>{task.unitPrice}$</TableCell>
-                      <TableCell className="text-right">
-                        {task.status}
-                      </TableCell>
-
-                      <TableCell>
+                      <TableCell className="w-20">{task.quantity}</TableCell>
+                      <TableCell className="w-20">{task.unitPrice}$</TableCell>
+                      <TableCell className="w-20">
                         <CellAction id={product.id} />
                       </TableCell>
                     </TableRow>
@@ -66,7 +61,6 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
             </div>
           ))}
         </div>
-
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
