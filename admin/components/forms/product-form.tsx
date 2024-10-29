@@ -1,71 +1,28 @@
 'use client';
-import * as z from 'zod';
-import { useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Trash } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
+
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-// import FileUpload from "@/components/FileUpload";
-import { useToast } from '../ui/use-toast';
-import FileUpload from '../file-upload';
-const ImgSchema = z.object({
-  fileName: z.string(),
-  name: z.string(),
-  fileSize: z.number(),
-  size: z.number(),
-  fileKey: z.string(),
-  key: z.string(),
-  fileUrl: z.string(),
-  url: z.string()
-});
-export const IMG_MAX_LIMIT = 3;
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: 'Product Name must be at least 3 characters' }),
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
-  description: z
-    .string()
-    .min(3, { message: 'Product description must be at least 3 characters' }),
-  price: z.coerce.number(),
-  category: z.string().min(1, { message: 'Please select a category' })
-});
 
-type ProductFormValues = z.infer<typeof formSchema>;
+import { useToast } from '../ui/use-toast';
+
+import { Category } from '@/constants/data';
+
+import { Label } from '@radix-ui/react-label';
+import { Trash } from 'lucide-react';
+import { ScrollArea } from '../ui/scroll-area';
+import axios from 'axios';
+import { apiUrl } from '@/lib/utils';
 
 interface ProductFormProps {
   initialData: any | null;
-  categories: any;
 }
 
-export const ProductForm: React.FC<ProductFormProps> = ({
-  initialData,
-  categories
-}) => {
+export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -76,23 +33,125 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [image, setImage] = useState('');
+  const getAllCategories = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}cat/get/category`);
+      if (res.status === 200) {
+        const { categories } = res.data;
+        console.log('categories', categories);
+        setCatForm(categories);
+        setCategories(categories);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getAllCategories();
+  }, []);
 
-  const defaultValues = initialData
-    ? initialData
-    : {
-        name: '',
-        description: '',
-        price: 0,
-        imgUrl: [],
-        category: ''
-      };
+  const [catForm, setCatForm] = useState<Category[]>(
+    categories.map((category) => ({
+      categoryName: category.categoryName,
+      _id: category._id,
+      procedures: category.procedures.map((proc) => ({
+        taskName: proc.taskName,
+        quantity: proc.quantity,
+        unitPrice: proc.unitPrice,
+        _id: proc._id,
+        proCheck: false
+      }))
+    }))
+  );
+  console.log('catform', catForm);
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  });
+  const [isCheck, setIsCheck] = useState<boolean[]>(
+    new Array(categories.length).fill(false)
+  );
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    catIndex: number
+  ) => {
+    const { checked } = e.target;
+    const updated = [...isCheck];
+    updated[catIndex] = checked;
+    setIsCheck(updated);
+  };
+
+  const handleInputChange = (
+    catIndex: number,
+    procIndex: number,
+    field: 'quantity' | 'unitPrice',
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setCatForm((prev) => {
+      const newCatForm = [...prev];
+      const updatedProcedures = [...newCatForm[catIndex]?.procedures];
+
+      if (field === 'quantity') {
+        updatedProcedures[procIndex].quantity = value;
+      } else {
+        updatedProcedures[procIndex].unitPrice = value;
+      }
+
+      newCatForm[catIndex].procedures = updatedProcedures;
+      return newCatForm;
+    });
+  };
+  const handleProCheckChange = (catIndex: number, procIndex: number) => {
+    // setCatForm((prev) => {
+    //   const newCatForm = [...prev];
+    //   const updatedProcedures = [...newCatForm[catIndex].procedures];
+    //   updatedProcedures[procIndex].proCheck = true;
+    //   // updatedProcedures[procIndex].proCheck =
+    //   //   !updatedProcedures[procIndex].proCheck;
+    //   newCatForm[catIndex].procedures = updatedProcedures;
+    //   console.log('boolean', updatedProcedures[procIndex].proCheck);
+    //   return newCatForm;
+    // });
+    setCatForm((prev) => {
+      return prev.map((category, index) => {
+        if (index === catIndex) {
+          return {
+            ...category,
+            procedures: category.procedures.map((proc, procIdx) => {
+              if (procIdx === procIndex) {
+                return { ...proc, proCheck: !proc.proCheck };
+              }
+              return proc;
+            })
+          };
+        }
+        return category;
+      });
+    });
+  };
+
+  const getCheckedValues = () => {
+    const checkedValues = catForm
+      .map((category, catIndex) => {
+        if (isCheck[catIndex]) {
+          return {
+            categoryName: category.categoryName,
+            _id: category._id,
+            procedures: category.procedures.filter(
+              (item) => item.proCheck === true
+            )
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+    const value = checkedValues.filter((item) => item?.procedures.length !== 0);
+    console.log('Checked Values:', value);
+  };
+
+  const createProject = async () => {
     try {
       setLoading(true);
       if (initialData) {
@@ -131,11 +190,28 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       setOpen(false);
     }
   };
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'pisrslvb');
 
-  const triggerImgUrlValidation = () => form.trigger('imgUrl');
+    try {
+      console.log('check');
+      setUploading(true);
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
+        formData
+      );
+      setImage(response.data.secure_url);
+      setUploading(false);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploading(false);
+    }
+  };
 
   return (
-    <>
+    <div className="">
       {/* <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -156,115 +232,80 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         )}
       </div>
       <Separator />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-8"
-        >
-          {/* <FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          <div className="gap-8 md:grid md:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product name"
-                      {...field}
+      <div className="flex gap-2">
+        <Input placeholder="Category name" />
+        <Input placeholder="Description" />
+        <Input type="number" placeholder="Qty" className="w-20" />
+        <div>
+          <Input
+            className="w-40"
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              e.target.files && handleImageUpload(e.target.files[0])
+            }
+          />
+          {uploading && <p>Uploading...</p>}
+        </div>
+      </div>
+
+      <section className="flex flex-col">
+        <div className="ml-10 flex flex-col">
+          {categories.map(({ categoryName, procedures }, catIndex) => (
+            <div key={catIndex}>
+              <div>
+                <input
+                  value={categoryName}
+                  type="checkbox"
+                  className="mr-2"
+                  checked={isCheck[catIndex]}
+                  onChange={(e) => handleChange(e, catIndex)}
+                />
+                <label>{categoryName}</label>
+              </div>
+
+              {procedures.map(
+                ({ taskName, quantity, unitPrice }, procIndex) => (
+                  <div className="ml-20" key={procIndex}>
+                    <input
+                      checked={
+                        catForm[catIndex]?.procedures[procIndex].proCheck
+                      }
+                      value={taskName}
+                      type="checkbox"
+                      className="mr-2"
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleProCheckChange(catIndex, procIndex)
+                      }
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product description"
-                      {...field}
+                    <label>{taskName}</label>
+                    <input
+                      type="number"
+                      className="w-20 p-2"
+                      value={catForm[catIndex]?.procedures[procIndex].quantity}
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleInputChange(catIndex, procIndex, 'quantity', e)
+                      }
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                    <input
+                      type="number"
+                      className="w-20 p-2"
+                      value={catForm[catIndex]?.procedures[procIndex].unitPrice}
+                      disabled={!isCheck[catIndex]}
+                      onChange={(e) =>
+                        handleInputChange(catIndex, procIndex, 'unitPrice', e)
+                      }
+                    />
+                  </div>
+                )
               )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    // defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          // defaultValue={field.value}
-                          placeholder="Select a category"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {/* @ts-ignore  */}
-                      {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button>
-        </form>
-      </Form>
-    </>
+            </div>
+          ))}
+        </div>
+        <button onClick={getCheckedValues}>Get Checked Values</button>
+      </section>
+    </div>
   );
 };

@@ -1,13 +1,11 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { apiUrl } from "@/lib/utils";
 
 export default function Login() {
@@ -30,7 +28,6 @@ export default function Login() {
         toast.success("User successfully signed in", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
-
         router.push("/dashboard");
       }
       console.log("medeelel", userData);

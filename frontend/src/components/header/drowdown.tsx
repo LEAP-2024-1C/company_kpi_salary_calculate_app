@@ -30,25 +30,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useUser } from "@/context/user-provider";
 
 // imgURl: string
 export const DropdownMenuDemo = () => {
   const router = useRouter();
+  const { user } = useUser();
+  const { id } = useParams();
+  const logout = () => {
+    router.push("/");
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="bg-black">
           <Avatar>
-            <AvatarImage src="./images/defaultProfilePic.jpg" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={user?.profile_img}
+              alt="@shadcn"
+              className="bg-center bg-contain"
+            />
+            <AvatarFallback className="bg-gray-500">
+              {user?.firstName[0]} {user?.lastName[0]}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
@@ -58,7 +69,7 @@ export const DropdownMenuDemo = () => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
+            <Link href="/salaryCalculator">Salary</Link>
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -68,14 +79,14 @@ export const DropdownMenuDemo = () => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Keyboard className="mr-2 h-4 w-4" />
-            <span>Keyboard shortcuts</span>
+            <span>History</span>
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOut className="mr-2 h-4 w-4" />
-          <button onClick={() => console.log("log out")}>Log out</button>
+          <button onClick={logout}>Log out</button>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
