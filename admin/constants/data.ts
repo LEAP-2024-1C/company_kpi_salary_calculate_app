@@ -1,4 +1,5 @@
 import { NavItem } from '@/types';
+import exp from 'constants';
 
 export type User = {
   id: number;
@@ -113,10 +114,11 @@ export type Product = {
 
 export type Procedures = {
   taskName: string;
-  unitPrice: number;
-  quantity: number;
+  unitPrice: string;
+  quantity: string;
   status?: string;
-  _id?: string;
+  _id: string;
+  proCheck?: boolean;
 };
 
 export type Category = {
@@ -266,179 +268,327 @@ export const navItems: NavItem[] = [
     label: 'login'
   }
 ];
-export const categories: Category[] = [
-  {
-    _id: '1',
-    categoryName: 'таг харма бэлтгэл',
-    procedures: [
-      {
-        taskName: 'энгэр харманы 0.1',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'э.харманы хагалбар цахилгаантай бэлдэх',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'харма хадах',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'уутан харма бэлдэх',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'уут_харма оёх',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      }
-    ]
-  },
-  {
-    _id: '2',
-    categoryName: 'урд гуя',
-    procedures: [
-      {
-        taskName: 'м_арлын суртай бэлдэх',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'м_арал  энгэрт тогтоох',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ташаа 5 см  цац',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'өвдгөвч оёх хос хавчуурга',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'элгэвчийг у_гуятай холбох 1-р',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      }
-    ]
-  },
-  {
-    _id: '3',
-    categoryName: 'ар',
-    procedures: [
-      {
-        taskName: 'бөгсөвч хадах хос',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ар суудал 1-р',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ард резин тогтоох',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ард мөрөвч тогтоох',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'бөгсөвч хадах хос',
-        unitPrice: 13,
-        quantity: 200,
-        status: 'pending'
-      }
-    ]
-  },
-  {
-    _id: '5',
-    categoryName: 'холбох',
-    procedures: [
-      {
-        taskName: 'ташаа холбох 1-р',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ташаа лавчик хос',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'харма бөхлөх ',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'алхам 1-р',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      }
-    ]
-  },
-  {
-    _id: '6',
-    categoryName: 'өмдний үндсэн дотор',
-    procedures: [
-      {
-        taskName: 'д_элгэвчинд хажлага оёх ',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'д_ ар нуруувч босоо холбох 1-р',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'д_ар_ ну-д шошго оёх',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'ташаа холбох /дээд биений/',
-        quantity: 150,
-        unitPrice: 10,
-        status: 'pending'
-      },
-      {
-        taskName: 'д_ урд суудал 1-р',
-        unitPrice: 13,
-        quantity: 200,
-        status: 'pending'
-      }
-    ]
-  }
-];
+
+// export const categories : Category[]= [
+//   {
+//       _id: "671afda11208d7373353b1a1",
+//       categoryName: "Харма",
+//       procedures: [
+//           {
+//               taskName: "таг 1-р оёо хавчуургатай",
+//               quantity: "2",
+//               status: "pending",
+//               unitPrice: "350",
+//               _id: "671afda11208d7373353b1a2"
+//           },
+//           {
+//               taskName: "таг лавчик 0.6",
+//               quantity: "2",
+//               status: "pending",
+//               unitPrice: "200",
+//               _id: "671afda11208d7373353b1a3"
+//           },
+//           {
+//               taskName: "харма хадах хос",
+//               quantity: "2",
+//               status: "pending",
+//               unitPrice: "500",
+//               _id: "671afda11208d7373353b1a4"
+//           },
+//           {
+//               taskName: "таг хадах",
+//               quantity: "2",
+//               status: "pending",
+//               unitPrice: "200",
+//               _id: "671afda11208d7373353b1a5"
+//           }
+//       ],
+//   },
+//   {
+//       _id: "671aff3f1208d7373353b1aa",
+//       categoryName: "Холбох",
+//       procedures: [
+//           {
+//               taskName: "Мөр залгах 1-р",
+//               quantity: "2",
+//               status: "pending",
+//               unitPrice: "200",
+//               _id: "671aff3f1208d7373353b1ab"
+//           },
+//           {
+//               taskName: "Мөр лавчик ХОС ногоон",
+//               quantity: "4",
+//               status: "pending",
+//               unitPrice: "450",
+//               _id: "671aff3f1208d7373353b1ac"
+//           },
+//           {
+//               taskName: "Ханцуй залгах 1-р",
+//               quantity: "1",
+//               status: "pending",
+//               unitPrice: "600",
+//               _id: "671aff3f1208d7373353b1ad"
+//           },
+//           {
+//               taskName: "Ханцуй залгаа лавчик ХОС ногоон",
+//               quantity: "20",
+//               status: "pending",
+//               unitPrice: "1000",
+//               _id: "671aff3f1208d7373353b1ae"
+//           },
+//           {
+//               taskName: "Сугалгаа 1-р эгнээ",
+//               quantity: "10",
+//               status: "pending",
+//               unitPrice: "100",
+//               _id: "671aff3f1208d7373353b1af"
+//           },
+//           {
+//               taskName: "энгэр сент шидэх",
+//               quantity: "10",
+//               status: "pending",
+//               unitPrice: "200",
+//               _id: "671aff3f1208d7373353b1b0"
+//           }
+//       ],
+
+//   {
+//       "_id": "671b00b81208d7373353b1b3",
+//       "categoryName": "Дотор",
+//       "procedures": [
+//           {
+//               "taskName": "Зах ширмэл шидэх",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b00b81208d7373353b1b4"
+//           },
+//           {
+//               "taskName": "Борта шидэх",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "120",
+//               "_id": "671b00b81208d7373353b1b5"
+//           },
+//           {
+//               "taskName": "өлгүүр бэлдэх хадах шошготой",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b00b81208d7373353b1b6"
+//           },
+//           {
+//               "taskName": "шошгоны суурь оёх",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b00b81208d7373353b1b7"
+//           },
+//           {
+//               "taskName": "мөр холбох дотор",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "50",
+//               "_id": "671b00b81208d7373353b1b8"
+//           },
+//           {
+//               "taskName": "зах залгах дотор",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "50",
+//               "_id": "671b00b81208d7373353b1b9"
+//           },
+//           {
+//               "taskName": "ханцуй залгах дотор",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "60",
+//               "_id": "671b00b81208d7373353b1ba"
+//           },
+//           {
+//               "taskName": "ноосон монжат бэлдэх",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "80",
+//               "_id": "671b00b81208d7373353b1bb"
+//           },
+//           {
+//               "taskName": "ханцуйн хажлага битүүлэх",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b00b81208d7373353b1bc"
+//           }
+//       ],
+//       "created_at": "2024-10-25T02:21:44.543Z",
+//       "updated_at": "2024-10-25T02:21:44.543Z",
+//       "__v": 0
+//   },
+//   {
+//       "_id": "671b04791208d7373353b1bf",
+//       "categoryName": "Малгай",
+//       "procedures": [
+//           {
+//               "taskName": "хажлага холбох, оёх, шидэх",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b04791208d7373353b1c0"
+//           },
+//           {
+//               "taskName": "дотор гол залгах",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "200",
+//               "_id": "671b04791208d7373353b1c1"
+//           },
+//           {
+//               "taskName": "өнгө гол залгах 1-р /тэлээ/",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "300",
+//               "_id": "671b04791208d7373353b1c2"
+//           },
+//           {
+//               "taskName": "өнгө гол лавчик хос",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "400",
+//               "_id": "671b04791208d7373353b1c3"
+//           },
+//           {
+//               "taskName": "малгайн цахилгаан өнгөнд оёх",
+//               "quantity": "4",
+//               "status": "pending",
+//               "unitPrice": "500",
+//               "_id": "671b04791208d7373353b1c4"
+//           },
+//           {
+//               "taskName": "өнгө дотор хавсрах 1-р сэтлэх өөлөх",
+//               "quantity": "4",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b04791208d7373353b1c5"
+//           },
+//           {
+//               "taskName": "малгай тэлээ холбох",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "200",
+//               "_id": "671b04791208d7373353b1c6"
+//           },
+//           {
+//               "taskName": "гоёлын оёо",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "200",
+//               "_id": "671b04791208d7373353b1c7"
+//           },
+//           {
+//               "taskName": "зангуу оёх",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b04791208d7373353b1c8"
+//           }
+//       ],
+//       "created_at": "2024-10-25T02:37:45.377Z",
+//       "updated_at": "2024-10-25T02:37:45.377Z",
+//       "__v": 0
+//   },
+//   {
+//       "_id": "671b06c81208d7373353b1cb",
+//       "categoryName": "хавсаргах",
+//       "procedures": [
+//           {
+//               "taskName": "Их бие хавсрах энг.зах сэт өөлөх",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b06c81208d7373353b1cc"
+//           },
+//           {
+//               "taskName": "заам сэтлэх шидэх",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "200",
+//               "_id": "671b06c81208d7373353b1cd"
+//           },
+//           {
+//               "taskName": "ханцуйны үзүүр хавсрах тэлээ",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "300",
+//               "_id": "671b06c81208d7373353b1ce"
+//           },
+//           {
+//               "taskName": "энгэрийн гоёл 0.6",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "400",
+//               "_id": "671b06c81208d7373353b1cf"
+//           },
+//           {
+//               "taskName": "ханцуйн үзүүр гоёл",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b06c81208d7373353b1d0"
+//           },
+//           {
+//               "taskName": "хормойн лавчик ",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "200",
+//               "_id": "671b06c81208d7373353b1d1"
+//           },
+//           {
+//               "taskName": "ханц, хажлаганд ширмэл шидэх",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "300",
+//               "_id": "671b06c81208d7373353b1d2"
+//           },
+//           {
+//               "taskName": "бланк 1-р, лавчик 0,6",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "400",
+//               "_id": "671b06c81208d7373353b1d3"
+//           },
+//           {
+//               "taskName": "бланк хадах ",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b06c81208d7373353b1d4"
+//           }
+//       ],
+//       "created_at": "2024-10-25T02:47:36.380Z",
+//       "updated_at": "2024-10-25T02:47:36.380Z",
+//       "__v": 0
+//   },
+//   {
+//       "_id": "671b265bc3ba8849c38011af",
+//       "categoryName": "halaas ",
+//       "procedures": [
+//           {
+//               "taskName": "oydol",
+//               "quantity": "1",
+//               "status": "pending",
+//               "unitPrice": "100",
+//               "_id": "671b265bc3ba8849c38011b0"
+//           },
+//           {
+//               "taskName": "induuu",
+//               "quantity": "2",
+//               "status": "pending",
+//               "unitPrice": "500",
+//               "_id": "671b265bc3ba8849c38011b1"
+//           }
+//       ],
+//       "created_at": "2024-10-25T05:02:19.518Z",
+//       "updated_at": "2024-10-25T05:02:19.518Z",
+//       "__v": 0
+//   }
+// ]

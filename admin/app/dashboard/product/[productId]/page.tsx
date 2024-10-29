@@ -15,29 +15,29 @@ const breadcrumbItems = [
 ];
 
 export default function Page() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const getAllCategories = async () => {
-    try {
-      const res = await axios.get(`${apiUrl}cat/get/category`);
-      if (res.status === 200) {
-        const { categories } = res.data;
-        console.log('categories', categories);
-        setCategories(categories);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    getAllCategories();
-  }, []);
+  // const [categories, setCategories] = useState<Category[]>([]);
+  // const getAllCategories = async () => {
+  //   try {
+  //     const res = await axios.get(`${apiUrl}cat/get/category`);
+  //     if (res.status === 200) {
+  //       const { categories } = res.data;
+  //       console.log('categories', categories);
+  //       setCategories(categories);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getAllCategories();
+  // }, []);
 
   return (
-    <ScrollArea className="h-full">
-      <div className="flex-1 space-y-4 p-8">
-        <Breadcrumbs items={breadcrumbItems} />
-        <ProductForm categories={categories} initialData={null} key={null} />
-      </div>
+    <ScrollArea className="h-[calc(100vh-60px)] ">
+      {/* <div className=""> */}
+      {/* <Breadcrumbs items={breadcrumbItems} /> */}
+      <ProductForm initialData={null} key={null} />
+      {/* </div> */}
     </ScrollArea>
   );
 }
