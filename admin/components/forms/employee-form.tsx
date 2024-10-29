@@ -106,7 +106,6 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
       // router.push(`/dashboard/products`);
 
       if (res.status === 200) {
-        console.log(res);
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
