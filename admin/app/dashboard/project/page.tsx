@@ -31,7 +31,6 @@ export default function page() {
 
       if (res.status === 200) {
         const { project } = res.data;
-        console.log('employee', project);
         setProjectData(project);
         toast({ title: 'successfully get employee' });
       }
