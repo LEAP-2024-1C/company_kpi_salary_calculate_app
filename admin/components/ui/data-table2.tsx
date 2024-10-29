@@ -17,9 +17,12 @@ import {
 } from '@/components/ui/chart';
 
 import { Input } from './input';
-import { IUser } from '@/constants/data';
+import { IUser, products } from '@/constants/data';
 import * as React from 'react';
 import Link from 'next/link';
+import axios from 'axios';
+import { apiUrl } from '@/lib/utils';
+import { toast } from './use-toast';
 
 interface DataTableProps {
   searchKey: string;
@@ -47,14 +50,39 @@ const chartConfig = {
 
 export function DataTable2({ searchKey, data }: DataTableProps) {
   const [progress, setProgress] = React.useState(13);
-  const [chartNUmber, setChartNumber] = React.useState(1);
   const [chartDatas, setChartData] = React.useState<number[]>([20, 10, 30, 40]);
+  const [value, setValue] = React.useState();
   const chartData = [
-    { browser: 'pending', visitors: chartNUmber, fill: 'var(--color-chrome)' },
+    { browser: 'pending', visitors: 5, fill: 'var(--color-chrome)' },
     { browser: 'inprogress', visitors: 50, fill: 'var(--color-safari)' },
     { browser: 'done', visitors: 15, fill: 'var(--color-firefox)' },
     { browser: 'review', visitors: 10, fill: 'var(--color-edge)' }
   ];
+  const getAllProduct = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}pro/product`);
+      if (res.status === 200) {
+        const { data } = res.data;
+        console.log(res.data);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.'
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    getAllProduct();
+  }, []);
+
   return (
     <>
       <Input
@@ -69,12 +97,16 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
           </div>
           <div className="flex">
             <div className="flex flex-col justify-center gap-2">
-              <div className="text-xl font-semibold">performence: 15%</div>
-              <div>pending: (6/80)</div>
-              <div>inprogress: (50/80)</div>
-              <div>done: (15/80)</div>
-              <div>review: (10/80)</div>
-              <Link href={'/dashboard/employee-task'}>employees</Link>
+              {products.map((product) => (
+                <>
+                  <div className="text-xl font-semibold">performence: 15%</div>
+                  <div>pending: (5/{value})</div>
+                  <div>inprogress: (50/{value})</div>
+                  <div>done: (15/{value})</div>
+                  <div>review: (10/{value})</div>
+                  <Link href={'/dashboard/employee-task'}>employees</Link>
+                </>
+              ))}
             </div>
 
             <CardContent className="flex-1 pb-0">
