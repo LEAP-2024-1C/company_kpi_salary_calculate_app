@@ -114,8 +114,8 @@ export type Product = {
 
 export type Procedures = {
   taskName: string;
-  unitPrice: string;
-  quantity: string;
+  unitPrice: number;
+  quantity: number;
   status?: string;
   _id?: string;
   proCheck?: boolean;
