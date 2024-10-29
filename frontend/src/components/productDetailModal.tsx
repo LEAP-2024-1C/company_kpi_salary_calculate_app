@@ -28,8 +28,14 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const [completedTasks, setCompletedTasks] = useState(0);
   const { user } = useUser();
   const { id } = useParams();
-  const { oneProduct, getProduct, products } = useProducts();
+  const { getProduct, products } = useProducts();
   const [productQuantity, setProductQuantity] = useState(0);
+
+  useEffect(() => {
+    if (id) {
+      getProduct(id);
+    }
+  }, [id, getProduct]);
 
   const getDotColor = () => {
     const percentageCompleted = completedTasks / totalTasks - 3;
@@ -38,43 +44,10 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     if (percentageCompleted >= 0.5) return "orange";
     return "red";
   };
+
   const invoices = [
     {
       work: "Ханцуй давхарлах",
-      price: "250",
-      completed: [totalTasks - 3],
-      total: [totalTasks],
-      myWork: [products.quantity],
-      select: (
-        <div className="flex gap-2 ">
-          <Button
-            onClick={() => {
-              products.quantity - 1;
-            }}
-            style={{ borderColor: getDotColor() }}
-            className="rounded-full border bg-white text-green-900"
-          >
-            -
-          </Button>
-          <Button
-            onClick={() => {
-              products.quantity + 1;
-            }}
-            style={{ borderColor: getDotColor() }}
-            className="rounded-full border bg-white text-green-900"
-          >
-            +
-          </Button>
-        </div>
-      ),
-      save: (
-        <Button variant="outline" className="rounded-full border-green-700">
-          Хадгалах
-        </Button>
-      ),
-    },
-    {
-      work: "Ханцуй оёх",
       price: "250",
       completed: [totalTasks - 3],
       total: [totalTasks],
