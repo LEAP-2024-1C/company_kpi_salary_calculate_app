@@ -28,14 +28,14 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const [completedTasks, setCompletedTasks] = useState(0);
   const { user } = useUser();
   const { id } = useParams();
-  const { getProduct, products } = useProducts();
+  const { products } = useProducts();
   const [productQuantity, setProductQuantity] = useState(0);
 
-  useEffect(() => {
-    if (id) {
-      getProduct(id);
-    }
-  }, [id, getProduct]);
+  // useEffect(() => {
+  // if (id) {
+  //   getProduct(id);
+  // }
+  // }, [id, getProduct]);
 
   const getDotColor = () => {
     const percentageCompleted = completedTasks / totalTasks - 3;

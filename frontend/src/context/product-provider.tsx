@@ -12,41 +12,45 @@ import { IProduct } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 
 interface IContext {
-  products: IProduct[] | undefined;
-  loading: boolean;
-  error: string | null;
-  getProduct: (id: string) => Promise<void>;
+  products: IProduct[] | null;
+  // loading: boolean;
+  // error: string | null;
+  // getProduct: (id: string) => Promise<void>;
 }
 
-export const ProductContext = createContext<IContext | undefined>(undefined);
+export const ProductContext = createContext<IContext>({
+  products: null,
+});
 
 export const ProductProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IProduct[] | null>(null);
+  // const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
 
   const getAllProducts = async () => {
-    const response = await axios.get(`${apiUrl}product`);
-    setProducts(response.data.products);
+    const response = await axios.get(`${apiUrl}pro/product`);
+    const products = response.data.products;
+    setProducts(products);
+    console.log("products", products);
   };
-  const getProduct = async (id: string) => {
-    try {
-      const response = await axios.get(`${apiUrl}product/${id}`);
-      setOneProduct(response.data.product);
-    } catch (err) {
-      console.log("Failed to fetch product");
-    }
-  };
+  // const getProduct = async (id: string) => {
+  //   try {
+  //     const response = await axios.get(`${apiUrl}pro/product/${id}`);
+  //     setOneProduct(response.data.product);
+  //   } catch (err) {
+  //     console.log("Failed to fetch product");
+  //   }
+  // };
 
   useEffect(() => {
     getAllProducts();
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products, getProduct }}>
+    <ProductContext.Provider value={{ products }}>
       {children}
     </ProductContext.Provider>
   );

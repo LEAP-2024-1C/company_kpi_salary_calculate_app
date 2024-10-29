@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -7,8 +7,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import ProductDetailModal from "@/components/productDetailModal";
+import { useUser } from "@/context/user-provider";
+import { useParams } from "next/navigation";
+import { useProducts } from "@/context/product-provider";
 
 const TaskDetail = () => {
+  // const { user } = useUser();
+  // const { id } = useParams();
+  // const { products } = useProducts();
+  // const [productQuantity, setProductQuantity] = useState(0);
   return (
     <div className="w-full h-full bg-gray-100 flex flex-col items-center ">
       <div className="p-16 flex flex-col items-center gap-5 ">

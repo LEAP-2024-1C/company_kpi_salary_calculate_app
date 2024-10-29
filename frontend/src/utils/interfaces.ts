@@ -5,33 +5,47 @@ export interface ITask {
     taskName:string
     price:number
 }
+
 export interface IEmployee {
-    _id: string
-    firstName: String;
-    lastName: String;
-    email: String;
-    password: string;
-    role: String;
-    job_title: String;
-    phoneNumber?: String;
-    profile_img?: String;
-    address?: String;
-    otp?: String;
-    passwordResetToken?: String;
-    passwordResetTokenExpire?: Date;
-    created_at: Date;
-    updated_at: Date;
-  }
-  export interface IProduct {
-    id:string;
-    productName: string;
-    description: string;
-    images?: [string];
-    quantity: number;
-    status: number;
-    category: [object];
-  }
-  // const [productData, setProductData] = useState<IProduct>({
+  _id: string
+  firstName: String;
+  lastName: String;
+  email: String;
+  password: string;
+  role: String;
+  job_title: String;
+  phoneNumber?: String;
+  profile_img?: String;
+  address?: String;
+  otp?: String;
+  passwordResetToken?: String;
+  passwordResetTokenExpire?: Date;
+  created_at: Date;
+  updated_at: Date;
+}
+export interface IProduct {
+  _id:string;
+  productName: string;
+  description: string;
+  images?: [string];
+  quantity: number;
+  status?: number;
+  components: [IComponents];
+}
+
+export interface IComponents {
+  _id:string;
+  categoryName:string
+  procedures:[IProcedures]
+}
+export interface IProcedures{
+  taskNeame: string;
+  quantity:number;
+  status?:string;
+  unitPrice:number;
+  _id?:string
+}
+// const [productData, setProductData] = useState<IProduct>({
   //   id: "",
   //   productName: "",
   //   description: "",

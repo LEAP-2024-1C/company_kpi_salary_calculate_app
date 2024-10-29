@@ -7,12 +7,10 @@ import React, { useState } from "react";
 
 const Dashboard = () => {
   const { products } = useProducts();
+  console.log("products", products);
   return (
-    <div className="w-full h-full grid grid-cols-3 gap-5 justify-center p-5">
-      {products.map((p, i) => {
-        <TaskTracker totalTasks={9} key={p.id} product={p} />;
-      })}
-
+    <div className="w-full h-full grid grid-cols-3 gap-5 justify-center p-5 text-green-900">
+      <TaskTracker />
       {/* {tasks.map((task, index) => (
         <TaskTracker key={index} taskName={task.name} totalTasks={task.total} />
       ))} */}
