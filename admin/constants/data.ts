@@ -4,16 +4,26 @@ export type User = {
   id: number;
   name: string;
   company: string;
-  role: string;
+  job_title: string;
   verified: boolean;
   status: string;
 };
+export interface IUser {
+  id: number;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phoneNumber: number;
+  job_title: string;
+  verified: boolean;
+  status: string;
+}
 export const users: User[] = [
   {
     id: 1,
     name: 'Candice Schiner',
     company: 'Dell',
-    role: 'Frontend Developer',
+    job_title: 'Frontend Developer',
     verified: false,
     status: 'Active'
   },
@@ -21,7 +31,7 @@ export const users: User[] = [
     id: 2,
     name: 'John Doe',
     company: 'TechCorp',
-    role: 'Backend Developer',
+    job_title: 'Backend Developer',
     verified: true,
     status: 'Active'
   },
@@ -29,7 +39,7 @@ export const users: User[] = [
     id: 3,
     name: 'Alice Johnson',
     company: 'WebTech',
-    role: 'UI Designer',
+    job_title: 'UI Designer',
     verified: true,
     status: 'Active'
   },
@@ -37,7 +47,7 @@ export const users: User[] = [
     id: 4,
     name: 'David Smith',
     company: 'Innovate Inc.',
-    role: 'Fullstack Developer',
+    job_title: 'Fullstack Developer',
     verified: false,
     status: 'Inactive'
   },
@@ -45,7 +55,7 @@ export const users: User[] = [
     id: 5,
     name: 'Emma Wilson',
     company: 'TechGuru',
-    role: 'Product Manager',
+    job_title: 'Product Manager',
     verified: true,
     status: 'Active'
   },
@@ -53,7 +63,7 @@ export const users: User[] = [
     id: 6,
     name: 'James Brown',
     company: 'CodeGenius',
-    role: 'QA Engineer',
+    job_title: 'QA Engineer',
     verified: false,
     status: 'Active'
   },
@@ -61,7 +71,7 @@ export const users: User[] = [
     id: 7,
     name: 'Laura White',
     company: 'SoftWorks',
-    role: 'UX Designer',
+    job_title: 'UX Designer',
     verified: true,
     status: 'Active'
   },
@@ -69,7 +79,7 @@ export const users: User[] = [
     id: 8,
     name: 'Michael Lee',
     company: 'DevCraft',
-    role: 'DevOps Engineer',
+    job_title: 'DevOps Engineer',
     verified: false,
     status: 'Active'
   },
@@ -77,7 +87,7 @@ export const users: User[] = [
     id: 9,
     name: 'Olivia Green',
     company: 'WebSolutions',
-    role: 'Frontend Developer',
+    job_title: 'Frontend Developer',
     verified: true,
     status: 'Active'
   },
@@ -85,7 +95,7 @@ export const users: User[] = [
     id: 10,
     name: 'Robert Taylor',
     company: 'DataTech',
-    role: 'Data Analyst',
+    job_title: 'Data Analyst',
     verified: false,
     status: 'Active'
   }
@@ -101,14 +111,18 @@ export type Product = {
   description: string;
 };
 
-export type Category = {
-  id: number;
-  categoryName: string;
-  procedureName: string[];
+export type Procedures = {
+  taskName: string;
   unitPrice: number;
-  price: number;
-  qty: number;
-  description: string;
+  quantity: number;
+  status?: string;
+  _id?: string;
+};
+
+export type Category = {
+  _id: string;
+  categoryName: string;
+  procedures: Procedures[];
 };
 
 export const products: Product[] = [
@@ -254,83 +268,177 @@ export const navItems: NavItem[] = [
 ];
 export const categories: Category[] = [
   {
-    id: 1,
+    _id: '1',
     categoryName: 'таг харма бэлтгэл',
-    procedureName: [
-      'энгэр харманы 0.1',
-      'э.харманы хагалбар цахилгаантай бэлдэх',
-      'харма хадах',
-      'уутан харма бэлдэх',
-      'уут_харма оёх'
-    ],
-    qty: 150,
-    unitPrice: 10,
-    price: 1500,
-    description:
-      'Ergonomic wireless mouse with adjustable DPI settings and long battery life.'
+    procedures: [
+      {
+        taskName: 'энгэр харманы 0.1',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'э.харманы хагалбар цахилгаантай бэлдэх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'харма хадах',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уутан харма бэлдэх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'уут_харма оёх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
+    ]
   },
   {
-    id: 2,
+    _id: '2',
     categoryName: 'урд гуя',
-    procedureName: [
-      'м_арлын суртай бэлдэх',
-      'м_арал  энгэрт тогтоох',
-      'ташаа 5 см  цац',
-      'өвдгөвч оёх хос хавчуурга',
-      'элгэвчийг у_гуятай холбох 1-р'
-    ],
-    unitPrice: 12,
-    price: 1200,
-    qty: 100,
-    description:
-      'Mechanical gaming keyboard with customizable RGB lighting and tactile keys.'
+    procedures: [
+      {
+        taskName: 'м_арлын суртай бэлдэх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'м_арал  энгэрт тогтоох',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа 5 см  цац',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'өвдгөвч оёх хос хавчуурга',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'элгэвчийг у_гуятай холбох 1-р',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
+    ]
   },
   {
-    id: 3,
+    _id: '3',
     categoryName: 'ар',
-    procedureName: [
-      'бөгсөвч хадах хос',
-      'ар суудал 1-р',
-      'ар суудал лавчик хос',
-      'ард резин тогтоох',
-      'ард мөрөвч тогтоох'
-    ],
-    unitPrice: 13,
-    price: 2600,
-    qty: 200,
-    description:
-      'Lightweight running shoes designed for comfort and durability.'
+    procedures: [
+      {
+        taskName: 'бөгсөвч хадах хос',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ар суудал 1-р',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ард резин тогтоох',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ард мөрөвч тогтоох',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'бөгсөвч хадах хос',
+        unitPrice: 13,
+        quantity: 200,
+        status: 'pending'
+      }
+    ]
   },
   {
-    id: 4,
+    _id: '5',
     categoryName: 'холбох',
-    procedureName: [
-      'ташаа холбох 1-р',
-      'ташаа лавчик хос',
-      'харма бөхлөх ',
-      'алхам 1-р',
-      'алхам 0.6'
-    ],
-    unitPrice: 10,
-    price: 199.99,
-    qty: 75,
-    description:
-      'Water-resistant smartwatch with heart-rate monitoring and GPS tracking.'
+    procedures: [
+      {
+        taskName: 'ташаа холбох 1-р',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа лавчик хос',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'харма бөхлөх ',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'алхам 1-р',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      }
+    ]
   },
   {
-    id: 5,
+    _id: '6',
     categoryName: 'өмдний үндсэн дотор',
-    procedureName: [
-      'д_элгэвчинд хажлага оёх ',
-      'д_ ар нуруувч босоо холбох 1-р',
-      'д_ар_ ну-д шошго оёх',
-      'ташаа холбох /дээд биений/',
-      'д_ урд суудал 1-р'
-    ],
-    unitPrice: 10,
-    price: 249.99,
-    qty: 60,
-    description:
-      'High-fidelity noise-cancelling headphones with wireless Bluetooth connectivity.'
+    procedures: [
+      {
+        taskName: 'д_элгэвчинд хажлага оёх ',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ ар нуруувч босоо холбох 1-р',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ар_ ну-д шошго оёх',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'ташаа холбох /дээд биений/',
+        quantity: 150,
+        unitPrice: 10,
+        status: 'pending'
+      },
+      {
+        taskName: 'д_ урд суудал 1-р',
+        unitPrice: 13,
+        quantity: 200,
+        status: 'pending'
+      }
+    ]
   }
 ];

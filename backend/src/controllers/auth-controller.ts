@@ -33,8 +33,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).json({ message: "Not found user" });
     }
-    const {  email, profile_img, firstName, lastName, address, phoneNumber } =
-      user;
+    const {  email, profile_img, firstName, lastName, address, phoneNumber } = user;
     res.status(200).json({
       message: "success",
       user: { email, profile_img, firstName, lastName, address, phoneNumber },
@@ -71,7 +70,6 @@ export const createEmployee = async (req: Request, res: Response) => {
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await Employee.find();
-
     res.status(200).json({ message: "success", employees });
   } catch (error) {
     res.status(401).json({ error });

@@ -29,33 +29,38 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         className="w-full md:max-w-sm"
       />
       <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Procedures</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Unit Price</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Description</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.categoryName}</TableCell>
-                <TableCell>{product.procedureName}</TableCell>
-                <TableCell>{product.qty}</TableCell>
-                <TableCell>{product.unitPrice}$</TableCell>
-                <TableCell>{product.price}$</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>
-                  <CellAction id={product.id} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="flex flex-col gap-4">
+          {data.map((product) => (
+            <div className="flex flex-col gap-4">
+              <h1 className="pl-4 text-left text-2xl font-semibold">
+                {product.categoryName}
+              </h1>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Task Name</TableHead>
+                    <TableHead>Unit</TableHead>
+                    <TableHead>Unit Price</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {product.procedures.map((task) => (
+                    <TableRow key={product.id}>
+                      <TableCell className="w-[900px]">
+                        {task.taskName}
+                      </TableCell>
+                      <TableCell className="w-20">{task.quantity}</TableCell>
+                      <TableCell className="w-20">{task.unitPrice}$</TableCell>
+                      <TableCell className="w-20">
+                        <CellAction id={product.id} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ))}
+        </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
