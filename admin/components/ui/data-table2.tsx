@@ -19,6 +19,7 @@ import {
 import { Input } from './input';
 import { IUser } from '@/constants/data';
 import * as React from 'react';
+import Link from 'next/link';
 
 interface DataTableProps {
   searchKey: string;
@@ -60,7 +61,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
       />
-      <Card className="w-1/2">
+      <Card className="w-2/5">
         <div className="flex flex-col gap-2 pl-4 pt-3">
           <div className="flex items-center justify-between gap-10">
             <p className="text-2xl font-semibold">project name: SHIRT</p>
@@ -73,7 +74,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               <div>inprogress: (50/80)</div>
               <div>done: (15/80)</div>
               <div>review: (10/80)</div>
-              <div>employee: boldoo</div>
+              <Link href={'/dashboard/employee-task'}>employees</Link>
             </div>
 
             <CardContent className="flex-1 pb-0">
