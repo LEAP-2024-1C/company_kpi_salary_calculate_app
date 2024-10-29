@@ -6,7 +6,7 @@ interface IProduct {
   images?: [string];
   quantity: number;
   status: number;
-  category: [Schema.Types.ObjectId];
+  components: [Schema.Types.ObjectId];
 }
 
 const productSchema = new Schema<IProduct>(
@@ -31,10 +31,10 @@ const productSchema = new Schema<IProduct>(
       type: Number,
       default: 0,
     },
-    category: {
+    components: {
       type: [Schema.Types.ObjectId],
       required: true,
-      ref: "Category",
+      ref: "Components",
     },
   },
   {
