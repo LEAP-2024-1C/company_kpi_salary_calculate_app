@@ -1,54 +1,57 @@
-// "use client";
+"use client";
 
-// import React, {
-//   createContext,
-//   useEffect,
-//   useState,
-//   ReactNode,
-//   useContext,
-// } from "react";
-// import axios from "axios";
-// import { ITask } from "@/utils/interfaces";
-// import { apiUrl } from "@/lib/utils";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from "react";
+import axios from "axios";
+import { IProduct } from "@/utils/interfaces";
+import { apiUrl } from "@/lib/utils";
 
-// interface ITaskTracker {
-//   products: ITask[] | undefined;
-//   loading: boolean;
-//   error: string | null;
-//   getProduct: (id: string) => Promise<void>;
-// }
+interface IContext {
+  products: IProduct[] | undefined;
+  loading: boolean;
+  error: string | null;
+  getProduct: (id: string) => Promise<void>;
+}
 
-// export const TaskTrackerContext = createContext<ITask | undefined>(undefined);
+export const ProductContext = createContext<IContext | undefined>(undefined);
 
-// export const ProductProvider = ({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) => {
-//   const [completedTasks, setCompletedTasks] = useState(0);
+export const ProductProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
 
-//   const completeTask = () => {
-//     if (completedTasks < totalTasks) {
-//       setCompletedTasks(completedTasks + 1);
-//     }
-//   };
+  const getAllProducts = async () => {
+    const response = await axios.get(`${apiUrl}product`);
+    setProducts(response.data.products);
+  };
+  const getProduct = async (id: string) => {
+    try {
+      const response = await axios.get(`${apiUrl}product/${id}`);
+      setOneProduct(response.data.product);
+    } catch (err) {
+      console.log("Failed to fetch product");
+    }
+  };
 
-//   const getDotColor = () => {
-//     const percentageCompleted = completedTasks / totalTasks;
+  useEffect(() => {
+    getAllProducts();
+  }, []);
 
-//     if (percentageCompleted === 1) return "green";
-//     if (percentageCompleted >= 0.5) return "orange";
-//     return "red";
-//   };
-//   useEffect(() => {}, []);
+  return (
+    <ProductContext.Provider value={{ products, oneProduct, getProduct }}>
+      {children}
+    </ProductContext.Provider>
+  );
+};
 
-//   return (
-//     <TaskTrackerContext.Provider value={{ tasks, oneProduct, getProduct }}>
-//       {children}
-//     </TaskTrackerContext.Provider>
-//   );
-// };
-
-// export const useTaskTracker = () => {
-//   return useContext(TaskTrackerContext);
-// };
+export const useProducts = () => {
+  return useContext(ProductContext);
+};

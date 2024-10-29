@@ -31,3 +31,12 @@ export interface IEmployee {
     status: number;
     category: [object];
   }
+  // const [productData, setProductData] = useState<IProduct>({
+  //   id: "",
+  //   productName: "",
+  //   description: "",
+  //   images: [""],
+  //   quantity: 0,
+  //   status: 0,
+  //   category: [{}],
+  // });

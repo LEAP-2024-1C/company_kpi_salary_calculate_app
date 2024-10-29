@@ -50,7 +50,6 @@ const TaskTracker: React.FC<TaskTrackerProps> = (
           <button onClick={completeTask}>Task</button>
         </div>
       </div>
-      //{" "}
     </Link>
   );
 };

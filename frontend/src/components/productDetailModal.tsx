@@ -16,6 +16,9 @@ import { apiUrl } from "@/lib/utils";
 import { toast } from "react-toastify";
 import { IProduct } from "@/utils/interfaces";
 import axios from "axios";
+import { useUser } from "@/context/user-provider";
+import { useParams } from "next/navigation";
+import { useProducts } from "@/context/product-provider";
 
 interface TaskTrackerProps {
   totalTasks: number;
@@ -23,75 +26,10 @@ interface TaskTrackerProps {
 
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const [completedTasks, setCompletedTasks] = useState(0);
-  const [productData, setProductData] = useState<IProduct>({
-    id: "",
-    productName: "",
-    description: "",
-    images: [""],
-    quantity: 0,
-    status: 0,
-    category: [{}],
-  });
-  const getProductData = async () => {
-    try {
-      const userToken = localStorage.getItem("token");
-      console.log("User Token:", userToken);
-      const response = await axios.get(`${apiUrl}get-product`, {
-        headers: { Authorization: `Bearer ${userToken}` },
-      });
-      console.log("response:", response);
-      if (response.status === 200) {
-        console.log("Product Data:", response.data);
-        setProductData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:");
-      toast.error("Failed to fetch product");
-    }
-  };
-
-  const updateQuanity = async (productId: string, newQuantity: number) => {
-    // setProductData((prevTask) =>
-    // prevTask.map((item) =>
-    //   item.product._id === productId
-    //     ? { ...item, quantity: newQuantity }
-    //     : item
-    // )
-    // );
-    const userToken = localStorage.getItem("token");
-    try {
-      const response = await axios.put(
-        `${apiUrl}update-product`,
-        {
-          productId,
-          newQuantity,
-        },
-        { headers: { Authorization: `Bearer ${userToken}` } }
-      );
-
-      if (response.status === 200) {
-        toast.success("Successfully updated");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error("Failed to add to task");
-    }
-  };
-
-  useEffect(() => {
-    getProductData();
-  }, []);
-
-  // const addTask = () => {
-  //   if (completedTasks < totalTasks - 3) {
-  //     setCompletedTasks(completedTasks + 1);
-  //   }
-  // };
-  // const reduceTask = () => {
-  //   if (completedTasks < totalTasks - 3) {
-  //     setCompletedTasks(completedTasks - 1);
-  //   }
-  // };
+  const { user } = useUser();
+  const { id } = useParams();
+  const { oneProduct, getProduct, products } = useProducts();
+  const [productQuantity, setProductQuantity] = useState(0);
 
   const getDotColor = () => {
     const percentageCompleted = completedTasks / totalTasks - 3;
@@ -106,12 +44,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       price: "250",
       completed: [totalTasks - 3],
       total: [totalTasks],
-      myWork: [productData.quantity],
+      myWork: [products.quantity],
       select: (
         <div className="flex gap-2 ">
           <Button
             onClick={() => {
-              productData.quantity - 1;
+              products.quantity - 1;
             }}
             style={{ borderColor: getDotColor() }}
             className="rounded-full border bg-white text-green-900"
@@ -120,7 +58,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </Button>
           <Button
             onClick={() => {
-              productData.quantity + 1;
+              products.quantity + 1;
             }}
             style={{ borderColor: getDotColor() }}
             className="rounded-full border bg-white text-green-900"
@@ -140,12 +78,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       price: "250",
       completed: [totalTasks - 3],
       total: [totalTasks],
-      myWork: [productData.quantity],
+      myWork: [products.quantity],
       select: (
         <div className="flex gap-2 ">
           <Button
             onClick={() => {
-              productData.quantity - 1;
+              products.quantity - 1;
             }}
             style={{ borderColor: getDotColor() }}
             className="rounded-full border bg-white text-green-900"
@@ -154,7 +92,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </Button>
           <Button
             onClick={() => {
-              productData.quantity + 1;
+              products.quantity + 1;
             }}
             style={{ borderColor: getDotColor() }}
             className="rounded-full border bg-white text-green-900"
