@@ -1,14 +1,14 @@
 import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-interface ITask {
+export interface ITask {
   task_id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
-  status: number;
+  status: string;
   unitPrice: number;
 }
-interface ICategory {
+export interface ICategory {
   cat_id: Schema.Types.ObjectId;
   categoryName: String;
   procedures: ITask[];

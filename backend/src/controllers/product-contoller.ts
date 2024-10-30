@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Category from "../models/category.model";
+import Category, { ICategory } from "../models/category.model";
 import Components from "../models/components.model";
-import Product from "../models/product.model";
+import Product, { IPopulatedPro } from "../models/product.model";
 
 export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
@@ -72,8 +72,39 @@ export const updateCategory = async (req: Request, res: Response) => {
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find().populate("components");
+
     console.log("product", products);
     res.status(200).json({ message: "success", products });
+  } catch (error) {
+    res.status(401).json({ error });
+    console.error(error);
+  }
+};
+
+export const getAllProductsStat = async (req: Request, res: Response) => {
+  try {
+    const products = await Product.find().populate<IPopulatedPro>("components");
+    const components = products.map((product) =>
+      product.components.map((component: ICategory) => {
+        const statusCounts = {
+          pending: component.procedures.filter(
+            (task) => task.status === "pending"
+          ).length,
+          progress: component.procedures.filter(
+            (task) => task.status === "progress"
+          ).length,
+          done: component.procedures.filter((task) => task.status === "done")
+            .length,
+          review: component.procedures.filter(
+            (task) => task.status === "review"
+          ).length,
+        };
+        return {
+          statusCounts,
+        };
+      })
+    );
+    res.status(200).json({ message: "success", components });
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);

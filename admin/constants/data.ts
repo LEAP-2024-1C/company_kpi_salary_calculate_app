@@ -111,6 +111,12 @@ export type Product = {
   images: string[];
   description: string;
 };
+export type Products = {
+  productName: string;
+  quantity: number;
+  components: Category[];
+  createdAt: string;
+};
 
 export type Procedures = {
   taskName: string;
