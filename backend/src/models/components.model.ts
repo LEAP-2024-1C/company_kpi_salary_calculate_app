@@ -18,7 +18,6 @@ interface ICategory {
 const componentSchema = new Schema<ICategory>({
   categoryName: {
     type: String,
-    unique: true,
     required: [true, "Ажлын нэрийг оруулах"],
   },
   procedures: [

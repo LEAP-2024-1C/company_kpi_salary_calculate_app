@@ -6,9 +6,13 @@ import Product from "../models/product.model";
 export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
   try {
+    const { categoryName } = components;
+    if (!categoryName) {
+      return res.status(404).json({ message: "Хоосон утга байж болохгүй" });
+    }
     console.log("first", components);
     const createdComp = await Components.insertMany(components);
-
+    console.log("createdcomp", createdComp);
     const compIDs = createdComp.map((item) => item._id);
     console.log("res", res);
     const { productName, description, quantity } = productForm;

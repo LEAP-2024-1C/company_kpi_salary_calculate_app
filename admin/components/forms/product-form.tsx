@@ -17,6 +17,8 @@ import { Trash } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
+import { Quantico } from 'next/font/google';
+import { count } from 'console';
 
 interface ProductFormProps {
   initialData: any | null;
@@ -49,7 +51,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       }))
     }))
   );
-
+  console.log('catform', catForm);
   const [isCheck, setIsCheck] = useState<boolean[]>(
     new Array(categories.length).fill(false)
   );
@@ -103,9 +105,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       const updatedProcedures = [...newCatForm[catIndex]?.procedures];
 
       if (field === 'quantity') {
-        updatedProcedures[procIndex].quantity = value;
+        updatedProcedures[procIndex].quantity = Number(value);
       } else {
-        updatedProcedures[procIndex].unitPrice = value;
+        updatedProcedures[procIndex].unitPrice = Number(value);
       }
 
       newCatForm[catIndex].procedures = updatedProcedures;
@@ -137,7 +139,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         if (isCheck[catIndex]) {
           return {
             categoryName: category.categoryName,
-            _id: category._id,
             procedures: category.procedures.filter(
               (item) => item.proCheck === true
             )
@@ -148,10 +149,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       .filter(Boolean);
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
     console.log('value', value);
-    createProject(value);
+    // createProject(value);
   };
 
   const createProject = async (components: any) => {
+    const { productName, description, quantity } = productForm;
+    if (!productName || !description || !quantity) {
+      return toast({
+        variant: 'destructive',
+        title: 'Хоосон утга байж болохгүй.',
+        description: 'There was a problem with your request.'
+      });
+    }
     try {
       setLoading(true);
       const res = await axios.post(`${apiUrl}pro/product`, {
@@ -204,12 +213,46 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       setUploading(false);
     }
   };
-  const handleSub = () => {
-    if (quantity > 0) {
-      setQuantity(quantity - 1);
-    } else {
-      setQuantity(0);
-    }
+  // const handleAdd = (catIndex: number, procIndex: number) => {
+  //   setCatForm((prev) => {
+  //     return prev.map((category, index) => {
+  //       if (index === catIndex) {
+  //         return {
+  //           ...category,
+  //           procedures: category.procedures.map((proc, procIdx) => {
+  //             if (procIdx === procIndex) {
+  //               return { ...proc, quantity: proc.quantity + 1 };
+  //             }
+  //             return proc;
+  //           })
+  //         };
+  //       }
+  //       return category;
+  //     });
+  //   });
+
+  //   // test
+  //   setCatForm((prev) => [...prev]);
+  //   // test
+  // };
+
+  const handleSub = (catIndex: number, procIndex: number) => {
+    setCatForm((prev) => {
+      const newArr = [...prev];
+      if (newArr[catIndex].procedures[procIndex].quantity > 0) {
+        newArr[catIndex].procedures[procIndex].quantity =
+          Number(newArr[catIndex].procedures[procIndex].quantity) - 1;
+      }
+      return newArr;
+    });
+  };
+  const handleAdd = (catIndex: number, procIndex: number) => {
+    setCatForm((prev) => {
+      const newArr = [...prev];
+      newArr[catIndex].procedures[procIndex].quantity =
+        Number(newArr[catIndex].procedures[procIndex].quantity) + 1;
+      return newArr;
+    });
   };
 
   return (
@@ -259,7 +302,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <input
                   value={categoryName}
                   type="checkbox"
-                  className="mr-2"
+                  className="mr-2 "
                   checked={isCheck[catIndex]}
                   onChange={(e) => handleChange(e, catIndex)}
                 />
@@ -275,7 +318,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       }
                       value={taskName}
                       type="checkbox"
-                      className="mr-2"
+                      className="mr-2 "
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleProCheckChange(catIndex, procIndex)
@@ -286,13 +329,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     <div>
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
-                        onClick={handleSub}
+                        onClick={() => handleSub(catIndex, procIndex)}
                       >
                         -
                       </Button>
                       <input
                         type="number"
-                        className="w-20 p-2"
+                        className="w-20  p-2 "
                         value={
                           catForm[catIndex]?.procedures[procIndex].quantity
                         }
@@ -303,7 +346,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       />
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
-                        onClick={() => setQuantity(quantity + 1)}
+                        onClick={() => handleAdd(catIndex, procIndex)}
                       >
                         +
                       </Button>
