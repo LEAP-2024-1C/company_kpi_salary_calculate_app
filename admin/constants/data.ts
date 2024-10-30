@@ -111,19 +111,20 @@ export type Product = {
   images: string[];
   description: string;
 };
-
+export interface IProduct {
+  productName: string;
+  description: string;
+  quantity: string;
+}
 export type Procedures = {
   taskName: string;
   unitPrice: number;
   quantity: number;
-  status?: string;
-  _id?: string;
   proCheck?: boolean;
 };
 
 export type Category = {
   categoryName: string;
-  _id?: string;
   procedures: Procedures[];
 };
 

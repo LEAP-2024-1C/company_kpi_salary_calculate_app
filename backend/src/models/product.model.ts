@@ -1,13 +1,17 @@
 import { model, Schema } from "mongoose";
+import { ICategory } from "./components.model";
 
-interface IProduct {
+export type IProduct = {
   productName: string;
   description: string;
   images?: [string];
   quantity: number;
   status: number;
   components: [Schema.Types.ObjectId];
-}
+};
+export type IComponent = {
+  components: ICategory[];
+};
 
 const productSchema = new Schema<IProduct>(
   {

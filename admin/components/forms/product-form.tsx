@@ -4,29 +4,15 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-
 import { useToast } from '../ui/use-toast';
-
-import { Category } from '@/constants/data';
-
-import { Label } from '@radix-ui/react-label';
-import { Trash } from 'lucide-react';
-import { ScrollArea } from '../ui/scroll-area';
+import { Category, IProduct } from '@/constants/data';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
-import { Quantico } from 'next/font/google';
-import { count } from 'console';
 
 interface ProductFormProps {
   initialData: any | null;
-}
-interface Product {
-  productName: string;
-  description: string;
-  quantity: string;
 }
 
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
@@ -34,28 +20,16 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [quantity, setQuantity] = useState<[number]>([0]);
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const [categories, setCategories] = useState<Category[]>([]);
   const [uploading, setUploading] = useState(false);
   const [images, setImage] = useState('');
-  const [catForm, setCatForm] = useState<Category[]>(
-    categories.map((category) => ({
-      categoryName: category.categoryName,
-      procedures: category.procedures.map((proc) => ({
-        taskName: proc.taskName,
-        quantity: proc.quantity,
-        unitPrice: proc.unitPrice,
-        proCheck: false
-      }))
-    }))
-  );
-  console.log('catform', catForm);
+
   const [isCheck, setIsCheck] = useState<boolean[]>(
     new Array(categories.length).fill(false)
   );
-  const [productForm, setProductForm] = useState<Product>({
+  const [productForm, setProductForm] = useState<IProduct>({
     productName: '',
     description: '',
     quantity: ''
@@ -66,7 +40,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       if (res.status === 200) {
         const { categories } = res.data;
         console.log('categories', categories);
-        setCatForm(categories);
         setCategories(categories);
       }
     } catch (error) {
@@ -100,7 +73,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = e.target;
-    setCatForm((prev) => {
+    setCategories((prev) => {
       const newCatForm = [...prev];
       const updatedProcedures = [...newCatForm[catIndex]?.procedures];
 
@@ -115,7 +88,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     });
   };
   const handleProCheckChange = (catIndex: number, procIndex: number) => {
-    setCatForm((prev) => {
+    setCategories((prev) => {
       return prev.map((category, index) => {
         if (index === catIndex) {
           return {
@@ -134,14 +107,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
 
   const getCheckedValues = () => {
-    const checkedValues = catForm
+    const checkedValues = categories
       .map((category, catIndex) => {
         if (isCheck[catIndex]) {
           return {
             categoryName: category.categoryName,
-            procedures: category.procedures.filter(
-              (item) => item.proCheck === true
-            )
+            procedures: category.procedures
+              .filter((item) => item.proCheck)
+              .map(({ taskName, quantity, unitPrice }) => ({
+                taskName,
+                quantity,
+                unitPrice
+              }))
           };
         }
         return null;
@@ -149,7 +126,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       .filter(Boolean);
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
     console.log('value', value);
-    // createProject(value);
+    createProject(value);
   };
 
   const createProject = async (components: any) => {
@@ -213,31 +190,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       setUploading(false);
     }
   };
-  // const handleAdd = (catIndex: number, procIndex: number) => {
-  //   setCatForm((prev) => {
-  //     return prev.map((category, index) => {
-  //       if (index === catIndex) {
-  //         return {
-  //           ...category,
-  //           procedures: category.procedures.map((proc, procIdx) => {
-  //             if (procIdx === procIndex) {
-  //               return { ...proc, quantity: proc.quantity + 1 };
-  //             }
-  //             return proc;
-  //           })
-  //         };
-  //       }
-  //       return category;
-  //     });
-  //   });
-
-  //   // test
-  //   setCatForm((prev) => [...prev]);
-  //   // test
-  // };
 
   const handleSub = (catIndex: number, procIndex: number) => {
-    setCatForm((prev) => {
+    setCategories((prev) => {
       const newArr = [...prev];
       if (newArr[catIndex].procedures[procIndex].quantity > 0) {
         newArr[catIndex].procedures[procIndex].quantity =
@@ -247,7 +202,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     });
   };
   const handleAdd = (catIndex: number, procIndex: number) => {
-    setCatForm((prev) => {
+    setCategories((prev) => {
       const newArr = [...prev];
       newArr[catIndex].procedures[procIndex].quantity =
         Number(newArr[catIndex].procedures[procIndex].quantity) + 1;
@@ -314,7 +269,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                   <div className="ml-20" key={procIndex}>
                     <input
                       checked={
-                        catForm[catIndex]?.procedures[procIndex].proCheck
+                        categories[catIndex]?.procedures[procIndex].proCheck
                       }
                       value={taskName}
                       type="checkbox"
@@ -337,7 +292,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         type="number"
                         className="w-20  p-2 "
                         value={
-                          catForm[catIndex]?.procedures[procIndex].quantity
+                          categories[catIndex]?.procedures[procIndex].quantity
                         }
                         disabled={!isCheck[catIndex]}
                         onChange={(e) =>
@@ -354,7 +309,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     <input
                       type="number"
                       className="w-20 p-2"
-                      value={catForm[catIndex]?.procedures[procIndex].unitPrice}
+                      value={
+                        categories[catIndex]?.procedures[procIndex].unitPrice
+                      }
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleInputChange(catIndex, procIndex, 'unitPrice', e)
