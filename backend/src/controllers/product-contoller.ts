@@ -71,12 +71,26 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-
-    const products = await Product.find().populate("components");
+    const products = await Product.find().populate("components")
     console.log("product", products);
     res.status(200).json({ message: "success", products });
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);
+  }
+};
+
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    res
+      .status(200)
+      .json({ message: "Success to get a product", product: product });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: "failed to get a product",
+    });
   }
 };

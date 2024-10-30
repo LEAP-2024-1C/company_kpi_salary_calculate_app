@@ -8,18 +8,19 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
-import { IProduct } from "@/utils/interfaces";
+import { IComponents, IProduct } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 
 interface IContext {
   products: IProduct[] | null;
   // loading: boolean;
   // error: string | null;
-  // getProduct: (id: string) => Promise<void>;
+  // oneProduct: IComponents[] | null;
 }
 
 export const ProductContext = createContext<IContext>({
   products: null,
+  // oneProduct: null,
 });
 
 export const ProductProvider = ({
@@ -31,7 +32,11 @@ export const ProductProvider = ({
   // const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
 
   const getAllProducts = async () => {
-    const response = await axios.get(`${apiUrl}pro/product`);
+    const userToken = localStorage.getItem("token");
+
+    const response = await axios.get(`${apiUrl}pro/product`, {
+      headers: { Authorization: `Bearer ${userToken}` },
+    });
     const products = response.data.products;
     setProducts(products);
     console.log("products", products);
@@ -47,6 +52,7 @@ export const ProductProvider = ({
 
   useEffect(() => {
     getAllProducts();
+    // getProduct();
   }, []);
 
   return (
