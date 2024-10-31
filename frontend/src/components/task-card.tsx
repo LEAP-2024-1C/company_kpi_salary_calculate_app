@@ -1,7 +1,5 @@
-import { IProduct } from "@/utils/interfaces";
 import Link from "next/link";
 import React, { useState } from "react";
-import ProductDetailModal from "./productDetailModal";
 import { useProducts } from "@/context/product-provider";
 import {
   Accordion,
