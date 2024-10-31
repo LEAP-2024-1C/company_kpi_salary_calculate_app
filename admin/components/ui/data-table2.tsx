@@ -17,12 +17,19 @@ import {
 } from '@/components/ui/chart';
 
 import { Input } from './input';
-import { Category, IUser, Products, products } from '@/constants/data';
-import * as React from 'react';
+import {
+  Category,
+  IProduct,
+  IProductStat,
+  IUser,
+  products
+} from '@/constants/data';
+
 import Link from 'next/link';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 import { toast } from './use-toast';
+import { useState, useEffect } from 'react';
 
 interface DataTableProps {
   searchKey: string;
@@ -49,23 +56,17 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DataTable2({ searchKey, data }: DataTableProps) {
-  const [progress, setProgress] = React.useState(13);
-  const [chartDatas, setChartData] = React.useState<number[]>([20, 10, 30, 40]);
-  const [value, setValue] = React.useState('');
-  const [productData, setProductData] = React.useState<Products[]>([]);
+  const [progress, setProgress] = useState(13);
 
-  const chartData = [
-    { browser: 'pending', visitors: 5, fill: 'var(--color-chrome)' },
-    { browser: 'inprogress', visitors: 50, fill: 'var(--color-safari)' },
-    { browser: 'done', visitors: 15, fill: 'var(--color-firefox)' },
-    { browser: 'review', visitors: 10, fill: 'var(--color-edge)' }
-  ];
+  const [productData, setProductData] = useState<IProductStat[]>([]);
   const getAllProduct = async () => {
     try {
-      const res = await axios.get(`${apiUrl}pro/product`);
+      const res = await axios.get(`${apiUrl}product/stat`);
       if (res.status === 200) {
-        const { products } = res.data;
-        setProductData(products);
+        const { productStat } = res.data;
+        setProductData(productStat);
+
+        console.log('product stat', productStat);
         toast({
           variant: 'destructive',
           title: 'Uh oh! Something went wrong.',
@@ -81,15 +82,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
     }
   };
 
-  const getValue = () => {
-    const status = productData.map(({ procedures }) =>
-      procedures.map((data) => data.status)
-    );
-    console.log('status', status);
-    return status;
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     getAllProduct();
   }, []);
 
@@ -101,7 +94,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
       />
-      {productData.map(({ productName, components, createdAt }) => (
+      {productData.map(({ productName, components, createdAt, total }) => (
         <Card className="w-2/5">
           <div className="flex flex-col gap-2 pl-4 pt-3">
             <div className="flex items-center justify-between gap-10">
@@ -112,11 +105,19 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
             </div>
             <div className="flex">
               <div className="flex flex-col justify-center gap-2">
-                <div className="text-xl font-semibold">performence: 15%</div>
-                <div>pending: (5/{value})</div>
-                <div>inprogress: (50/{value})</div>
-                <div>done: (15/{value})</div>
-                <div>review: (10/{value})</div>
+                {/* <div className="text-xl font-semibold">performence: 15%</div> */}
+                <div>
+                  pending: ({components.pending}/{total})
+                </div>
+                <div>
+                  inprogress: ({components.progress}/{total})
+                </div>
+                <div>
+                  done: ({components.done}/{total})
+                </div>
+                <div>
+                  review: ({components.review}/{total})
+                </div>
                 <Link href={'/dashboard/employee-task'}>employees</Link>
               </div>
 
@@ -131,7 +132,28 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                       content={<ChartTooltipContent hideLabel />}
                     />
                     <Pie
-                      data={chartData}
+                      data={[
+                        {
+                          browser: 'pending',
+                          visitors: components.pending,
+                          fill: 'var(--color-chrome)'
+                        },
+                        {
+                          browser: 'inprogress',
+                          visitors: components.progress,
+                          fill: 'var(--color-safari)'
+                        },
+                        {
+                          browser: 'done',
+                          visitors: components.done,
+                          fill: 'var(--color-firefox)'
+                        },
+                        {
+                          browser: 'review',
+                          visitors: components.review,
+                          fill: 'var(--color-edge)'
+                        }
+                      ]}
                       dataKey="visitors"
                       nameKey="browser"
                     />

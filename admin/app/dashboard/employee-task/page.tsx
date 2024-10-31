@@ -100,28 +100,14 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          employees
-        </Button>
-      );
+      return <div>employees</div>;
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>
   },
   {
     accessorKey: 'tasks',
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          tasks
-        </Button>
-      );
+      return <div>tasks</div>;
     }
   },
   {

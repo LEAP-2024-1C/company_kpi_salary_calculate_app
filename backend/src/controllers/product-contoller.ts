@@ -7,10 +7,6 @@ export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
   try {
     console.log("first", components);
-    const { categoryName } = components;
-    if (!categoryName) {
-      return res.status(404).json({ message: "Хоосон утга байж болохгүй" });
-    }
 
     const createdComp = await Components.insertMany(components);
     console.log("createdcomp", createdComp);
@@ -44,7 +40,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllProductStat = async (req: Request, res: Response) => {
+export const getAllProductsStat = async (req: Request, res: Response) => {
   try {
     const products = await Product.find().populate<IComponent>("components");
     const productStat = products.map((c) => {
@@ -76,6 +72,7 @@ export const getAllProductStat = async (req: Request, res: Response) => {
         productName: c.productName,
         description: c.description,
         image: c.images,
+        createdAt: c.createdAt,
       };
     });
 
@@ -119,36 +116,6 @@ export const getAllProductsStatEmployee = async (
     });
 
     res.status(200).json({ message: "success", productStat });
-  } catch (error) {
-    res.status(401).json({ error });
-    console.error(error);
-  }
-};
-
-export const getAllProductsStat = async (req: Request, res: Response) => {
-  try {
-    const products = await Product.find().populate<IComponent>("components");
-    const components = products.map((product) =>
-      product.components.map((component: ICategory) => {
-        const statusCounts = {
-          pending: component.procedures.filter(
-            (task) => task.status === "pending"
-          ).length,
-          progress: component.procedures.filter(
-            (task) => task.status === "progress"
-          ).length,
-          done: component.procedures.filter((task) => task.status === "done")
-            .length,
-          review: component.procedures.filter(
-            (task) => task.status === "review"
-          ).length,
-        };
-        return {
-          statusCounts,
-        };
-      })
-    );
-    res.status(200).json({ message: "success", components });
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);
