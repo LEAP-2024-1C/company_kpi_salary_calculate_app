@@ -32,14 +32,29 @@ export interface IProduct {
   status?: number;
   components: [IComponents];
 }
+export interface IProductStat{
+  components:IComps[]
+  productName:string
+  description:string
+  image:[string]
+  createdAt:string
+  quantity:number
+  _id:string
+}
 
+export interface IComps{
+  categoryName: string,
+  cat_id: string
+  total: number
+  other: number
+}
 export interface IComponents {
   _id:string;
   categoryName:string
   procedures:[IProcedures]
 }
 export interface IProcedures{
-  taskNeame: string;
+  taskName: string;
   quantity:number;
   status?:string;
   unitPrice:number;

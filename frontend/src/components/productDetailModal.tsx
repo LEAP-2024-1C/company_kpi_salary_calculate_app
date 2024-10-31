@@ -12,75 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { apiUrl } from "@/lib/utils";
-import { toast } from "react-toastify";
-import { IProduct } from "@/utils/interfaces";
-import axios from "axios";
+import { IProcedures, IProduct, ISavedTasks } from "@/utils/interfaces";
 import { useUser } from "@/context/user-provider";
 import { useParams } from "next/navigation";
 import { useProducts } from "@/context/product-provider";
 
 interface TaskTrackerProps {
-  totalTasks: number;
+  totalTasks: IProcedures[];
 }
 
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
-  const [completedTasks, setCompletedTasks] = useState(0);
-  const { user } = useUser();
   const { id } = useParams();
-  const { products } = useProducts();
-  const [productQuantity, setProductQuantity] = useState(0);
-
-  // useEffect(() => {
-  // if (id) {
-  //   getProduct(id);
-  // }
-  // }, [id, getProduct]);
-
-  const getDotColor = () => {
-    const percentageCompleted = completedTasks / totalTasks - 3;
-
-    if (percentageCompleted === 1) return "gray";
-    if (percentageCompleted >= 0.5) return "orange";
-    return "red";
-  };
-
-  const invoices = [
-    {
-      work: "Ханцуй давхарлах",
-      price: "250",
-      completed: [totalTasks - 3],
-      total: [totalTasks],
-      myWork: [products.quantity],
-      select: (
-        <div className="flex gap-2 ">
-          <Button
-            onClick={() => {
-              products.quantity - 1;
-            }}
-            style={{ borderColor: getDotColor() }}
-            className="rounded-full border bg-white text-green-900"
-          >
-            -
-          </Button>
-          <Button
-            onClick={() => {
-              products.quantity + 1;
-            }}
-            style={{ borderColor: getDotColor() }}
-            className="rounded-full border bg-white text-green-900"
-          >
-            +
-          </Button>
-        </div>
-      ),
-      save: (
-        <Button variant="outline" className="rounded-full border-green-700">
-          Хадгалах
-        </Button>
-      ),
-    },
-  ];
+  const [number, setNumber] = useState<number>();
+  const [updateQuantity, setUpdateQuantity] = useState();
+  const [cartData, setCartData] = useState<ISavedTasks>();
 
   return (
     <div>
@@ -94,19 +39,40 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
             <TableHead> Үлдсэн ажилууд</TableHead>
             <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
             <TableHead className="text-right"></TableHead>
-            <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.work}>
-              <TableCell className="font-medium">{invoice.work}</TableCell>
-              <TableCell>{invoice.price}</TableCell>
-              <TableCell className="text-right">{invoice.total}</TableCell>
-              <TableCell>{invoice.completed}</TableCell>
-              <TableCell className="text-right">{invoice.myWork}</TableCell>
-              <TableCell className="text-right">{invoice.select}</TableCell>
-              <TableCell className="text-right">{invoice.save}</TableCell>
+          {totalTasks.map(({ taskName, quantity, unitPrice, _id, status }) => (
+            <TableRow key={_id}>
+              <TableCell className="font-medium">{taskName}</TableCell>
+              <TableCell>{unitPrice}</TableCell>
+              <TableCell className="text-right">{quantity}</TableCell>
+              <TableCell>{}</TableCell>
+              <TableCell className="text-right">
+                {<input type="number" value={quantity} />}
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex gap-2 ">
+                  <Button
+                    // onClick={() => {
+                    //   number - 1;
+                    // }}
+                    // style={{ borderColor: getDotColor() }}
+                    className="rounded-full border bg-white text-green-900"
+                  >
+                    -
+                  </Button>
+                  <Button
+                    // onClick={() => {
+                    //   number + 1;
+                    // }}
+                    // style={{ borderColor: getDotColor() }}
+                    className="rounded-full border bg-white text-green-900"
+                  >
+                    +
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -114,6 +80,14 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           <TableRow>
             <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
             <TableCell className="text-right">₮</TableCell>
+            <TableCell className="text-right">
+              <Button
+                variant="outline"
+                className="rounded-full border-green-700"
+              >
+                Хадгалах
+              </Button>
+            </TableCell>
           </TableRow>
         </TableFooter>
       </Table>

@@ -44,17 +44,21 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const getProduct = async (req: Request, res: Response) => {
+export const getCurrentProduct = async (req: Request, res: Response) => {
   try {
-    const { productId } = req.params;
-    const product = await Product.findById(productId);
+    const { id } = req.params;
+    console.log(id)
+    const oneProductDatas = await Product.findById(id).populate("components");
+
     res
       .status(200)
-      .json({ message: "Success to get a product", product: product });
+      .json({ message: "Success to get a product", oneProductDatas});
+
   } catch (error) {
     console.error(error);
     res.status(400).json({
       message: "failed to get a product",
+      
     });
   }
 };
@@ -129,12 +133,16 @@ export const getAllProductsStatEmployee = async (
         productName: c.productName,
         description: c.description,
         image: c.images,
+        createdAt:c.createdAt,
+        quantity:c.quantity,
+        _id:c._id
       };
     });
 
-    res.status(200).json({ message: "success", productStat });
+    res.status(200).json({ message: "success", productStat ,products});
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);
   }
 };
+

@@ -18,12 +18,20 @@ const TaskTracker = () => {
   //   return "red";
   // };
 
-  const { products } = useProducts();
+  const { productStat } = useProducts();
 
   return (
     <>
-      {products?.map(
-        ({ _id, productName, quantity, components, images, status }) => (
+      {productStat?.map(
+        ({
+          productName,
+          components,
+          image,
+          description,
+          createdAt,
+          quantity,
+          _id,
+        }) => (
           <div
             className="bg-gray-200 rounded-xl p-5 flex flex-col border text-green-900"
             // style={{ borderColor: getColor() }}
@@ -35,7 +43,7 @@ const TaskTracker = () => {
                     <div
                       className="w-[100px] h-[100px] rounded-xl"
                       style={{
-                        backgroundImage: `url('${images}')`,
+                        backgroundImage: `url('${image}')`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
                       }}
@@ -50,20 +58,18 @@ const TaskTracker = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <Link href={"/" + _id}>
-                    {components.map(({ _id, categoryName, procedures }) => (
-                      <ul>
-                        <li className="flex items-center gap-3">
-                          <div>{categoryName}</div>
-                          <p>
-                            (1
-                            {/* {procedures.filter(
-                            (item) => item.status === "pending"
-                            )} */}
-                            / {procedures.length})
-                          </p>
-                        </li>
-                      </ul>
-                    ))}
+                    {components.map(
+                      ({ categoryName, cat_id, total, other }) => (
+                        <ul>
+                          <li className="flex items-center gap-3">
+                            <div>{categoryName}</div>
+                            <p>
+                              ({other}/ {total})
+                            </p>
+                          </li>
+                        </ul>
+                      )
+                    )}
                   </Link>
                 </AccordionContent>
               </AccordionItem>
