@@ -114,7 +114,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             categoryName: category.categoryName,
             procedures: category.procedures
               .filter((item) => item.proCheck)
-              .map(({ taskName, quantity, unitPrice }) => ({
+              .map(({ taskName, quantity, unitPrice, status }) => ({
                 taskName,
                 quantity,
                 unitPrice
@@ -126,7 +126,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       .filter(Boolean);
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
     console.log('value', value);
-    createProject(value);
+    // createProject(value);
   };
 
   const createProject = async (components: any) => {
