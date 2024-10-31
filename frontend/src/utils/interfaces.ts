@@ -54,3 +54,8 @@ export interface IProcedures{
   //   status: 0,
   //   category: [{}],
   // });
+
+  export interface ISavedTasks{
+ task:IProduct;
+ quantity:number
+  }

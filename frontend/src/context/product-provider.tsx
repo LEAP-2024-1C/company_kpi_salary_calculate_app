@@ -13,14 +13,14 @@ import { apiUrl } from "@/lib/utils";
 
 interface IContext {
   products: IProduct[] | null;
-  // loading: boolean;
-  // error: string | null;
   // oneProduct: IComponents[] | null;
+  // getProduct: (id: string) => Promise<void>;
 }
 
 export const ProductContext = createContext<IContext>({
   products: null,
   // oneProduct: null,
+  // getProduct:(id: string) => void
 });
 
 export const ProductProvider = ({
@@ -29,7 +29,7 @@ export const ProductProvider = ({
   children: React.ReactNode;
 }) => {
   const [products, setProducts] = useState<IProduct[] | null>(null);
-  // const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
+  const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
 
   const getAllProducts = async () => {
     const userToken = localStorage.getItem("token");
@@ -41,14 +41,14 @@ export const ProductProvider = ({
     setProducts(products);
     console.log("products", products);
   };
-  // const getProduct = async (id: string) => {
-  //   try {
-  //     const response = await axios.get(`${apiUrl}pro/product/${id}`);
-  //     setOneProduct(response.data.product);
-  //   } catch (err) {
-  //     console.log("Failed to fetch product");
-  //   }
-  // };
+  const getProduct = async (id: string) => {
+    try {
+      const response = await axios.get(`${apiUrl}pro/product/${id}`);
+      setOneProduct(response.data.product);
+    } catch (err) {
+      console.log("Failed to fetch product");
+    }
+  };
 
   useEffect(() => {
     getAllProducts();
