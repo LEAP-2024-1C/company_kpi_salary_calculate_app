@@ -2,14 +2,16 @@ import { Router } from "express";
 import {
   createProduct,
   getAllProducts,
-  getProduct,
+  getAllProductsStat,
+  getAllProductsStatEmployee,
 } from "../controllers/product-contoller";
 import { auth } from "../middlewares/auth";
 
 
 const router = Router();
 
-router.route("/pro/product").post(createProduct).get(auth, getAllProducts);
-router.route("pro/product/:productId").get(getProduct)
+router.route("/pro/product").post(createProduct).get(getAllProducts);
+router.route("/product/stat").get(getAllProductsStat);
+router.route("/product/stat/employee").get(getAllProductsStatEmployee);
 
 export default router;
