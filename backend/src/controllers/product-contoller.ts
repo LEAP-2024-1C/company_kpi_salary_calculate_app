@@ -28,47 +28,6 @@ export const createProduct = async (req: Request, res: Response) => {
     res.status(404).json({ error });
   }
 };
-export const updateCategory = async (req: Request, res: Response) => {
-  const { data } = req.body;
-  try {
-    const { cat_id, task_id, taskName, unitPrice, status, quantity } = data;
-    if (!cat_id || !taskName || !unitPrice || !status || quantity) {
-      return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
-    }
-    const findCategory = await Category.findOne({ cat_id });
-    if (!findCategory) {
-      return res.status(400).json({
-        message: "Категори олдсонгүй",
-      });
-    }
-    const procedures = findCategory?.procedures;
-    const findIndex = procedures?.findIndex(
-      (item) => item._id?.toString() === task_id
-    );
-    if (findIndex === -1) {
-      return res.status(400).json({ message: "task oldsongui" });
-    }
-    if (procedures[findIndex].status !== status) {
-      procedures[findIndex].status = status;
-      const updatedStatus = await findCategory.save();
-      res
-        .status(200)
-        .json({ message: "update status completely", updatedStatus });
-      return;
-    }
-    procedures[findIndex].status = status;
-    procedures[findIndex].taskName = taskName;
-    procedures[findIndex].quantity = quantity;
-    procedures[findIndex].unitPrice = unitPrice;
-    const updatedStatus = await findCategory.save();
-    res
-      .status(200)
-      .json({ message: "update status completely", updatedStatus });
-    return;
-  } catch (error) {
-    res.status(404).json({ error });
-  }
-};
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
