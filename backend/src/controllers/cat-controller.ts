@@ -41,7 +41,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
     const procedures = findCategory?.procedures;
     const findIndex = procedures?.findIndex(
-      (item) => item.task_id?.toString() === task_id
+      (item) => item._id?.toString() === task_id
     );
     if (findIndex === -1) {
       return res.status(400).json({ message: "task oldsongui" });

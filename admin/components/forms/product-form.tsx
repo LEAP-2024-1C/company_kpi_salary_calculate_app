@@ -4,57 +4,32 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-
 import { useToast } from '../ui/use-toast';
-
-import { Category } from '@/constants/data';
-
-import { Label } from '@radix-ui/react-label';
-import { Trash } from 'lucide-react';
-import { ScrollArea } from '../ui/scroll-area';
+import { Category, IProduct } from '@/constants/data';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 
 interface ProductFormProps {
   initialData: any | null;
 }
-interface Product {
-  productName: string;
-  description: string;
-  quantity: string;
-}
 
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgLoading, setImgLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const [categories, setCategories] = useState<Category[]>([]);
   const [uploading, setUploading] = useState(false);
   const [images, setImage] = useState('');
-  const [catForm, setCatForm] = useState<Category[]>(
-    categories.map((category) => ({
-      categoryName: category.categoryName,
-      procedures: category.procedures.map((proc) => ({
-        taskName: proc.taskName,
-        quantity: proc.quantity,
-        unitPrice: proc.unitPrice,
-        proCheck: false
-      }))
-    }))
-  );
 
   const [isCheck, setIsCheck] = useState<boolean[]>(
     new Array(categories.length).fill(false)
   );
-  const [productForm, setProductForm] = useState<Product>({
+  const [productForm, setProductForm] = useState<IProduct>({
     productName: '',
     description: '',
     quantity: ''
@@ -65,7 +40,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       if (res.status === 200) {
         const { categories } = res.data;
         console.log('categories', categories);
-        setCatForm(categories);
         setCategories(categories);
       }
     } catch (error) {
@@ -91,7 +65,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       ...productForm,
       [name]: value
     });
-    console.log('productform', productForm);
   };
   const handleInputChange = (
     catIndex: number,
@@ -100,14 +73,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = e.target;
-    setCatForm((prev) => {
+    setCategories((prev) => {
       const newCatForm = [...prev];
       const updatedProcedures = [...newCatForm[catIndex]?.procedures];
 
       if (field === 'quantity') {
-        updatedProcedures[procIndex].quantity = value;
+        updatedProcedures[procIndex].quantity = Number(value);
       } else {
-        updatedProcedures[procIndex].unitPrice = value;
+        updatedProcedures[procIndex].unitPrice = Number(value);
       }
 
       newCatForm[catIndex].procedures = updatedProcedures;
@@ -115,17 +88,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     });
   };
   const handleProCheckChange = (catIndex: number, procIndex: number) => {
-    // setCatForm((prev) => {
-    //   const newCatForm = [...prev];
-    //   const updatedProcedures = [...newCatForm[catIndex].procedures];
-    //   updatedProcedures[procIndex].proCheck = true;
-    //   // updatedProcedures[procIndex].proCheck =
-    //   //   !updatedProcedures[procIndex].proCheck;
-    //   newCatForm[catIndex].procedures = updatedProcedures;
-    //   console.log('boolean', updatedProcedures[procIndex].proCheck);
-    //   return newCatForm;
-    // });
-    setCatForm((prev) => {
+    setCategories((prev) => {
       return prev.map((category, index) => {
         if (index === catIndex) {
           return {
@@ -144,15 +107,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
 
   const getCheckedValues = () => {
-    const checkedValues = catForm
+    const checkedValues = categories
       .map((category, catIndex) => {
         if (isCheck[catIndex]) {
           return {
             categoryName: category.categoryName,
-            _id: category._id,
-            procedures: category.procedures.filter(
-              (item) => item.proCheck === true
-            )
+            procedures: category.procedures
+              .filter((item) => item.proCheck)
+              .map(({ taskName, quantity, unitPrice }) => ({
+                taskName,
+                quantity,
+                unitPrice
+              }))
           };
         }
         return null;
@@ -164,6 +130,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
 
   const createProject = async (components: any) => {
+    const { productName, description, quantity } = productForm;
+    if (!productName || !description || !quantity) {
+      return toast({
+        variant: 'destructive',
+        title: 'Хоосон утга байж болохгүй.',
+        description: 'There was a problem with your request.'
+      });
+    }
     try {
       setLoading(true);
       const res = await axios.post(`${apiUrl}pro/product`, {
@@ -171,19 +145,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         productForm,
         images
       });
-      // if (initialData) {
-      //   // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
-      // } else {
-      //   // const res = await axios.post(`/api/products/create-product`, data);
-      //   // console.log("product", res);
-      // }
-      // router.refresh();
-      // router.push(`/dashboard/products`);
-      // toast({
-      //   variant: 'destructive',
-      //   title: 'Uh oh! Something went wrong.',
-      //   description: 'There was a problem with your request.'
-      // });
+
       if (res.status === 200) {
         console.log('success');
       }
@@ -207,7 +169,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     } catch (error: any) {
     } finally {
       setLoading(false);
-      setOpen(false);
     }
   };
   const handleImageUpload = async (file: File) => {
@@ -230,49 +191,40 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
+  const handleSub = (catIndex: number, procIndex: number) => {
+    setCategories((prev) => {
+      const newArr = [...prev];
+      if (newArr[catIndex].procedures[procIndex].quantity > 0) {
+        newArr[catIndex].procedures[procIndex].quantity =
+          Number(newArr[catIndex].procedures[procIndex].quantity) - 1;
+      }
+      return newArr;
+    });
+  };
+  const handleAdd = (catIndex: number, procIndex: number) => {
+    setCategories((prev) => {
+      const newArr = [...prev];
+      newArr[catIndex].procedures[procIndex].quantity =
+        Number(newArr[catIndex].procedures[procIndex].quantity) + 1;
+      return newArr;
+    });
+  };
+
   return (
     <div className="">
-      {/* <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      /> */}
-      <div className="flex items-center justify-between">
+      <div className="mb-5 flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={loading}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
       </div>
-      <Separator />
-      <div className="flex gap-2">
-        <Input
-          placeholder="Product name"
-          onChange={handleLogForm}
-          name="productName"
-        />
-        <Input
-          placeholder="Description"
-          onChange={handleLogForm}
-          name="description"
-        />
-        <Input
-          type="number"
-          placeholder="Qty"
-          className="w-20"
-          onChange={handleLogForm}
-          name="quantity"
-        />
-        <div>
+      <Separator className="mb-5" />
+      <div className="p-5">
+        <div className="mb-5 flex gap-4">
           <Input
-            className="w-40"
+            placeholder="Product name"
+            onChange={handleLogForm}
+            name="productName"
+          />
+          <Input
+            className=""
             type="file"
             accept="image/*"
             onChange={(e) =>
@@ -280,6 +232,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             }
           />
           {uploading && <p>Uploading...</p>}
+        </div>
+        <div className="mb-5 flex gap-4">
+          <Input
+            placeholder="Description"
+            onChange={handleLogForm}
+            name="description"
+          />
+          <Input
+            type="number"
+            placeholder="Quantity"
+            className=""
+            onChange={handleLogForm}
+            name="quantity"
+          />
         </div>
       </div>
 
@@ -291,7 +257,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <input
                   value={categoryName}
                   type="checkbox"
-                  className="mr-2"
+                  className="mr-2 "
                   checked={isCheck[catIndex]}
                   onChange={(e) => handleChange(e, catIndex)}
                 />
@@ -303,30 +269,49 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                   <div className="ml-20" key={procIndex}>
                     <input
                       checked={
-                        catForm[catIndex]?.procedures[procIndex].proCheck
+                        categories[catIndex]?.procedures[procIndex].proCheck
                       }
                       value={taskName}
                       type="checkbox"
-                      className="mr-2"
+                      className="mr-2 "
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleProCheckChange(catIndex, procIndex)
                       }
                     />
+
                     <label>{taskName}</label>
+                    <div>
+                      <Button
+                        className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                        onClick={() => handleSub(catIndex, procIndex)}
+                      >
+                        -
+                      </Button>
+                      <input
+                        type="number"
+                        className="w-20  p-2 "
+                        value={
+                          categories[catIndex]?.procedures[procIndex].quantity
+                        }
+                        disabled={!isCheck[catIndex]}
+                        onChange={(e) =>
+                          handleInputChange(catIndex, procIndex, 'quantity', e)
+                        }
+                      />
+                      <Button
+                        className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                        onClick={() => handleAdd(catIndex, procIndex)}
+                      >
+                        +
+                      </Button>
+                    </div>
                     <input
                       type="number"
                       className="w-20 p-2"
-                      value={catForm[catIndex]?.procedures[procIndex].quantity}
-                      disabled={!isCheck[catIndex]}
-                      onChange={(e) =>
-                        handleInputChange(catIndex, procIndex, 'quantity', e)
+                      value={
+                        categories[catIndex]?.procedures[procIndex].unitPrice
                       }
-                    />
-                    <input
-                      type="number"
-                      className="w-20 p-2"
-                      value={catForm[catIndex]?.procedures[procIndex].unitPrice}
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleInputChange(catIndex, procIndex, 'unitPrice', e)
