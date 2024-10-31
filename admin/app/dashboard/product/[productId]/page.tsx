@@ -34,10 +34,10 @@ export default function Page() {
 
   return (
     <ScrollArea className="h-[calc(100vh-60px)] ">
-      {/* <div className=""> */}
-      {/* <Breadcrumbs items={breadcrumbItems} /> */}
-      <ProductForm initialData={null} key={null} />
-      {/* </div> */}
+      <div className="ml-10">
+        <Breadcrumbs items={breadcrumbItems} />
+        <ProductForm initialData={null} key={null} />
+      </div>
     </ScrollArea>
   );
 }
