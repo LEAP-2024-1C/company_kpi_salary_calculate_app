@@ -30,6 +30,7 @@ import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 import { toast } from './use-toast';
 import { useState, useEffect } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DataTableProps {
   searchKey: string;
@@ -95,74 +96,76 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
         className="w-full md:max-w-sm"
       />
       {productData.map(({ productName, components, createdAt, total }) => (
-        <Card className="w-2/5">
-          <div className="flex flex-col gap-2 pl-4 pt-3">
-            <div className="flex items-center justify-between gap-10">
-              <p className="text-2xl font-semibold">
-                project name: {productName}
-              </p>
-              <p className="pr-4 text-gray-500">{createdAt}</p>
-            </div>
-            <div className="flex">
-              <div className="flex flex-col justify-center gap-2">
-                {/* <div className="text-xl font-semibold">performence: 15%</div> */}
-                <div>
-                  pending: ({components.pending}/{total})
-                </div>
-                <div>
-                  inprogress: ({components.progress}/{total})
-                </div>
-                <div>
-                  done: ({components.done}/{total})
-                </div>
-                <div>
-                  review: ({components.review}/{total})
-                </div>
-                <Link href={'/dashboard/employee-task'}>employees</Link>
+        <div className="">
+          <Card className="w-2/5">
+            <div className="flex flex-col gap-2 pl-4 pt-3">
+              <div className="flex items-center justify-between gap-10">
+                <p className="text-2xl font-semibold">
+                  project name: {productName}
+                </p>
+                <p className="pr-4 text-gray-500">{createdAt}</p>
               </div>
+              <div className="flex">
+                <div className="flex flex-col justify-center gap-2">
+                  {/* <div className="text-xl font-semibold">performence: 15%</div> */}
+                  <div>
+                    pending: ({components.pending}/{total})
+                  </div>
+                  <div>
+                    inprogress: ({components.progress}/{total})
+                  </div>
+                  <div>
+                    done: ({components.done}/{total})
+                  </div>
+                  <div>
+                    review: ({components.review}/{total})
+                  </div>
+                  <Link href={'/dashboard/employee-task'}>employees</Link>
+                </div>
 
-              <CardContent className="flex-1 pb-0">
-                <ChartContainer
-                  config={chartConfig}
-                  className="mx-auto aspect-square max-h-[200px]"
-                >
-                  <PieChart>
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                    />
-                    <Pie
-                      data={[
-                        {
-                          browser: 'pending',
-                          visitors: components.pending,
-                          fill: 'var(--color-chrome)'
-                        },
-                        {
-                          browser: 'inprogress',
-                          visitors: components.progress,
-                          fill: 'var(--color-safari)'
-                        },
-                        {
-                          browser: 'done',
-                          visitors: components.done,
-                          fill: 'var(--color-firefox)'
-                        },
-                        {
-                          browser: 'review',
-                          visitors: components.review,
-                          fill: 'var(--color-edge)'
-                        }
-                      ]}
-                      dataKey="visitors"
-                      nameKey="browser"
-                    />
-                  </PieChart>
-                </ChartContainer>
-              </CardContent>
+                <CardContent className="flex-1 pb-0">
+                  <ChartContainer
+                    config={chartConfig}
+                    className="mx-auto aspect-square max-h-[200px]"
+                  >
+                    <PieChart>
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent hideLabel />}
+                      />
+                      <Pie
+                        data={[
+                          {
+                            browser: 'pending',
+                            visitors: components.pending,
+                            fill: 'var(--color-chrome)'
+                          },
+                          {
+                            browser: 'inprogress',
+                            visitors: components.progress,
+                            fill: 'var(--color-safari)'
+                          },
+                          {
+                            browser: 'done',
+                            visitors: components.done,
+                            fill: 'var(--color-firefox)'
+                          },
+                          {
+                            browser: 'review',
+                            visitors: components.review,
+                            fill: 'var(--color-edge)'
+                          }
+                        ]}
+                        dataKey="visitors"
+                        nameKey="browser"
+                      />
+                    </PieChart>
+                  </ChartContainer>
+                </CardContent>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       ))}
     </>
   );
