@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { apiUrl } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -64,12 +65,12 @@ export default function Login() {
           >
             Нэвтрэх
           </Button>
-          <Button
-            className="w-1/4 flex items-center justify-center  bg-blue-700 rounded-full"
-            onClick={logIn}
-          >
-            Нэвтрэх
-          </Button>
+          <Link href={"/forgetpass/email"}>
+            <Button className=" bg-gray-500 rounded-full w-full">
+              Нэвтрэх
+            </Button>
+          </Link>
+
           <div className="flex gap-3">
             <p className="border-b text-gray-500">
               {/* <Link href={"/forgetpass/email"}
