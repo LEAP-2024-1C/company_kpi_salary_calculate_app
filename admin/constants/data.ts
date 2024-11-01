@@ -137,6 +137,7 @@ export type Procedures = {
   unitPrice: number;
   quantity: number;
   proCheck?: boolean;
+  _id: string;
 };
 
 export type Category = {

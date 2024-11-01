@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface CellActionProps {
-  id: number;
+  id: string;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ id }) => {
