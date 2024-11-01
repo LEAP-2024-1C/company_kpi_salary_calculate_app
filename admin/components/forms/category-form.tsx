@@ -60,7 +60,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
 
   const defaultValues = {
     categoryName: '',
-    procedures: [{ taskName: '', unit: 1, unitPrice: 200 }]
+    procedures: [{ taskName: 'Task-2', unit: 2, unitPrice: 1000 }]
   };
 
   const form = useForm<ProductFormValues>({
@@ -112,7 +112,10 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   };
   const subtrtactUnitPrice = (id: string) => {
     const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
+    const findPro = fields.find((f) => {
+      f.id === id;
+    });
+    console.log('FP', fields);
     update(findIndex, { ...findPro!, unit: findPro?.unitPrice! - 1 });
   };
 
@@ -276,9 +279,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
             <div>
               <Button
                 type="button"
-                onClick={() =>
-                  append({ taskName: '', unit: 1, unitPrice: 200 })
-                }
+                onClick={() => append({ taskName: '', unit: 0, unitPrice: 0 })}
               >
                 Add
               </Button>

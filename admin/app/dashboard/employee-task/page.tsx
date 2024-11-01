@@ -42,6 +42,8 @@ import {
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
+import { IProductStat } from '@/constants/data';
+import { useState, useEffect } from 'react';
 
 const data: Payment[] = [
   {
@@ -128,6 +130,33 @@ export const columns: ColumnDef<Payment>[] = [
 ];
 
 export function DataTableDemo() {
+  const [productData, setProductData] = useState<IProductStat[]>([]);
+  const getAllProduct = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}product/stat`);
+      if (res.status === 200) {
+        const { productStat } = res.data;
+        setProductData(productStat);
+
+        console.log('product stat', productStat);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.'
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+    }
+  };
+
+  useEffect(() => {
+    getAllProduct();
+  }, []);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -159,6 +188,7 @@ export function DataTableDemo() {
     <div className="flex flex-col items-center">
       <div className=" w-4/5">
         <div className="flex items-center py-4">
+          {console.log('object', productData)}
           <Input
             placeholder="Filter emails..."
             value={
