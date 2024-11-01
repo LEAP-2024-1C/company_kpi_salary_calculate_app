@@ -100,28 +100,14 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          employees
-        </Button>
-      );
+      return <div>employees</div>;
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>
   },
   {
     accessorKey: 'tasks',
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          tasks
-        </Button>
-      );
+      return <div>tasks</div>;
     }
   },
   {
@@ -150,27 +136,6 @@ export function DataTableDemo() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const getAllProduct = async () => {
-    try {
-      const res = await axios.get(`${apiUrl}pro/product`);
-      if (res.status === 200) {
-        const { data } = res.data;
-        console.log(res.data);
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      });
-    }
-  };
-
   const table = useReactTable({
     data,
     columns,
@@ -189,10 +154,6 @@ export function DataTableDemo() {
       rowSelection
     }
   });
-
-  React.useEffect(() => {
-    getAllProduct();
-  }, []);
 
   return (
     <div className="flex flex-col items-center">
