@@ -1,13 +1,17 @@
 import { model, Schema } from "mongoose";
+import { ICategory } from "./components.model";
 
-interface IProduct {
+export type IProduct = {
   productName: string;
   description: string;
   images?: [string];
   quantity: number;
   status: number;
-  category: [Schema.Types.ObjectId];
-}
+  components: [Schema.Types.ObjectId];
+};
+export type IComponent = {
+  components: ICategory[];
+};
 
 const productSchema = new Schema<IProduct>(
   {
@@ -31,10 +35,10 @@ const productSchema = new Schema<IProduct>(
       type: Number,
       default: 0,
     },
-    category: {
+    components: {
       type: [Schema.Types.ObjectId],
       required: true,
-      ref: "Category",
+      ref: "Components",
     },
   },
   {

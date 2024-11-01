@@ -1,24 +1,23 @@
 import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-interface ITask {
-  _id: Schema.Types.ObjectId;
+export interface ITask {
+  task_id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
-  status: number;
+  status: string;
   unitPrice: number;
 }
-interface ICategory {
+export type ICategory = {
   _id: Schema.Types.ObjectId;
   categoryName: String;
   procedures: ITask[];
   created_at: Date;
   updated_at: Date;
-}
-const categorySchema = new Schema<ICategory>({
+};
+const componentSchema = new Schema<ICategory>({
   categoryName: {
     type: String,
-    unique: true,
     required: [true, "Ажлын нэрийг оруулах"],
   },
   procedures: [
@@ -46,5 +45,5 @@ const categorySchema = new Schema<ICategory>({
   updated_at: { type: Date, default: Date.now },
 });
 
-const Category = model("Category", categorySchema);
-export default Category;
+const Components = model("Components", componentSchema);
+export default Components;
