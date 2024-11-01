@@ -3,7 +3,6 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -52,13 +51,13 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create category';
-  const description = initialData ? 'Edit a product.' : 'Add a new product';
+  const description = initialData ? 'Edit a product.' : 'Add a new category';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = {
     categoryName: '',
-    procedures: [{ taskName: '', quantity: 0, unitPrice: 0 }]
+    procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   };
 
   const form = useForm<ProductFormValues>({
@@ -95,6 +94,32 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
     createCategory(data);
+  };
+  const handleSub = (index: number, type: 'quantity' | 'unitPrice') => {
+    if (type === 'quantity') {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value > 1) {
+        form.setValue(`procedures.${index}.quantity`, Number(value) - 1);
+      }
+    } else {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value > 50) {
+        form.setValue(`procedures.${index}.unitPrice`, Number(value) - 50);
+      }
+    }
+  };
+  const handleAdd = (index: number, type: 'quantity' | 'unitPrice') => {
+    if (type === 'unitPrice') {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value >= 50) {
+        form.setValue(`procedures.${index}.unitPrice`, Number(value) + 50);
+      }
+    } else {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value >= 0) {
+        form.setValue(`procedures.${index}.quantity`, Number(value) + 1);
+      }
+    }
   };
 
   return (
@@ -146,14 +171,23 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleSub(index, 'quantity')}
+                  >
+                    -
+                  </Button>
                   <FormField
                     control={form.control}
                     name={`procedures.${index}.quantity`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Quantity</FormLabel>
+
                         <FormControl className="w-20">
                           <Input
+                            className="text-center"
                             type="number"
                             disabled={loading}
                             placeholder="Quantity"
@@ -164,6 +198,20 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleAdd(index, 'quantity')}
+                  >
+                    +
+                  </Button>
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleSub(index, 'unitPrice')}
+                  >
+                    -
+                  </Button>
                   <FormField
                     control={form.control}
                     name={`procedures.${index}.unitPrice`}
@@ -172,6 +220,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                         <FormLabel>Unit Price</FormLabel>
                         <FormControl className="w-20">
                           <Input
+                            className="text-center"
                             type="number"
                             disabled={loading}
                             placeholder="Unit Price"
@@ -182,6 +231,13 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleAdd(index, 'unitPrice')}
+                  >
+                    +
+                  </Button>
                 </>
               )}
               {index > 0 && (
@@ -202,6 +258,13 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleSub(index, 'quantity')}
+                  >
+                    -
+                  </Button>
                   <FormField
                     control={form.control}
                     name={`procedures.${index}.quantity`}
@@ -209,6 +272,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       <FormItem>
                         <FormControl className="w-20">
                           <Input
+                            className="text-center"
                             type="number"
                             disabled={loading}
                             placeholder="Quantity"
@@ -219,6 +283,20 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleAdd(index, 'quantity')}
+                  >
+                    +
+                  </Button>
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleSub(index, 'unitPrice')}
+                  >
+                    -
+                  </Button>
                   <FormField
                     control={form.control}
                     name={`procedures.${index}.unitPrice`}
@@ -226,6 +304,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       <FormItem>
                         <FormControl className="w-20">
                           <Input
+                            className="text-center"
                             type="number"
                             disabled={loading}
                             placeholder="Unit Price"
@@ -236,6 +315,13 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                    onClick={() => handleAdd(index, 'unitPrice')}
+                  >
+                    +
+                  </Button>
                 </div>
               )}
               <Button type="button" onClick={() => remove(index)}>
@@ -245,7 +331,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
           ))}
           <Button
             type="button"
-            onClick={() => append({ taskName: '', quantity: 0, unitPrice: 0 })}
+            onClick={() => append({ taskName: '', quantity: 1, unitPrice: 50 })}
           >
             +
           </Button>
