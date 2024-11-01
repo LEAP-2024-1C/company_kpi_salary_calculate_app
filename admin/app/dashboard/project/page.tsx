@@ -46,7 +46,7 @@ export default function page() {
     getProject();
   }, []);
   return (
-    <PageContainer>
+    <PageContainer scrollable={true}>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <ProjectClient data={projectData} />

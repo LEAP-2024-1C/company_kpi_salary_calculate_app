@@ -34,7 +34,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DataTableProps {
   searchKey: string;
-  data: IUser[];
+  data: IProductStat[];
 }
 
 const chartConfig = {
@@ -59,34 +59,6 @@ const chartConfig = {
 export function DataTable2({ searchKey, data }: DataTableProps) {
   const [progress, setProgress] = useState(13);
 
-  const [productData, setProductData] = useState<IProductStat[]>([]);
-  const getAllProduct = async () => {
-    try {
-      const res = await axios.get(`${apiUrl}product/stat`);
-      if (res.status === 200) {
-        const { productStat } = res.data;
-        setProductData(productStat);
-
-        console.log('product stat', productStat);
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
-      });
-    }
-  };
-
-  useEffect(() => {
-    getAllProduct();
-  }, []);
-
   // console.log('product data', productData.components);
 
   return (
@@ -95,9 +67,9 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
       />
-      {productData.map(({ productName, components, createdAt, total }) => (
-        <div className="">
-          <Card className="w-2/5">
+      <div className="grid grid-cols-2 gap-6">
+        {data.map(({ productName, components, createdAt, total }) => (
+          <Card>
             <div className="flex flex-col gap-2 pl-4 pt-3">
               <div className="flex items-center justify-between gap-10">
                 <p className="text-2xl font-semibold">
@@ -165,8 +137,8 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               </div>
             </div>
           </Card>
-        </div>
-      ))}
+        ))}
+      </div>
     </>
   );
 }
