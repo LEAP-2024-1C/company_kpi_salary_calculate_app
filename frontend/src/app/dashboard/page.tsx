@@ -11,9 +11,6 @@ const Dashboard = () => {
   return (
     <div className="w-full  grid grid-cols-3 gap-5 justify-center p-5 text-green-900">
       <TaskTracker />
-      {/* {tasks.map((task, index) => (
-        <TaskTracker key={index} taskName={task.name} totalTasks={task.total} />
-      ))} */}
     </div>
   );
 };

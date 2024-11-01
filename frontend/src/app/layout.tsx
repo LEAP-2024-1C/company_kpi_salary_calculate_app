@@ -34,7 +34,7 @@ export default function RootLayout({
         <ProductProvider>
           <UserProvider>
             <Header />
-            <div className="w-screen h-screen flex flex-col items-center bg-gray-100">
+            <div className=" flex flex-col items-center bg-gray-100">
               {children}
             </div>
           </UserProvider>

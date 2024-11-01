@@ -3,15 +3,16 @@ import SavedTasks from "../models/savedTasks.model";
 
 
 export const createSavedTasks = async (req: Request, res: Response) => {
-  const { userId, productId, totalAmount, quantity } = req.body;
+  const { userId, productId,categoryId,taskId,quantity} = req.body;
   try {
     const findSavedTasks = await SavedTasks.findOne({ user: userId });
 
     if (!findSavedTasks) {
       const savedTasks = await SavedTasks.create({
         user: userId,
-        products: { product: productId, quantity },
-        totalAmount,
+        products: { product: productId, components:[]},
+        categories:{category:categoryId,procedures:[]},
+        procedures:{task:taskId,quantity}
       });
       console.log(savedTasks);
       return res.status(200).json({
@@ -25,9 +26,9 @@ export const createSavedTasks = async (req: Request, res: Response) => {
     );
 
     if (findDuplicated > -1) {
-        findSavedTasks.products[findDuplicated].quantity += quantity;
+        findSavedTasks.products[findDuplicated];
     } else {
-        findSavedTasks.products.push({ product: productId, quantity });
+        findSavedTasks.products.push({ product: productId});
     }
 
     const updatedSavedTasks = await findSavedTasks.save();
@@ -46,7 +47,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
 export const getUserSavedTasks = async (req: Request, res: Response) => {
   const { id } = req.user;
   try {
-    const cart = await SavedTasks.findOne({ user: id }).populate("products.product");
+    const cart = await SavedTasks.findOne({ user: id }).populate("categories.category");
     console.log(id);
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
@@ -62,7 +63,7 @@ export const getUserSavedTasks = async (req: Request, res: Response) => {
 
 export const updateSavedTasks = async (req: Request, res: Response) => {
   const { id } = req.user;
-  const { productId, newQuantity } = req.body;
+  const { taskId, newQuantity } = req.body;
   try {
     const savedTasks = await SavedTasks.findOne({ user: id });
     if (!savedTasks) {
@@ -71,11 +72,11 @@ export const updateSavedTasks = async (req: Request, res: Response) => {
       });
     }
 
-    const findProduct = savedTasks.products.findIndex(
-      (item) => item.product.toString() === productId
+    const findTask = savedTasks.procedures.findIndex(
+      (item) => item.task.toString() === taskId
     );
 
-    savedTasks.products[findProduct].quantity = newQuantity;
+    savedTasks.procedures[findTask].quantity = newQuantity;
 
     const updatedSavedTasks = await savedTasks.save();
     res.status(200).json({

@@ -13,36 +13,58 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { IProcedures, IProduct, ISavedTasks } from "@/utils/interfaces";
-import { useUser } from "@/context/user-provider";
 import { useParams } from "next/navigation";
 import axios from "axios";
-
+import { apiUrl } from "@/lib/utils";
+import SavedTasksCard from "./savedTasksCard";
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
 }
-
+// interface SavedTasks {
+//   savedTAsks: ISavedTasks[];
+// }
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
+  const [oneProductDatas, setOneProduct] = useState<IProduct>();
+  const getCurrentProduct = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}product/${id}`);
+      if (res.status === 200) {
+        const { oneProductDatas } = res.data;
+        console.log("data", oneProductDatas);
+        setOneProduct(oneProductDatas);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  console.log("id", id);
+  console.log("oneProduct", oneProductDatas);
+  useEffect(() => {
+    getCurrentProduct();
+  }, []);
+
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
     totalTasks.map(() => 0)
   );
+  const [savedTasks, setSavedTasks] = useState<
+    { taskId: string; quantity: number }[]
+  >([]);
+  // const [savedTasks, setSavedTasks] = useState<object>();
 
   useEffect(() => {
-    // Initialize selected quantities array
     setSelectedQuantities(totalTasks.map(() => 0));
   }, [totalTasks]);
 
-  const handleIncrement = (index: number) => {
+  const productQuantity = oneProductDatas?.quantity;
+  const add = (index: number) => {
     setSelectedQuantities((prevQuantities) =>
       prevQuantities.map((quantity, i) =>
-        i === index && quantity < totalTasks[index].quantity
-          ? quantity + 1
-          : quantity
+        i === index && quantity < productQuantity ? quantity + 1 : quantity
       )
     );
   };
-
-  const handleDecrement = (index: number) => {
+  const reduce = (index: number) => {
     setSelectedQuantities((prevQuantities) =>
       prevQuantities.map((quantity, i) =>
         i === index && quantity > 0 ? quantity - 1 : quantity
@@ -52,70 +74,83 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
 
   const handleSaveTasks = async () => {
     try {
-      const savedTasks = totalTasks.map((task, index) => ({
-        taskId: task._id,
-        quantity: selectedQuantities[index],
-      }));
-
-      await axios.post(`/api/tasks/save`, { tasks: savedTasks });
-      setSelectedQuantities(totalTasks.map(() => 0)); // Reset selections after saving
+      const tasksToSave = totalTasks
+        .map((task, i) => ({
+          taskId: task._id,
+          quantity: selectedQuantities[i],
+        }))
+        .filter((task) => task.quantity > 0);
+      if (tasksToSave.length === 0) {
+        console.log("No tasks to save.");
+        return;
+      }
+      console.log("Tasks to save:", tasksToSave);
+      // await axios.post(`${apiUrl}/save-tasks`, { tasks: tasksToSave });
+      setSelectedQuantities(totalTasks.map(() => 0));
     } catch (error) {
-      console.error("Error saving tasks", error);
+      console.error("Error sending saved tasks", error);
     }
   };
 
+  // const handleSaveTasks = async () => {
+  //   try {
+  //     const savedTasks = totalTasks.map((task, i) => ({
+  //       taskId: task._id,
+  //       quantity: selectedQuantities[i],
+  //     }));
+  //     console.log("savedTasks", savedTasks);
+  //     //   await axios.post(`${apiUrl}`, { tasks: savedTasks });
+  //     // setSelectedQuantities(totalTasks.map(() => 0));
+  //   } catch (error) {
+  //     console.error("Error saving tasks", error);
+  //   }
+  // };
+  // const sendSavedTaks = async () => {
+  //   try {
+  //     const sendTAsk = savedTasks.map();
+  //     setSavedTasks(savedTasks);
+  //   } catch (error) {
+  //     console.error("Error sending saved tasks", error);
+  //   }
+  // };
   const taskTotals = totalTasks.map(
-    (task, index) => selectedQuantities[index] * task.unitPrice
+    (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
-
   return (
-    <div>
+    <div className="">
       <Table>
-        {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Хийгдэх ажилууд</TableHead>
             <TableHead> Нэгж Үнэ</TableHead>
-            <TableHead className="text-right"> Шаардлагатай тоо</TableHead>
-            <TableHead> Үлдсэн ажилууд</TableHead>
+            <TableHead className="text-right"> Нэгжийн тоо</TableHead>
+            <TableHead> Ширхэгийн тоо</TableHead>
             <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
             <TableHead className="text-right"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {totalTasks.map((task, index) => (
+          {totalTasks.map((task, i) => (
             <TableRow key={task._id}>
               <TableCell className="font-medium">{task.taskName}</TableCell>
               <TableCell>{task.unitPrice}</TableCell>
               <TableCell className="text-right">{task.quantity}</TableCell>
-              <TableCell>{task.quantity - selectedQuantities[index]}</TableCell>
+              <TableCell>{productQuantity - selectedQuantities[i]}</TableCell>
               <TableCell className="text-right">
-                <input
-                  type="number"
-                  value={selectedQuantities[index]}
-                  readOnly
-                />
+                <input type="number" value={selectedQuantities[i]} readOnly />
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex gap-2 ">
                   <Button
-                    // onClick={() => {
-                    //   number - 1;
-                    // }}
-                    // style={{ borderColor: getDotColor() }}
                     className="rounded-full border bg-white text-green-900"
-                    onClick={() => handleDecrement(index)}
+                    onClick={() => reduce(i)}
                   >
                     -
                   </Button>
                   <Button
-                    // onClick={() => {
-                    //   number + 1;
-                    // }}
-                    // style={{ borderColor: getDotColor() }}
                     className="rounded-full border bg-white text-green-900"
-                    onClick={() => handleIncrement(index)}
+                    onClick={() => add(i)}
                   >
                     +
                   </Button>
@@ -140,8 +175,14 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </TableRow>
         </TableFooter>
       </Table>
+      {totalTasks.map((task, index) => (
+        <SavedTasksCard
+          key={task._id}
+          task={task}
+          selectedQuantity={selectedQuantities[index]}
+        />
+      ))}
     </div>
   );
 };
-
 export default ProductDetailModal;

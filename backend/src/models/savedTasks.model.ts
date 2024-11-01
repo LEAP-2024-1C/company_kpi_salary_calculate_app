@@ -2,8 +2,9 @@ import { model, Schema } from "mongoose";
 
 interface ISavedTasks {
   user: Schema.Types.ObjectId;
-  products: [{ product: Schema.Types.ObjectId; quantity: Number }];
-  totalAmount: Number;
+  products: [{ product: Schema.Types.ObjectId }];
+  categories:[{category:Schema.Types.ObjectId ,procedures:[]}]
+  procedures:[{task: Schema.Types.ObjectId; quantity:number}]
 }
 
 const savedTasksSchema = new Schema<ISavedTasks>(
@@ -19,17 +20,30 @@ const savedTasksSchema = new Schema<ISavedTasks>(
           type: Schema.Types.ObjectId,
           ref: "Product",
           required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
+          components:[]
+        }
+      
       },
     ],
-    totalAmount: {
-      type: Number,
-      default: 0,
-    },
+    categories:[
+      {
+        category:{
+          type: Schema.Types.ObjectId,
+          ref: "Category",
+          required: true,
+        },
+        procedures:[]
+      }
+    ],
+    procedures: [
+   {
+    task:{
+      type: Schema.Types.ObjectId,
+      ref: "Task",
+      required: true,
+    }
+   }
+    ],
   },
   {
     timestamps: true,

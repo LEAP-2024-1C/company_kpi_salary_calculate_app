@@ -71,6 +71,7 @@ export interface IProcedures{
   // });
 
   export interface ISavedTasks{
- task:IProduct;
- quantity:number
+components: [IComponents]
+
+
   }
