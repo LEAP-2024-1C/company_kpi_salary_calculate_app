@@ -5,7 +5,7 @@ interface ITask {
   _id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
-  status: number;
+  status: string;
   unitPrice: number;
 }
 interface ICategory {

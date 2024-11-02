@@ -2,16 +2,16 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface ITask {
-  task_id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   taskName: string;
-  quantity: number;
+  quantity: Number;
   status: string;
-  unitPrice: number;
+  unitPrice: Number;
 }
 export type ICategory = {
   _id: Schema.Types.ObjectId;
   categoryName: String;
-  procedures: ITask[];
+  procedures: [ITask];
   created_at: Date;
   updated_at: Date;
 };
@@ -27,7 +27,7 @@ const componentSchema = new Schema<ICategory>({
         required: [true],
       },
       quantity: {
-        type: String,
+        type: Number,
         required: [true],
       },
       status: {
@@ -36,7 +36,7 @@ const componentSchema = new Schema<ICategory>({
         default: "pending",
       },
       unitPrice: {
-        type: String,
+        type: Number,
         required: [true],
       },
     },

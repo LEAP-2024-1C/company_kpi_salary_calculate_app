@@ -102,6 +102,22 @@ export const users: User[] = [
   }
 ];
 
+export interface IStatus {
+  pending: number;
+  progress: number;
+  done: number;
+  review: number;
+}
+
+export interface IProductStat {
+  components: IStatus;
+  total: number;
+  description: string;
+  productName: string;
+  images?: string[];
+  createdAt: string;
+}
+
 export type Product = {
   id: number;
   productName: string;
@@ -121,6 +137,7 @@ export type Procedures = {
   unitPrice: number;
   quantity: number;
   proCheck?: boolean;
+  _id: string;
 };
 
 export type Category = {

@@ -7,10 +7,6 @@ export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
   try {
     console.log("first", components);
-    const { categoryName } = components;
-    if (!categoryName) {
-      return res.status(404).json({ message: "Хоосон утга байж болохгүй" });
-    }
 
     const createdComp = await Components.insertMany(components);
     console.log("createdcomp", createdComp);
@@ -94,6 +90,7 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
         productName: c.productName,
         description: c.description,
         image: c.images,
+        createdAt: c.createdAt,
       };
     });
 
