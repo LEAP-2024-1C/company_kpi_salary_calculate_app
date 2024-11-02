@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 
 export interface ITask {
   _id: Schema.Types.ObjectId;
-  _id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
   status: IStatus;
