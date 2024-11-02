@@ -3,7 +3,6 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { CloudCog, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,8 +19,7 @@ import { Heading } from '@/components/ui/heading';
 import { useToast } from '../ui/use-toast';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
-import { Label } from '../ui/label';
-import { setMinutes } from 'date-fns';
+import CategoryInput from '../inputs/category-inputs';
 
 const formSchema = z.object({
   categoryName: z
@@ -32,7 +30,7 @@ const formSchema = z.object({
       taskName: z
         .string()
         .min(3, { message: 'Task Name must be at least 3 characters' }),
-      unit: z.coerce.number(),
+      quantity: z.coerce.number(),
       unitPrice: z.coerce.number()
     })
   )
@@ -55,12 +53,12 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create category';
   const description = initialData ? 'Edit a product.' : 'Add a new category';
-  const toastMessage = initialData ? 'Product updated.' : 'Product created.';
+  const toastMessage = initialData ? 'Category updated.' : 'Category created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = {
     categoryName: '',
-    procedures: [{ taskName: '', unit: 1, unitPrice: 200 }]
+    procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   };
 
   const form = useForm<ProductFormValues>({
@@ -68,7 +66,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     defaultValues
   });
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'procedures'
   });
@@ -76,11 +74,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const createCategory = async (data: ProductFormValues) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${apiUrl}cat/create/category`, { data });
+      const res = await axios.post(`${apiUrl}cat/category`, { data });
       if (res.status === 200) {
         router.refresh();
         console.log('success');
-        // router.push(`/dashboard/products`);
+        router.push(`/dashboard/category`);
         toast({ title: toastMessage });
       }
     } catch (error) {
@@ -94,32 +92,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  const addUnit = (id: string) => {
-    console.log('IN', id);
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, unit: findPro?.unit! + 1 });
-  };
-  const subtractUnit = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, unit: findPro?.unit! - 1 });
-  };
-  const addUnitPrice = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, unit: findPro?.unitPrice! + 1 });
-  };
-  const subtrtactUnitPrice = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, unit: findPro?.unitPrice! - 1 });
-  };
-
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
     createCategory(data);
   };
+
   const handleSub = (index: number, type: 'quantity' | 'unitPrice') => {
     if (type === 'quantity') {
       const value = Number(form.getValues(`procedures.${index}.${type}`));
@@ -175,141 +152,27 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-4">
-            {fields.map((pro, index) => {
-              // console.log(pro);
-              return (
-                <div key={pro.id} className="flex items-end gap-3">
-                  {/* start */}
-                  <>
-                    <FormField
-                      control={form.control}
-                      name={`procedures.${index}.taskName`}
-                      render={({ field }) => {
-                        return (
-                          <FormItem>
-                            <FormLabel>Task Name</FormLabel>
-                            <FormControl className="w-[400px]">
-                              <Input
-                                disabled={loading}
-                                placeholder="Task Name"
-                                {...field}
-                                min={0}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        );
-                      }}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`procedures.${index}.unit`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Unit</FormLabel>
-                          <div className="flex gap-2">
-                            <div>
-                              <Button
-                                className="rounded-full"
-                                onClick={() => subtractUnit(pro.id)}
-                              >
-                                -
-                              </Button>
-                            </div>
-                            <FormControl className="w-10 rounded-full text-center">
-                              <Input
-                                type="number"
-                                disabled={loading}
-                                placeholder="Unit"
-                                {...field}
-                                min={0}
-                                className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                              />
-                            </FormControl>
-                            <div>
-                              <Button
-                                className="rounded-full"
-                                onClick={() => addUnit(pro.id)}
-                              >
-                                +
-                              </Button>
-                            </div>
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`procedures.${index}.unitPrice`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Unit Price</FormLabel>
-                          <div className="flex gap-2">
-                            <div>
-                              <Button
-                                className="rounded-full"
-                                onClick={() => subtrtactUnitPrice(pro.id)}
-                              >
-                                -
-                              </Button>
-                            </div>
-                            <FormControl className="w-20 rounded-full text-center">
-                              <Input
-                                type="number"
-                                disabled={loading}
-                                placeholder="Unit Price"
-                                {...field}
-                                min={0}
-                                className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                              />
-                            </FormControl>
-                            <div>
-                              <Button
-                                className="rounded-full"
-                                onClick={() => addUnitPrice(pro.id)}
-                              >
-                                +
-                              </Button>
-                            </div>
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* <FormField
-                        control={form.control}
-                        name={`procedures.${index}.price`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Price</FormLabel>
-                            <FormControl className="w-30">
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      /> */}
-                  </>
-                  {/* end */}
+          {fields.map((pro, index) => {
+            return (
+              <CategoryInput
+                key={pro.id}
+                pro={pro}
+                form={form}
+                index={index}
+                loading={loading}
+                handleSub={handleSub}
+                handleAdd={handleAdd}
+                remove={remove}
+              />
+            );
+          })}
+          <Button
+            type="button"
+            onClick={() => append({ taskName: '', quantity: 1, unitPrice: 50 })}
+          >
+            +
+          </Button>
 
-                  <Button type="button" onClick={() => remove(index)}>
-                    Remove
-                  </Button>
-                </div>
-              );
-            })}
-            <div>
-              <Button
-                type="button"
-                onClick={() =>
-                  append({ taskName: '', unit: 1, unitPrice: 200 })
-                }
-              >
-                Add
-              </Button>
-            </div>
-          </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

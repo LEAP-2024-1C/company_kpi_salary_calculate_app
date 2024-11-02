@@ -142,6 +142,7 @@ export type Procedures = {
 };
 
 export type Category = {
+  _id: string;
   categoryName: string;
   procedures: Procedures[];
 };

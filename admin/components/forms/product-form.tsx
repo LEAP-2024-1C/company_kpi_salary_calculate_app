@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
 
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -247,7 +247,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   return (
     <div className="">
-      <div className="mb-5 flex items-center justify-between">
+      <div className="my-5 flex items-center justify-between">
         <Heading title={title} description={description} />
       </div>
       <Separator className="mb-5" />
