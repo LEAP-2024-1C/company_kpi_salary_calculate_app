@@ -40,7 +40,7 @@ const SavedTasksCard = ({ task, selectedQuantity }) => {
   const updateQuanity = async (productId: string, newQuantity: number) => {
     setCartData((prevCart) =>
       prevCart.map((item) =>
-        item.product._id === productId
+        item.products._id === productId
           ? { ...item, quantity: newQuantity }
           : item
       )
@@ -48,7 +48,7 @@ const SavedTasksCard = ({ task, selectedQuantity }) => {
     const userToken = localStorage.getItem("token");
     try {
       const response = await axios.put(
-        `${apiUrl}cart/update-cart`,
+        `${apiUrl}task/update`,
         {
           productId,
           newQuantity,
