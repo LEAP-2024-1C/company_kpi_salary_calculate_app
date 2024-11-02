@@ -65,6 +65,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       ...productForm,
       [name]: value
     });
+    categories.map((item) =>
+      item.procedures.map((pro) => (pro.status.pending = Number(value)))
+    );
   };
   const handleInputChange = (
     catIndex: number,
@@ -117,7 +120,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               .map(({ taskName, quantity, unitPrice, status }) => ({
                 taskName,
                 quantity,
-                unitPrice
+                unitPrice,
+                status
               }))
           };
         }

@@ -31,7 +31,8 @@ const formSchema = z.object({
         .string()
         .min(3, { message: 'Task Name must be at least 3 characters' }),
       quantity: z.coerce.number(),
-      unitPrice: z.coerce.number()
+      unitPrice: z.coerce.number(),
+      status: z.object({ pending: z.coerce.number() })
     })
   )
 });
@@ -94,7 +95,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
 
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
-    createCategory(data);
+    // createCategory(data);
   };
 
   return (
@@ -159,6 +160,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                             placeholder="Quantity"
                             {...field}
                           />
+                          <button onClick={() => addQuantity(index)}>+</button>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -245,10 +247,18 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
           ))}
           <Button
             type="button"
-            onClick={() => append({ taskName: '', quantity: 0, unitPrice: 0 })}
+            onClick={() =>
+              append({
+                taskName: '',
+                quantity: 0,
+                unitPrice: 0,
+                status: { pending: 0 }
+              })
+            }
           >
             +
           </Button>
+
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>
