@@ -8,6 +8,7 @@ export type IProduct = {
   quantity: number;
   status: number;
   components: [Schema.Types.ObjectId];
+  createdAt: Date;
 };
 export type IComponent = {
   components: ICategory[];

@@ -155,6 +155,7 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
         productName: c.productName,
         description: c.description,
         image: c.images,
+        createdAt: c.createdAt,
       };
     });
 

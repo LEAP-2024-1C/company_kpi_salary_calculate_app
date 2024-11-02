@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 export interface ITask {
   _id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
   status: IStatus;
@@ -17,7 +18,7 @@ export interface IStatus {
 export type ICategory = {
   _id: Schema.Types.ObjectId;
   categoryName: String;
-  procedures: ITask[];
+  procedures: [ITask];
   created_at: Date;
   updated_at: Date;
 };
@@ -33,7 +34,7 @@ const componentSchema = new Schema<ICategory>({
         required: [true],
       },
       quantity: {
-        type: String,
+        type: Number,
         required: [true],
       },
       status: {
@@ -55,7 +56,7 @@ const componentSchema = new Schema<ICategory>({
         },
       },
       unitPrice: {
-        type: String,
+        type: Number,
         required: [true],
       },
     },
