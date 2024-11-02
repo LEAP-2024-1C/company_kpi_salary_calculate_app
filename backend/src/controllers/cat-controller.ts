@@ -8,6 +8,7 @@ export const createCategory = async (req: Request, res: Response) => {
     if (!categoryName || !procedures) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
+    console.log("first");
     const findCategory = await Category.findOne({ categoryName });
     if (!findCategory) {
       const category = await Category.create({
@@ -26,6 +27,7 @@ export const createCategory = async (req: Request, res: Response) => {
     res.status(404).json({ error });
   }
 };
+
 export const updateCategory = async (req: Request, res: Response) => {
   const { data } = req.body;
   try {
@@ -75,5 +77,29 @@ export const getAllCategories = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);
+  }
+};
+
+export const deleteCategory = async (req: Request, res: Response) => {
+  const { data } = req.body;
+  try {
+    const { c_id, t_id } = data;
+    if (!t_id || !c_id) {
+      return res.status(400).json({ message: " Устгалт амжилтгүй" });
+    }
+    const findCategory = await Category.findOne({ c_id });
+    if (findCategory) {
+      const category = await Category.deleteOne({
+        t_id,
+      });
+      return res.status(200).json({
+        message: "deleted procedure",
+      });
+    }
+    res
+      .status(400)
+      .json({ message: "Категорийн нэр давхацаж байна нэрээ өөрчилнө үү" });
+  } catch (error) {
+    res.status(404).json({ error });
   }
 };

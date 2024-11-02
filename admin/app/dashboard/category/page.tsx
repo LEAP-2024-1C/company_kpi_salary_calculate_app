@@ -18,7 +18,7 @@ const breadcrumbItems = [
   { title: 'Category', link: '/dashboard/category' }
 ];
 
-export default function page() {
+export default function Page() {
   const [categories, setCategories] = useState<Category[]>([]);
   const getAllCategories = async () => {
     try {
