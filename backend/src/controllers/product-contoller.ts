@@ -31,7 +31,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Product.find().populate("components");
+    const products = await Product.find().populate("components")
     console.log("product", products);
     res.status(200).json({ message: "success", products });
   } catch (error) {
@@ -40,6 +40,24 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
+export const getCurrentProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log(id)
+    const oneProductDatas = await Product.findById(id).populate("components");
+
+    res
+      .status(200)
+      .json({ message: "Success to get a product", oneProductDatas});
+
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: "failed to get a product",
+      
+    });
+  }
+};
 // export const getAllProductsStat = async (req: Request, res: Response) => {
 //   try {
 //     const products = await Product.find().populate<IComponent>("components");
@@ -165,3 +183,46 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
     console.error(error);
   }
 };
+
+// export const getAllProductsStatEmployee = async (
+//   req: Request,
+//   res: Response
+// ) => {
+//   try {
+//     const products = await Product.find().populate<IComponent>("components");
+//     const productStat = products.map((c) => {
+//       const comps = c.components.map((x) => {
+//         const status = {
+//           pending: x.procedures.filter((s) => s.status === "pending").length,
+//           progress: x.procedures.filter((s) => s.status === "progress").length,
+//           done: x.procedures.filter((s) => s.status === "done").length,
+//           review: x.procedures.filter((s) => s.status === "review").length,
+//         };
+//         const total =
+//           status.done + status.pending + status.progress + status.review;
+//         const other = total - status.pending;
+//         return {
+//           categoryName: x.categoryName,
+//           cat_id: x._id,
+//           total,
+//           other,
+//         };
+//       });
+//       return {
+//         components: comps,
+//         productName: c.productName,
+//         description: c.description,
+//         image: c.images,
+//         createdAt:c.createdAt,
+//         quantity:c.quantity,
+//         _id:c._id
+//       };
+//     });
+
+//     res.status(200).json({ message: "success", productStat ,products});
+//   } catch (error) {
+//     res.status(401).json({ error });
+//     console.error(error);
+//   }
+// };
+
