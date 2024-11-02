@@ -195,23 +195,47 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
-  const handleSub = (catIndex: number, procIndex: number) => {
+  const handleSub = (
+    catIndex: number,
+    procIndex: number,
+    type: 'quantity' | 'unitPrice'
+  ) => {
     setCategories((prev) => {
       const newArr = [...prev];
-      if (newArr[catIndex].procedures[procIndex].quantity > 0) {
-        newArr[catIndex].procedures[procIndex].quantity =
-          Number(newArr[catIndex].procedures[procIndex].quantity) - 1;
+      if (type === 'quantity') {
+        if (newArr[catIndex].procedures[procIndex].quantity > 1) {
+          newArr[catIndex].procedures[procIndex].quantity =
+            Number(newArr[catIndex].procedures[procIndex].quantity) - 1;
+        }
+      } else {
+        if (newArr[catIndex].procedures[procIndex].unitPrice > 100) {
+          newArr[catIndex].procedures[procIndex].unitPrice =
+            Number(newArr[catIndex].procedures[procIndex].unitPrice) - 100;
+        }
       }
       return newArr;
     });
   };
-  const handleAdd = (catIndex: number, procIndex: number) => {
-    setCategories((prev) => {
-      const newArr = [...prev];
-      newArr[catIndex].procedures[procIndex].quantity =
-        Number(newArr[catIndex].procedures[procIndex].quantity) + 1;
-      return newArr;
-    });
+  const handleAdd = (
+    catIndex: number,
+    procIndex: number,
+    type: 'quantity' | 'unitPrice'
+  ) => {
+    if (type !== 'unitPrice') {
+      setCategories((prev) => {
+        const newArr = [...prev];
+        newArr[catIndex].procedures[procIndex].quantity =
+          Number(newArr[catIndex].procedures[procIndex].quantity) + 1;
+        return newArr;
+      });
+    } else {
+      setCategories((prev) => {
+        const newArr = [...prev];
+        newArr[catIndex].procedures[procIndex].unitPrice =
+          Number(newArr[catIndex].procedures[procIndex].unitPrice) + 100;
+        return newArr;
+      });
+    }
   };
 
   return (
@@ -270,31 +294,36 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
               {procedures.map(
                 ({ taskName, quantity, unitPrice }, procIndex) => (
-                  <div className="ml-20" key={procIndex}>
+                  <div
+                    className="ml-20 flex items-center gap-2"
+                    key={procIndex}
+                  >
                     <input
                       checked={
                         categories[catIndex]?.procedures[procIndex].proCheck
                       }
                       value={taskName}
                       type="checkbox"
-                      className="mr-2 "
+                      className="mr-2"
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleProCheckChange(catIndex, procIndex)
                       }
                     />
 
-                    <label>{taskName}</label>
+                    <label className="w-80">{taskName}</label>
                     <div>
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
-                        onClick={() => handleSub(catIndex, procIndex)}
+                        onClick={() =>
+                          handleSub(catIndex, procIndex, 'quantity')
+                        }
                       >
                         -
                       </Button>
                       <input
                         type="number"
-                        className="w-20  p-2 "
+                        className="w-20 p-2 text-center "
                         value={
                           categories[catIndex]?.procedures[procIndex].quantity
                         }
@@ -305,22 +334,42 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       />
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
-                        onClick={() => handleAdd(catIndex, procIndex)}
+                        onClick={() =>
+                          handleAdd(catIndex, procIndex, 'quantity')
+                        }
                       >
                         +
                       </Button>
                     </div>
-                    <input
-                      type="number"
-                      className="w-20 p-2"
-                      value={
-                        categories[catIndex]?.procedures[procIndex].unitPrice
-                      }
-                      disabled={!isCheck[catIndex]}
-                      onChange={(e) =>
-                        handleInputChange(catIndex, procIndex, 'unitPrice', e)
-                      }
-                    />
+                    <div>
+                      <Button
+                        className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                        onClick={() =>
+                          handleSub(catIndex, procIndex, 'unitPrice')
+                        }
+                      >
+                        -
+                      </Button>
+                      <input
+                        type="number"
+                        className="w-20 p-2 text-center"
+                        value={
+                          categories[catIndex]?.procedures[procIndex].unitPrice
+                        }
+                        disabled={!isCheck[catIndex]}
+                        onChange={(e) =>
+                          handleInputChange(catIndex, procIndex, 'unitPrice', e)
+                        }
+                      />
+                      <Button
+                        className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
+                        onClick={() =>
+                          handleAdd(catIndex, procIndex, 'unitPrice')
+                        }
+                      >
+                        +
+                      </Button>
+                    </div>
                   </div>
                 )
               )}
