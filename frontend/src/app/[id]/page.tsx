@@ -72,7 +72,7 @@ const TaskDetail = () => {
           </div>
           {oneProduct?.components.map(({ categoryName, procedures }) => (
             <div className="bg-white p-5 rounded-lg border border-green-900">
-              <Accordion type="single" collapsible className=" w-[800px]">
+              <Accordion type="single" collapsible className=" w-[900px]">
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-green-900">
                     <p>{categoryName}</p>

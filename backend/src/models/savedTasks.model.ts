@@ -41,7 +41,8 @@ const savedTasksSchema = new Schema<ISavedTasks>(
       type: Schema.Types.ObjectId,
       ref: "Task",
       required: true,
-    }
+    },
+    quantity:0
    }
     ],
   },

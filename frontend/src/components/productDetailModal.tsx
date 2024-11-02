@@ -20,9 +20,7 @@ import SavedTasksCard from "./savedTasksCard";
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
 }
-// interface SavedTasks {
-//   savedTAsks: ISavedTasks[];
-// }
+
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
@@ -85,47 +83,27 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
         return;
       }
       console.log("Tasks to save:", tasksToSave);
-      // await axios.post(`${apiUrl}/save-tasks`, { tasks: tasksToSave });
+      // await axios.post(`${apiUrl}tasks/updateTasks`, { tasks: tasksToSave });
       setSelectedQuantities(totalTasks.map(() => 0));
     } catch (error) {
       console.error("Error sending saved tasks", error);
     }
   };
 
-  // const handleSaveTasks = async () => {
-  //   try {
-  //     const savedTasks = totalTasks.map((task, i) => ({
-  //       taskId: task._id,
-  //       quantity: selectedQuantities[i],
-  //     }));
-  //     console.log("savedTasks", savedTasks);
-  //     //   await axios.post(`${apiUrl}`, { tasks: savedTasks });
-  //     // setSelectedQuantities(totalTasks.map(() => 0));
-  //   } catch (error) {
-  //     console.error("Error saving tasks", error);
-  //   }
-  // };
-  // const sendSavedTaks = async () => {
-  //   try {
-  //     const sendTAsk = savedTasks.map();
-  //     setSavedTasks(savedTasks);
-  //   } catch (error) {
-  //     console.error("Error sending saved tasks", error);
-  //   }
-  // };
   const taskTotals = totalTasks.map(
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
   return (
-    <div className="">
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Хийгдэх ажилууд</TableHead>
             <TableHead> Нэгж Үнэ</TableHead>
             <TableHead className="text-right"> Нэгжийн тоо</TableHead>
-            <TableHead> Ширхэгийн тоо</TableHead>
+            <TableHead> Бүтээгдэхүүний нийт тоо</TableHead>
+            <TableHead className="text-right"> Үлдсэн ажилууд</TableHead>
             <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
             <TableHead className="text-right"></TableHead>
           </TableRow>
@@ -136,6 +114,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
               <TableCell className="font-medium">{task.taskName}</TableCell>
               <TableCell>{task.unitPrice}</TableCell>
               <TableCell className="text-right">{task.quantity}</TableCell>
+              <TableCell>{productQuantity}</TableCell>
               <TableCell>{productQuantity - selectedQuantities[i]}</TableCell>
               <TableCell className="text-right">
                 <input type="number" value={selectedQuantities[i]} readOnly />
@@ -175,11 +154,11 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      {totalTasks.map((task, index) => (
+      {totalTasks.map((task, i) => (
         <SavedTasksCard
           key={task._id}
           task={task}
-          selectedQuantity={selectedQuantities[index]}
+          selectedQuantity={selectedQuantities[i]}
         />
       ))}
     </div>
