@@ -1,49 +1,86 @@
 import { model, Schema } from "mongoose";
+import { ITask } from "./components.model";
 
 interface ISavedTasks {
   user: Schema.Types.ObjectId;
-  products: [{ product: Schema.Types.ObjectId }];
-  categories:[{category:Schema.Types.ObjectId ,procedures:[]}]
-  procedures:[{task: Schema.Types.ObjectId; quantity:number}]
+  products: ISavedProduct[];
+}
+interface ISavedProduct {
+  product_id: Schema.Types.ObjectId;
+  productName: String;
+  components: ISavedComponents[];
+}
+interface ISavedComponents {
+  _id: Schema.Types.ObjectId;
+  componentName: string;
+  procedures: ITask[];
 }
 
 const savedTasksSchema = new Schema<ISavedTasks>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
     },
     products: [
       {
-        product: {
+        product_id: {
           type: Schema.Types.ObjectId,
           ref: "Product",
           required: true,
-          components:[]
-        }
-      
-      },
-    ],
-    categories:[
-      {
-        category:{
-          type: Schema.Types.ObjectId,
-          ref: "Category",
+        },
+        productName: {
+          type: String,
           required: true,
         },
-        procedures:[]
-      }
-    ],
-    procedures: [
-   {
-    task:{
-      type: Schema.Types.ObjectId,
-      ref: "Task",
-      required: true,
-    },
-    quantity:0
-   }
+        components: [
+          {
+            _id: {
+              type: Schema.Types.ObjectId,
+              required: true,
+            },
+            categoryName: {
+              type: String,
+              required: true,
+            },
+            procedures: [
+              {
+                taskName: {
+                  type: String,
+                  required: [true],
+                },
+                quantity: {
+                  type: Number,
+                  required: [true],
+                },
+                status: {
+                  pending: {
+                    type: Number,
+                    default: 0,
+                  },
+                  progress: {
+                    type: Number,
+                    default: 0,
+                  },
+                  done: {
+                    type: Number,
+                    default: 0,
+                  },
+                  review: {
+                    type: Number,
+                    default: 0,
+                  },
+                },
+                unitPrice: {
+                  type: Number,
+                  required: [true],
+                },
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
