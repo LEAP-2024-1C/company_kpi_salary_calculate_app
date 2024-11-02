@@ -65,9 +65,16 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       ...productForm,
       [name]: value
     });
-    categories.map((item) =>
-      item.procedures.map((pro) => (pro.status.pending = Number(value)))
-    );
+    // categories.map((item) =>
+    //   item.procedures.map((pro) => (pro.status.pending = Number(value)))
+    // );
+    setCategories((prev) => {
+      const newCatForm = [...prev];
+      newCatForm.map((pro) =>
+        pro.procedures.map((task) => (task.status.pending = Number(value)))
+      );
+      return newCatForm;
+    });
   };
   const handleInputChange = (
     catIndex: number,
@@ -130,7 +137,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       .filter(Boolean);
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
     console.log('value', value);
-    // createProject(value);
+    createProject(value);
   };
 
   const createProject = async (components: any) => {
@@ -304,7 +311,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       }
                       value={taskName}
                       type="checkbox"
-                      className="mr-2"
+                      className="mr-2 "
                       disabled={!isCheck[catIndex]}
                       onChange={(e) =>
                         handleProCheckChange(catIndex, procIndex)
@@ -323,7 +330,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       </Button>
                       <input
                         type="number"
-                        className="w-20 p-2 text-center "
+                        className="w-20 bg-inherit p-2 text-center "
                         value={
                           categories[catIndex]?.procedures[procIndex].quantity
                         }
@@ -352,7 +359,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       </Button>
                       <input
                         type="number"
-                        className="w-20 p-2 text-center"
+                        className="w-20 bg-inherit p-2 text-center"
                         value={
                           categories[catIndex]?.procedures[procIndex].unitPrice
                         }

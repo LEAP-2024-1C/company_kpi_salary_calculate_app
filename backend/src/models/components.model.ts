@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface ITask {
-  task_id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
   status: IStatus;

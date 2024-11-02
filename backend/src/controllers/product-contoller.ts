@@ -90,21 +90,18 @@ export const getAllProducts = async (req: Request, res: Response) => {
 //     const products = await Product.find().populate<IComponent>("components");
 //     const productStat = products.map((c) => {
 //       const comps = c.components.map((x) => {
-//         const status = {
-//           pending: x.procedures.filter((s) => s.status === "pending").length,
-//           progress: x.procedures.filter((s) => s.status === "progress").length,
-//           done: x.procedures.filter((s) => s.status === "done").length,
-//           review: x.procedures.filter((s) => s.status === "review").length,
-//         };
-//         const total =
-//           status.done + status.pending + status.progress + status.review;
-//         const other = total - status.pending;
-//         return {
-//           categoryName: x.categoryName,
-//           cat_id: x._id,
-//           total,
-//           other,
-//         };
+//         let pending = 0;
+//         let progress = 0;
+//         let done = 0;
+//         let review = 0;
+
+//         x.procedures.forEach((task) => {
+//           pending += task.status.pending;
+//           progress += task.status.progress;
+//           done += task.status.done;
+//           review += task.status.review;
+//         });
+//         return { pending, progress, done, review };
 //       });
 //       return {
 //         components: comps,

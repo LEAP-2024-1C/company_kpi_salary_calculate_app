@@ -93,7 +93,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
 
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
-    // createCategory(data);
+    createCategory(data);
   };
   const handleSub = (index: number, type: 'quantity' | 'unitPrice') => {
     if (type === 'quantity') {
