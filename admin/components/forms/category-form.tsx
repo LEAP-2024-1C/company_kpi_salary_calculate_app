@@ -3,7 +3,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -43,14 +43,17 @@ interface ProductFormProps {
   categories: any;
 }
 
-export const CategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
+export const CategoryForm: React.FC<ProductFormProps> = ({
+  initialData,
+  categories
+}) => {
+  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [taskName, setTaskName] = useState<string>('');
   const title = initialData ? 'Edit product' : 'Create category';
-  const description = initialData ? 'Edit a product.' : 'Add a new product';
-  const toastMessage = initialData ? 'Product updated.' : 'Product created.';
+  const description = initialData ? 'Edit a product.' : 'Add a new category';
+  const toastMessage = initialData ? 'Category updated.' : 'Category created.';
   const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = {
@@ -63,7 +66,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
     defaultValues
   });
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'procedures'
   });
@@ -71,11 +74,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const createCategory = async (data: ProductFormValues) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${apiUrl}cat/create/category`, { data });
+      const res = await axios.post(`${apiUrl}cat/category`, { data });
       if (res.status === 200) {
         router.refresh();
         console.log('success');
-        // router.push(`/dashboard/products`);
+        router.push(`/dashboard/category`);
         toast({ title: toastMessage });
       }
     } catch (error) {
@@ -89,36 +92,36 @@ export const CategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
-  const addUnit = (id: string) => {
-    console.log('IN', id);
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, quantity: findPro?.quantity! + 1 });
-  };
-  const subtractUnit = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, quantity: findPro?.quantity! - 1 });
-  };
-  const addUnitPrice = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    update(findIndex, { ...findPro!, unitPrice: findPro?.unitPrice! + 50 });
-  };
-  const subtractUnitPrice = (id: string) => {
-    const findIndex = fields.findIndex((f) => f.id === id);
-    const findPro = fields.find((f) => f.id === id);
-    console.log('FP', findPro);
-    update(findIndex, {
-      ...findPro!,
-      taskName: taskName,
-      unitPrice: findPro?.unitPrice! - 50
-    });
-  };
-
   const onSubmit = (data: ProductFormValues) => {
     console.log(data);
     createCategory(data);
+  };
+
+  const handleSub = (index: number, type: 'quantity' | 'unitPrice') => {
+    if (type === 'quantity') {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value > 1) {
+        form.setValue(`procedures.${index}.quantity`, Number(value) - 1);
+      }
+    } else {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value > 50) {
+        form.setValue(`procedures.${index}.unitPrice`, Number(value) - 50);
+      }
+    }
+  };
+  const handleAdd = (index: number, type: 'quantity' | 'unitPrice') => {
+    if (type === 'unitPrice') {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value >= 50) {
+        form.setValue(`procedures.${index}.unitPrice`, Number(value) + 50);
+      }
+    } else {
+      const value = Number(form.getValues(`procedures.${index}.${type}`));
+      if (value >= 0) {
+        form.setValue(`procedures.${index}.quantity`, Number(value) + 1);
+      }
+    }
   };
 
   return (
@@ -149,37 +152,27 @@ export const CategoryForm: React.FC<ProductFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-4">
-            {fields.map((pro, index) => {
-              // console.log(pro);
-              return (
-                <CategoryInput
-                  key={pro.id}
-                  pro={pro}
-                  form={form}
-                  index={index}
-                  loading={loading}
-                  taskName={taskName}
-                  setTaskName={setTaskName}
-                  addUnit={addUnit}
-                  addUnitPrice={addUnitPrice}
-                  subtractUnit={subtractUnit}
-                  subtractUnitPrice={subtractUnitPrice}
-                  remove={remove}
-                />
-              );
-            })}
-            <div>
-              <Button
-                type="button"
-                onClick={() =>
-                  append({ taskName: '', quantity: 1, unitPrice: 100 })
-                }
-              >
-                Add
-              </Button>
-            </div>
-          </div>
+          {fields.map((pro, index) => {
+            return (
+              <CategoryInput
+                key={pro.id}
+                pro={pro}
+                form={form}
+                index={index}
+                loading={loading}
+                handleSub={handleSub}
+                handleAdd={handleAdd}
+                remove={remove}
+              />
+            );
+          })}
+          <Button
+            type="button"
+            onClick={() => append({ taskName: '', quantity: 1, unitPrice: 50 })}
+          >
+            +
+          </Button>
+
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

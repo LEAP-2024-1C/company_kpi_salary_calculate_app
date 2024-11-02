@@ -188,7 +188,6 @@ export function DataTableDemo() {
     <div className="flex flex-col items-center">
       <div className=" w-4/5">
         <div className="flex items-center py-4">
-          {console.log('object', productData)}
           <Input
             placeholder="Filter emails..."
             value={

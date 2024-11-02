@@ -35,12 +35,8 @@ interface ProductFormProps {
   >;
   index: number;
   loading: boolean;
-  taskName: string;
-  setTaskName: Dispatch<SetStateAction<string>>;
-  addUnit: (id: string) => void;
-  addUnitPrice: (id: string) => void;
-  subtractUnit: (id: string) => void;
-  subtractUnitPrice: (id: string) => void;
+  handleAdd: (index: number, type: 'quantity' | 'unitPrice') => void;
+  handleSub: (index: number, type: 'quantity' | 'unitPrice') => void;
   remove: UseFieldArrayRemove;
 }
 
@@ -49,12 +45,8 @@ const CategoryInput: React.FC<ProductFormProps> = ({
   form,
   index,
   loading,
-  taskName,
-  setTaskName,
-  addUnit,
-  addUnitPrice,
-  subtractUnit,
-  subtractUnitPrice,
+  handleAdd,
+  handleSub,
   remove
 }) => {
   return (
@@ -73,10 +65,6 @@ const CategoryInput: React.FC<ProductFormProps> = ({
                     disabled={loading}
                     placeholder="Task Name"
                     {...field}
-                    value={taskName}
-                    onChange={(e) => {
-                      setTaskName(e.target.value);
-                    }}
                   />
                 </FormControl>
               </FormItem>
@@ -93,7 +81,8 @@ const CategoryInput: React.FC<ProductFormProps> = ({
                 <div>
                   <Button
                     className="rounded-full"
-                    onClick={() => subtractUnit(pro.id)}
+                    onClick={() => handleSub(index, 'quantity')}
+                    type="button"
                   >
                     -
                   </Button>
@@ -111,7 +100,8 @@ const CategoryInput: React.FC<ProductFormProps> = ({
                 <div>
                   <Button
                     className="rounded-full"
-                    onClick={() => addUnit(pro.id)}
+                    onClick={() => handleAdd(index, 'quantity')}
+                    type="button"
                   >
                     +
                   </Button>
@@ -130,7 +120,8 @@ const CategoryInput: React.FC<ProductFormProps> = ({
                 <div>
                   <Button
                     className="rounded-full"
-                    onClick={() => subtractUnitPrice(pro.id)}
+                    onClick={() => handleSub(index, 'unitPrice')}
+                    type="button"
                   >
                     -
                   </Button>
@@ -148,7 +139,8 @@ const CategoryInput: React.FC<ProductFormProps> = ({
                 <div>
                   <Button
                     className="rounded-full"
-                    onClick={() => addUnitPrice(pro.id)}
+                    onClick={() => handleAdd(index, 'unitPrice')}
+                    type="button"
                   >
                     +
                   </Button>

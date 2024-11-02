@@ -54,7 +54,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                       <TableCell className="w-20">{task.quantity}</TableCell>
                       <TableCell className="w-20">{task.unitPrice}₮</TableCell>
                       <TableCell className="w-20">
-                        <CellAction key={task._id} />
+                        <CellAction t_id={task._id} c_id={product._id} />
                       </TableCell>
                     </TableRow>
                   ))}
