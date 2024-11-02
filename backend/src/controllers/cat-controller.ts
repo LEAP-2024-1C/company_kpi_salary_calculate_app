@@ -8,6 +8,7 @@ export const createCategory = async (req: Request, res: Response) => {
     if (!categoryName || !procedures) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
+    console.log("first");
     const findCategory = await Category.findOne({ categoryName });
     if (!findCategory) {
       const category = await Category.create({
