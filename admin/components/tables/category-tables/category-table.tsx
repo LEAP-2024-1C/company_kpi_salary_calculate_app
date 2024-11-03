@@ -31,7 +31,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       <ScrollArea className="h-[calc(85vh-220px)] rounded-md border">
         <div className="flex flex-col gap-4">
           {data.map((product) => (
-            <div className="flex flex-col gap-4">
+            <div key={product._id} className="flex flex-col gap-4">
               <h1 className="pl-2 text-left text-xl font-semibold">
                 {product.categoryName}
               </h1>

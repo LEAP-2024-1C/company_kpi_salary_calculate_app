@@ -87,18 +87,17 @@ export const deleteCategory = async (req: Request, res: Response) => {
     if (!t_id || !c_id) {
       return res.status(400).json({ message: " Устгалт амжилтгүй" });
     }
-    const findCategory = await Category.findOne({ c_id });
+    const findCategory = await Category.findById({ c_id });
+    console.log("FC", findCategory);
     if (findCategory) {
-      const category = await Category.deleteOne({
+      const deletedCategory = await Category.findByIdAndDelete({
         t_id,
       });
       return res.status(200).json({
         message: "deleted procedure",
+        deletedCategory,
       });
     }
-    res
-      .status(400)
-      .json({ message: "Категорийн нэр давхацаж байна нэрээ өөрчилнө үү" });
   } catch (error) {
     res.status(404).json({ error });
   }
