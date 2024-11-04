@@ -1,50 +1,87 @@
+import Link from "next/link";
 import React, { useState } from "react";
+import { useProducts } from "@/context/product-provider";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import StatusIndicator from "./status";
 
-interface TaskTrackerProps {
-  totalTasks: number;
-}
+const TaskTracker = () => {
+  // const getColor = () => {
+  //   const status = 1 / 5;
 
-const TaskTracker: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
-  const [completedTasks, setCompletedTasks] = useState(0);
+  //   if (status === 1) return "green";
+  //   if (status >= 0.5) return "orange";
+  //   return "red";
+  // };
 
-  const completeTask = () => {
-    if (completedTasks < totalTasks) {
-      setCompletedTasks(completedTasks + 1);
-    }
-  };
-
-  const getDotColor = () => {
-    const percentageCompleted = completedTasks / totalTasks;
-
-    if (percentageCompleted === 1) return "green";
-    if (percentageCompleted >= 0.5) return "orange";
-    return "red";
-  };
+  const { productStat } = useProducts();
 
   return (
-    <div className="bg-gray-200 rounded-xl p-5 flex flex-col">
-      <h1 className="text-3xl font-bold ">Tsamts</h1>
-      <ul>
-        <li className="flex items-center gap-3">
+    <>
+      {productStat?.map(
+        ({
+          productName,
+          components,
+          image,
+          description,
+          createdAt,
+          quantity,
+          _id,
+        }) => (
           <div
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              backgroundColor: getDotColor(),
-            }}
-          />
-          <p>Pocket</p>
-          <p>
-            ({completedTasks} / {totalTasks})
-          </p>
-        </li>
-      </ul>
-      <div className="w-full flex ">
-        <p className="text-blue-500 justify-self-end">Status</p>
-        <button onClick={completeTask}>Task</button>
-      </div>
-    </div>
+            className="bg-gray-200 rounded-xl p-5 flex flex-col border text-green-900"
+            // style={{ borderColor: getColor() }}
+          >
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="">
+                  <Link href={"/" + _id}>
+                    <div
+                      className="w-[100px] h-[100px] rounded-xl"
+                      style={{
+                        backgroundImage: `url('${image}')`,
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                      }}
+                    ></div>
+                  </Link>
+
+                  <Link href={"/" + _id}>
+                    <h1 className="text-3xl font-bold ">
+                      {productName}({components.length})
+                    </h1>
+                  </Link>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Link href={"/" + _id}>
+                    {components.map(
+                      ({ categoryName, cat_id, total, other }) => (
+                        <ul>
+                          <li className="flex items-center gap-3">
+                            <div>{categoryName}</div>
+                            <p>
+                              ({other}/ {total})
+                            </p>
+                          </li>
+                        </ul>
+                      )
+                    )}
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <div className="w-full flex ">
+              <StatusIndicator status="pending" />
+              {/* <p className="text-blue-500 justify-self-end">Төлөв: {status}</p> */}
+            </div>
+          </div>
+        )
+      )}
+    </>
   );
 };
 

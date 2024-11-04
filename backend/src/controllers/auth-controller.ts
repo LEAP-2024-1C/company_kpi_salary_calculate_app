@@ -8,6 +8,7 @@ import { sendEmail } from "../utils/send-email";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  console.log("user", email, password);
   try {
     const user = await Employee.findOne({ email });
     if (!user) {

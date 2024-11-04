@@ -28,31 +28,33 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
       />
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
+      <ScrollArea className="h-[calc(85vh-220px)] rounded-md border">
         <div className="flex flex-col gap-4">
           {data.map((product) => (
-            <div className="flex flex-col gap-4">
-              <h1 className="pl-4 text-left text-2xl font-semibold">
+            <div key={product._id} className="flex flex-col gap-4">
+              <h1 className="pl-2 text-left text-xl font-semibold">
                 {product.categoryName}
               </h1>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Task Name</TableHead>
-                    <TableHead>Unit</TableHead>
-                    <TableHead>Unit Price</TableHead>
+                    <TableHead className="pl-4 font-semibold">
+                      Дамжлага
+                    </TableHead>
+                    <TableHead className="font-semibold">Нэгж</TableHead>
+                    <TableHead className="font-semibold">Нэгжийн Үнэ</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {product.procedures.map((task) => (
-                    <TableRow key={product.id}>
+                    <TableRow key={task._id}>
                       <TableCell className="w-[900px]">
                         {task.taskName}
                       </TableCell>
                       <TableCell className="w-20">{task.quantity}</TableCell>
-                      <TableCell className="w-20">{task.unitPrice}$</TableCell>
+                      <TableCell className="w-20">{task.unitPrice}₮</TableCell>
                       <TableCell className="w-20">
-                        <CellAction id={product.id} />
+                        <CellAction t_id={task._id} c_id={product._id} />
                       </TableCell>
                     </TableRow>
                   ))}

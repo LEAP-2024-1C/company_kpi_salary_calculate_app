@@ -65,11 +65,6 @@ export default function Login() {
           >
             Нэвтрэх
           </Button>
-          <Link href={"/forgetpass/email"}>
-            <Button className=" bg-gray-500 rounded-full w-full">
-              Нэвтрэх
-            </Button>
-          </Link>
 
           <div className="flex gap-3">
             <p className="border-b text-gray-500">

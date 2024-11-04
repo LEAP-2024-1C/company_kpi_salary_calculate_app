@@ -5,8 +5,14 @@ interface ITask {
   _id: Schema.Types.ObjectId;
   taskName: string;
   quantity: number;
-  status: string;
+  status: IStatus;
   unitPrice: number;
+}
+interface IStatus {
+  pending: number;
+  progress: number;
+  done: number;
+  review: number;
 }
 interface ICategory {
   _id: Schema.Types.ObjectId;
@@ -18,7 +24,6 @@ interface ICategory {
 const categorySchema = new Schema<ICategory>({
   categoryName: {
     type: String,
-    unique: true,
     required: [true, "Ажлын нэрийг оруулах"],
   },
   procedures: [
@@ -32,9 +37,22 @@ const categorySchema = new Schema<ICategory>({
         required: [true],
       },
       status: {
-        type: String,
-        enum: ["pending", "progress", "done", "review"],
-        default: "pending",
+        pending: {
+          type: Number,
+          default: 0,
+        },
+        progress: {
+          type: Number,
+          default: 0,
+        },
+        done: {
+          type: Number,
+          default: 0,
+        },
+        review: {
+          type: Number,
+          default: 0,
+        },
       },
       unitPrice: {
         type: String,
