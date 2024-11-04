@@ -30,15 +30,13 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       const res = await axios.get(`${apiUrl}product/${id}`);
       if (res.status === 200) {
         const { oneProductDatas } = res.data;
-        console.log("data", oneProductDatas);
         setOneProduct(oneProductDatas);
       }
     } catch (error) {
       console.error(error);
     }
   };
-  console.log("id", id);
-  console.log("oneProductStatus", oneProductDatas);
+
   useEffect(() => {
     getCurrentProduct();
   }, []);
@@ -71,27 +69,27 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     );
   };
 
-  const handleSaveTasks = async () => {
-    try {
-      const tasksToSave = totalTasks
-        .map((task, i) => ({
-          product_id: id,
-          components_id: ,
-          task_id: task._id,
-          progress: selectedQuantities[i],
-        }))
-        .filter((task) => task.progress > 0);
-      if (tasksToSave.length === 0) {
-        console.log("No tasks to save.");
-        return;
-      }
-      console.log("Tasks to save:", tasksToSave);
-      await axios.post(`${apiUrl}save/employee/task`, { tasks: tasksToSave });
-      setSelectedQuantities(totalTasks.map(() => 0));
-    } catch (error) {
-      console.error("Error sending saved tasks", error);
-    }
-  };
+  // const handleSaveTasks = async () => {
+  //   try {
+  //     const tasksToSave = totalTasks
+  //       .map((task, i) => ({
+  //         product_id: id,
+  //         components_id:
+  //         task_id: task._id,
+  //         progress: selectedQuantities[i],
+  //       }))
+  //       .filter((task) => task.progress > 0);
+  //     if (tasksToSave.length === 0) {
+  //       console.log("No tasks to save.");
+  //       return;
+  //     }
+  //     console.log("Tasks to save:", tasksToSave);
+  //     await axios.post(`${apiUrl}save/employee/task`, { tasks: tasksToSave });
+  //     setSelectedQuantities(totalTasks.map(() => 0));
+  //   } catch (error) {
+  //     console.error("Error sending saved tasks", error);
+  //   }
+  // };
   const getSavedTasks = async () => {
     try {
       const userToken = localStorage.getItem("token");
@@ -107,7 +105,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   };
 
   useEffect(() => {
-    getSavedTasks();
+    // getSavedTasks();
   }, []);
 
   const taskTotals = totalTasks.map(
@@ -167,7 +165,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
             <TableCell className="text-right">
               <Button
                 variant="outline"
-                onClick={handleSaveTasks}
+                // onClick={handleSaveTasks}
                 className="rounded-full border-green-700"
               >
                 Хадгалах

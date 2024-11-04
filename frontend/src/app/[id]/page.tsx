@@ -102,7 +102,6 @@ const TaskDetail = () => {
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-green-900">
                     <p>{categoryName}</p>
-                    <p></p>
                   </AccordionTrigger>
                   <AccordionContent>
                     <ProductDetailModal totalTasks={procedures} />
