@@ -19,7 +19,7 @@ const TaskTracker = () => {
   // };
 
   const { productStat } = useProducts();
-
+  console.log("productStat", productStat);
   return (
     <>
       {productStat?.map(

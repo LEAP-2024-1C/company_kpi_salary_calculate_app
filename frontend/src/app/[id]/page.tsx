@@ -14,14 +14,17 @@ import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
+import { toast } from "react-toastify";
 // import { useTasks } from "@/context/task-provider";
 
 const TaskDetail = () => {
   const { user } = useUser();
   const { id } = useParams();
   const [oneProduct, setOneProduct] = useState<IProduct>();
+
   const getCurrentProduct = async () => {
     try {
+      console.log("id", id);
       const res = await axios.get(`${apiUrl}product/${id}`);
       if (res.status === 200) {
         const { oneProductDatas } = res.data;
@@ -37,6 +40,29 @@ const TaskDetail = () => {
   useEffect(() => {
     getCurrentProduct();
   }, []);
+
+  // const createSavedTasks = async () => {
+  //   try {
+  //     const response = await axios.post(`${apiUrl}save/employee/task`, {
+  //       user_id: user?._id,
+  //       product_id: id,
+  //     });
+
+  //     if (response.status === 200) {
+  //       console.log("success");
+  //       toast.success("Successfully added to cart");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     toast.error("Failed to add to cart");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (id) {
+  //     getCurrentProduct();
+  //   }
+  // }, [id, getCurrentProduct]);
 
   return (
     <>

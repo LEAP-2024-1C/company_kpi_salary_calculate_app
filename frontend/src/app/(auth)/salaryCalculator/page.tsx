@@ -1,7 +1,8 @@
+import SavedTasksCard from "@/components/savedTasksCard";
 import React from "react";
 
 const SalaryCalculator = () => {
-  return <div></div>;
+  return <div>{/* <SavedTasksCard /> */}</div>;
 };
 
 export default SalaryCalculator;
