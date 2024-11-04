@@ -67,7 +67,7 @@ const TaskDetail = () => {
               <p className="text-green-800 w-[700px]">
                 {/* Хугацаа:{createdAt} */}
               </p>
-              <p className="text-green-800 w-[700px]">Төлөв: {status}</p>
+              <p className="text-green-800 w-[700px]">Төлөв: </p>
             </div>
           </div>
           {oneProduct?.components.map(({ categoryName, procedures }) => (

@@ -24,6 +24,11 @@ interface TaskTrackerProps {
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
+  const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
+  const [cartData, setCartData] = useState<ISavedTasks[] | null>(null);
+  const [savedTasks, setSavedTasks] = useState<
+    { taskId: string; quantity: number }[]
+  >([]);
   const getCurrentProduct = async () => {
     try {
       const res = await axios.get(`${apiUrl}product/${id}`);
@@ -42,19 +47,11 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     getCurrentProduct();
   }, []);
 
-  const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
-    totalTasks.map(() => 0)
-  );
-  const [savedTasks, setSavedTasks] = useState<
-    { taskId: string; quantity: number }[]
-  >([]);
-  // const [savedTasks, setSavedTasks] = useState<object>();
-
   useEffect(() => {
     setSelectedQuantities(totalTasks.map(() => 0));
   }, [totalTasks]);
 
-  const productQuantity = oneProductDatas?.quantity;
+  const productQuantity = oneProductDatas?.quantity || 0;
   const add = (index: number) => {
     setSelectedQuantities((prevQuantities) =>
       prevQuantities.map((quantity, i) =>
@@ -89,11 +86,29 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       console.error("Error sending saved tasks", error);
     }
   };
+  const getSavedTasks = async () => {
+    try {
+      const userToken = localStorage.getItem("token");
+      const response = await axios.get(`${apiUrl}tasks/get-savedTasks`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+      if (response.status === 200) {
+        setCartData(response.data.cart.products);
+      }
+    } catch (error) {
+      console.error("Error fetching saved tasks:", error);
+    }
+  };
+
+  useEffect(() => {
+    getSavedTasks();
+  }, []);
 
   const taskTotals = totalTasks.map(
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
+
   return (
     <div>
       <Table>
@@ -154,13 +169,19 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      {totalTasks.map((task, i) => (
+      {/* {totalTasks.map((task, i) => (
         <SavedTasksCard
           key={task._id}
           task={task}
           selectedQuantity={selectedQuantities[i]}
         />
-      ))}
+      ))} */}
+
+      {cartData && cartData.length > 0 ? (
+        <SavedTasksCard cartData={cartData} />
+      ) : (
+        <p>No saved tasks available.</p>
+      )}
     </div>
   );
 };

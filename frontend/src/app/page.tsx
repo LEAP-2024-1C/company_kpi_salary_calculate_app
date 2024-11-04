@@ -64,12 +64,7 @@ export default function Login() {
           >
             Нэвтрэх
           </Button>
-          <Button
-            className="w-1/4 flex items-center justify-center  bg-blue-700 rounded-full"
-            onClick={logIn}
-          >
-            Нэвтрэх
-          </Button>
+
           <div className="flex gap-3">
             <p className="border-b text-gray-500">
               {/* <Link href={"/forgetpass/email"}
