@@ -24,6 +24,10 @@ interface TaskTrackerProps {
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
+  const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
+  const [savedTasks, setSavedTasks] = useState<
+    { taskId: string; quantity: number }[]
+  >([]);
   const getCurrentProduct = async () => {
     try {
       const res = await axios.get(`${apiUrl}product/${id}`);
@@ -42,19 +46,11 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     getCurrentProduct();
   }, []);
 
-  const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
-    totalTasks.map(() => 0)
-  );
-  const [savedTasks, setSavedTasks] = useState<
-    { taskId: string; quantity: number }[]
-  >([]);
-  // const [savedTasks, setSavedTasks] = useState<object>();
-
   useEffect(() => {
     setSelectedQuantities(totalTasks.map(() => 0));
   }, [totalTasks]);
 
-  const productQuantity = oneProductDatas?.quantity;
+  const productQuantity = oneProductDatas?.quantity || 0;
   const add = (index: number) => {
     setSelectedQuantities((prevQuantities) =>
       prevQuantities.map((quantity, i) =>
@@ -94,6 +90,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
+
   return (
     <div>
       <Table>
