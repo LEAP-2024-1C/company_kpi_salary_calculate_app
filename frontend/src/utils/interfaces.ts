@@ -5,7 +5,6 @@
 //     taskName:string
 //     price:number
 // }
-
 export interface IEmployee {
   _id: string
   firstName: String;
@@ -24,12 +23,12 @@ export interface IEmployee {
   updated_at: Date;
 }
 export interface IProduct {
-  _id:string;
+  product_id:string;
   productName: string;
   description: string;
   images?: [string];
   quantity: number;
-  // status?: number;
+  status?: number;
   components: [IComponents];
 }
 export interface IProductStat{
@@ -49,38 +48,54 @@ export interface IComps{
   other: number
 }
 export interface IComponents {
-  _id:string;
-  categoryName:string
-  procedures:[IProcedures]
+  // _id:string;
+  // categoryName:string
+  // tota: number;
+  // other: number,
+  categoryName: string,
+  _id: string
+  procedures:IProcedures[]
 }
 export interface IProcedures{
   taskName: string;
   quantity:number;
-  status:ITask;
+  status:IStatus;
   unitPrice:number;
   _id?:string
 }
-export interface ITask{
+export interface IStatus{
   pending:number;
   progress:number;
   done:number;
   review:number
 }
-// const [productData, setProductData] = useState<IProduct>({
-  //   id: "",
-  //   productName: "",
-  //   description: "",
-  //   images: [""],
-  //   quantity: 0,
-  //   status: 0,
-  //   category: [{}],
-  // });
 
-  export interface ISavedTasks{
+
+export interface ISaveTasks{
     _id:string;
     taskName:string
     unitPrice:number
     quantity:number
-    selectedQuantity:number
-
+    selectedQuantity:number }
+  export interface ISavedTasks {
+    user: string;
+    products: ISavedProduct[];
   }
+  export interface ISavedProduct {
+    product_id: string;
+    productName: String;
+    components: ISavedComponents[];
+  }
+  export  interface ISavedComponents {
+    _id: string;
+    componentName: string;
+    procedures: ITask[];}
+
+    export interface ITask {
+      _id: string;
+      taskName: string;
+      quantity: number;
+      status: IStatus;
+      unitPrice: number;
+    }
+  

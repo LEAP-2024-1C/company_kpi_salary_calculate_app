@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IProcedures, IProduct, ISavedTasks } from "@/utils/interfaces";
+import { IProcedures, IProduct, ISaveTasks } from "@/utils/interfaces";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
@@ -24,11 +24,7 @@ interface TaskTrackerProps {
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
-  const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
-  const [cartData, setCartData] = useState<ISavedTasks[] | null>(null);
-  const [savedTasks, setSavedTasks] = useState<
-    { taskId: string; quantity: number }[]
-  >([]);
+  const [cartData, setCartData] = useState<ISaveTasks[] | null>(null);
   const getCurrentProduct = async () => {
     try {
       const res = await axios.get(`${apiUrl}product/${id}`);
@@ -42,10 +38,18 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     }
   };
   console.log("id", id);
-  console.log("oneProduct", oneProductDatas);
+  console.log("oneProductStatus", oneProductDatas);
   useEffect(() => {
     getCurrentProduct();
   }, []);
+
+  const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
+    totalTasks.map(() => 0)
+  );
+  const [savedTasks, setSavedTasks] = useState<
+    { taskId: string; quantity: number }[]
+  >([]);
+  // const [savedTasks, setSavedTasks] = useState<object>();
 
   useEffect(() => {
     setSelectedQuantities(totalTasks.map(() => 0));
@@ -71,16 +75,18 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     try {
       const tasksToSave = totalTasks
         .map((task, i) => ({
-          taskId: task._id,
-          quantity: selectedQuantities[i],
+          product_id: id,
+          components_id: ,
+          task_id: task._id,
+          progress: selectedQuantities[i],
         }))
-        .filter((task) => task.quantity > 0);
+        .filter((task) => task.progress > 0);
       if (tasksToSave.length === 0) {
         console.log("No tasks to save.");
         return;
       }
       console.log("Tasks to save:", tasksToSave);
-      // await axios.post(`${apiUrl}tasks/updateTasks`, { tasks: tasksToSave });
+      await axios.post(`${apiUrl}save/employee/task`, { tasks: tasksToSave });
       setSelectedQuantities(totalTasks.map(() => 0));
     } catch (error) {
       console.error("Error sending saved tasks", error);
@@ -108,9 +114,8 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
-
   return (
-    <div>
+    <div className="flex ">
       <Table>
         <TableHeader>
           <TableRow>
@@ -130,7 +135,9 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
               <TableCell>{task.unitPrice}</TableCell>
               <TableCell className="text-right">{task.quantity}</TableCell>
               <TableCell>{productQuantity}</TableCell>
-              <TableCell>{productQuantity - selectedQuantities[i]}</TableCell>
+              <TableCell>
+                {task?.status.pending - selectedQuantities[i]}
+              </TableCell>
               <TableCell className="text-right">
                 <input type="number" value={selectedQuantities[i]} readOnly />
               </TableCell>
@@ -169,19 +176,13 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      {/* {totalTasks.map((task, i) => (
-        <SavedTasksCard
-          key={task._id}
-          task={task}
-          selectedQuantity={selectedQuantities[i]}
-        />
-      ))} */}
 
-      {cartData && cartData.length > 0 ? (
+      {/* {cartData && cartData.length > 0 ? (
         <SavedTasksCard cartData={cartData} />
       ) : (
         <p>No saved tasks available.</p>
-      )}
+      )} */}
+      <div></div>
     </div>
   );
 };

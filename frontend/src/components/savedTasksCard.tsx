@@ -12,12 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ISavedTasks } from "@/utils/interfaces";
+import { ISaveTasks } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "react-toastify";
 interface SavedTasksCardProps {
-  cartData: ISavedTasks[];
+  cartData: ISaveTasks[];
 }
 
 const SavedTasksCard: React.FC<SavedTasksCardProps> = ({ cartData }) => {
