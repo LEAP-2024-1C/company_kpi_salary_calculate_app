@@ -1,10 +1,10 @@
-export interface ITask {
-    id:string;
-    totalTasks:number;
-    completedTasks:number
-    taskName:string
-    price:number
-}
+// export interface ITask {
+//     id:string;
+//     totalTasks:number;
+//     completedTasks:number
+//     taskName:string
+//     price:number
+// }
 
 export interface IEmployee {
   _id: string
@@ -29,7 +29,7 @@ export interface IProduct {
   description: string;
   images?: [string];
   quantity: number;
-  status?: number;
+  // status?: number;
   components: [IComponents];
 }
 export interface IProductStat{
@@ -56,9 +56,15 @@ export interface IComponents {
 export interface IProcedures{
   taskName: string;
   quantity:number;
-  status?:string;
+  status:ITask;
   unitPrice:number;
   _id?:string
+}
+export interface ITask{
+  pending:number;
+  progress:number;
+  done:number;
+  review:number
 }
 // const [productData, setProductData] = useState<IProduct>({
   //   id: "",
@@ -71,7 +77,10 @@ export interface IProcedures{
   // });
 
   export interface ISavedTasks{
-components: [IComponents]
-
+    _id:string;
+    taskName:string
+    unitPrice:number
+    quantity:number
+    selectedQuantity:number
 
   }
