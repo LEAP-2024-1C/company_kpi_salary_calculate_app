@@ -84,21 +84,27 @@ export const getAllEmployees = async (req: Request, res: Response) => {
 export const forgetPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const findUser = await Employee.findOne({ email: email });
-    if (!findUser) {
+    console.log("email", email);
+    const findEmployee = await Employee.findOne({ email });
+    if (!findEmployee) {
       return res
         .status(400)
         .json({ message: "Бүртгэлтэй хэрэглэгч олдсонгүй" });
     }
-
+    console.log("findemail", findEmployee);
     const otp = Math.floor(Math.random() * 10_000)
       .toString()
       .padStart(4, "0");
-    findUser.otp = otp;
-    await findUser.save();
+    findEmployee.otp = otp;
+
+    await findEmployee.save();
+
     await sendEmail(email, otp);
+    console.log("success");
     res.status(200).json({ message: "OTP code is sent email successfully" });
-  } catch (error) {}
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
 };
 
 export const verifyOtp = async (req: Request, res: Response) => {

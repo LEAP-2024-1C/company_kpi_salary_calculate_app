@@ -10,6 +10,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { apiUrl } from "@/lib/utils";
 
 const ForgetPassword = () => {
   const router = useRouter();
@@ -26,34 +27,29 @@ const ForgetPassword = () => {
   const handleSendOtp = async () => {
     console.log(email);
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/forget-password",
-        { email }
-      );
+      const res = await axios.post(`${apiUrl}auth/forget-password`, { email });
       if (res.status === 200) {
         setStep(step + 1);
       }
     } catch (error) {
       toast.error("Имэйл илгээхэд алдаа гарлаа");
     }
-
-    // router.push("/forgetpass/otp");
   };
 
   const handleConfirmOtp = async (value: string) => {
     setOtpValue(value);
+    console.log("value", value);
     if (value.length === 4) {
-      // router.push("/forgetpass/newpass");
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/v1/auth/verify-otp",
-          { email, otpValue: value }
-        );
+        const res = await axios.post(`${apiUrl}auth/verify-otp`, {
+          email,
+          otpValue: value,
+        });
         if (res.status === 200) {
           toast.success(
             "Нууц үг сэргээх холбоосыг таны имэйл хаяг руу явууллаа."
           );
-          router.push("/login");
+          router.push("/");
         }
       } catch (error) {
         console.log(error);

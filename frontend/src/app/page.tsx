@@ -68,8 +68,9 @@ export default function Login() {
 
           <div className="flex gap-3">
             <p className="border-b text-gray-500">
-              {/* <Link href={"/forgetpass/email"}
-			  >Нууц үг мартсан</Link> */}
+              <Link href={"/forgetpass/email"}>
+                Нууц үг мартсан /анх удаа нэвтрэх
+              </Link>
             </p>
           </div>
         </div>
