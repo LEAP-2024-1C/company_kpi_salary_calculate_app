@@ -9,33 +9,28 @@ import {
 
 import { useUser } from "@/context/user-provider";
 import { useParams } from "next/navigation";
-import { useProducts } from "@/context/product-provider";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
-import { toast } from "react-toastify";
-// import { useTasks } from "@/context/task-provider";
 
 const TaskDetail = () => {
   const { user } = useUser();
   const { id } = useParams();
-  const [oneProduct, setOneProduct] = useState<IProduct>();
+  const [currentProduct, setCurrentProduct] = useState<IProduct>();
 
   const getCurrentProduct = async () => {
     try {
-      console.log("id", id);
       const res = await axios.get(`${apiUrl}product/${id}`);
       if (res.status === 200) {
         const { oneProductDatas } = res.data;
         console.log("data", oneProductDatas);
-        setOneProduct(oneProductDatas);
+        setCurrentProduct(oneProductDatas);
       }
     } catch (error) {
       console.error(error);
     }
   };
-  console.log("id", id);
 
   useEffect(() => {
     getCurrentProduct();
@@ -72,7 +67,7 @@ const TaskDetail = () => {
             <div
               className="w-[300px] h-[300px] rounded-xl border border-green-900 bg-gray-300"
               style={{
-                backgroundImage: `url('${oneProduct?.images}')`,
+                backgroundImage: `url('${currentProduct?.images}')`,
                 backgroundPosition: "center",
                 backgroundSize: "cover",
               }}
@@ -82,13 +77,13 @@ const TaskDetail = () => {
               <h1 className="text-green-900 text-2xl font-bold">Тайлбар:</h1>
 
               <p className="text-green-800 w-[700px]">
-                Төрөл: {oneProduct?.description}
+                Төрөл: {currentProduct?.description}
               </p>
               <p className="text-green-800 w-[700px]">
-                Бүтээгдэхүүний нэр: {oneProduct?.productName}
+                Бүтээгдэхүүний нэр: {currentProduct?.productName}
               </p>
               <p className="text-green-800 w-[700px]">
-                Хийгдэх тоо ширхэг: {oneProduct?.quantity}
+                Хийгдэх тоо ширхэг: {currentProduct?.quantity}
               </p>
               <p className="text-green-800 w-[700px]">
                 {/* Хугацаа:{createdAt} */}
@@ -96,20 +91,30 @@ const TaskDetail = () => {
               <p className="text-green-800 w-[700px]">Төлөв: </p>
             </div>
           </div>
-          {oneProduct?.components.map(({ categoryName, procedures }) => (
-            <div className="bg-white p-5 rounded-lg border border-green-900">
-              <Accordion type="single" collapsible className=" w-[900px]">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-green-900">
-                    <p>{categoryName}</p>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ProductDetailModal totalTasks={procedures} />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          ))}
+          {currentProduct?.components.map(
+            ({ categoryName, procedures }, idx) => (
+              <div
+                className="bg-white p-5 rounded-lg border border-green-900"
+                key={idx}
+              >
+                <Accordion type="single" collapsible className=" w-[1200px]">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-green-900">
+                      <p>{categoryName}</p>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ProductDetailModal
+                        totalTasks={procedures}
+                        productName={currentProduct.productName}
+                        product_id={currentProduct._id}
+                        quantity={currentProduct.quantity}
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )
+          )}
         </div>
       </div>
     </>

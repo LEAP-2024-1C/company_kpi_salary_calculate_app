@@ -12,175 +12,159 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IProcedures, IProduct, ISaveTasks } from "@/utils/interfaces";
+import { IProcedures, IProduct, ISaveTasks, IStatus } from "@/utils/interfaces";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import SavedTasksCard from "./savedTasksCard";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  taskName: string;
+  unitPrice: number;
+  quantity: string;
+  status: IStatus;
+};
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
+  productName: string;
+  product_id: string;
+  quantity: number;
 }
 
-const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
-  const { id } = useParams();
-  const [oneProductDatas, setOneProduct] = useState<IProduct>();
-  const [cartData, setCartData] = useState<ISaveTasks[] | null>(null);
-  const getCurrentProduct = async () => {
-    try {
-      const res = await axios.get(`${apiUrl}product/${id}`);
-      if (res.status === 200) {
-        const { oneProductDatas } = res.data;
-        setOneProduct(oneProductDatas);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+const ProductDetailModal: React.FC<TaskTrackerProps> = ({
+  totalTasks,
+  productName,
+  product_id,
+  quantity,
+}) => {
+  const [count, setCount] = useState<number>(0);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs[]>();
+  const onSubmit: SubmitHandler<Inputs[]> = (data) => console.log(data);
+
+  const handleAdd = (i: number) => {
+    setCount((prev) => prev + 1);
   };
-
-  useEffect(() => {
-    getCurrentProduct();
-  }, []);
-
-  const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
-    totalTasks.map(() => 0)
-  );
-  const [savedTasks, setSavedTasks] = useState<
-    { taskId: string; quantity: number }[]
-  >([]);
-  // const [savedTasks, setSavedTasks] = useState<object>();
-
-  useEffect(() => {
-    setSelectedQuantities(totalTasks.map(() => 0));
-  }, [totalTasks]);
-
-  const productQuantity = oneProductDatas?.quantity || 0;
-  const add = (index: number) => {
-    setSelectedQuantities((prevQuantities) =>
-      prevQuantities.map((quantity, i) =>
-        i === index && quantity < productQuantity ? quantity + 1 : quantity
-      )
-    );
+  const handleSub = (i: number) => {
+    setCount((prev) => prev - 1);
   };
-  const reduce = (index: number) => {
-    setSelectedQuantities((prevQuantities) =>
-      prevQuantities.map((quantity, i) =>
-        i === index && quantity > 0 ? quantity - 1 : quantity
-      )
-    );
-  };
-
-  // const handleSaveTasks = async () => {
-  //   try {
-  //     const tasksToSave = totalTasks
-  //       .map((task, i) => ({
-  //         product_id: id,
-  //         components_id:
-  //         task_id: task._id,
-  //         progress: selectedQuantities[i],
-  //       }))
-  //       .filter((task) => task.progress > 0);
-  //     if (tasksToSave.length === 0) {
-  //       console.log("No tasks to save.");
-  //       return;
-  //     }
-  //     console.log("Tasks to save:", tasksToSave);
-  //     await axios.post(`${apiUrl}save/employee/task`, { tasks: tasksToSave });
-  //     setSelectedQuantities(totalTasks.map(() => 0));
-  //   } catch (error) {
-  //     console.error("Error sending saved tasks", error);
-  //   }
-  // };
-  const getSavedTasks = async () => {
-    try {
-      const userToken = localStorage.getItem("token");
-      const response = await axios.get(`${apiUrl}tasks/get-savedTasks`, {
-        headers: { Authorization: `Bearer ${userToken}` },
-      });
-      if (response.status === 200) {
-        setCartData(response.data.cart.products);
-      }
-    } catch (error) {
-      console.error("Error fetching saved tasks:", error);
-    }
-  };
-
-  useEffect(() => {
-    // getSavedTasks();
-  }, []);
-
-  const taskTotals = totalTasks.map(
-    (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
-  );
-  const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
   return (
     <div className="flex ">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Хийгдэх ажилууд</TableHead>
-            <TableHead> Нэгж Үнэ</TableHead>
-            <TableHead className="text-right"> Нэгжийн тоо</TableHead>
-            <TableHead> Бүтээгдэхүүний нийт тоо</TableHead>
-            <TableHead className="text-right"> Үлдсэн ажилууд</TableHead>
-            <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
-            <TableHead className="text-right"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {totalTasks.map((task, i) => (
-            <TableRow key={task._id}>
-              <TableCell className="font-medium">{task.taskName}</TableCell>
-              <TableCell>{task.unitPrice}</TableCell>
-              <TableCell className="text-right">{task.quantity}</TableCell>
-              <TableCell>{productQuantity}</TableCell>
-              <TableCell>
-                {task?.status.pending - selectedQuantities[i]}
-              </TableCell>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[600px]">Хийгдэх ажилууд</TableHead>
+              <TableHead className="text-center"> Нэгж Үнэ ₮</TableHead>
+              <TableHead className="text-center"> Нэгжийн тоо</TableHead>
+              <TableHead>Нийт ажилбарын тоо</TableHead>
+              <TableHead className="text-center"> Үлдсэн ажилууд</TableHead>
+              <TableHead className="text-center">Миний авсан ажилууд</TableHead>
+              <TableHead className="text-center"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {totalTasks.map((task, idx) => (
+              <TableRow key={task._id}>
+                <TableCell className="font-medium ">
+                  <input
+                    defaultValue={task.taskName}
+                    type="text"
+                    readOnly
+                    className="bg-inherit w-[300px]"
+                    {...register(`${idx}.taskName`)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <input
+                    type="number"
+                    readOnly
+                    defaultValue={task.unitPrice}
+                    className="bg-inherit text-center w-20"
+                    {...register(`${idx}.unitPrice`)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <input
+                    type="number"
+                    readOnly
+                    defaultValue={task.quantity}
+                    value={task.quantity}
+                    className="bg-inherit text-center w-20"
+                    {...register(`${idx}.quantity`)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <input
+                    type="text"
+                    className="bg-inherit text-center w-20"
+                    disabled
+                    value={quantity}
+                  /> */}
+                  <label htmlFor="">{quantity}</label>
+                </TableCell>
+                <TableCell>
+                  <input
+                    type="text"
+                    className="bg-inherit text-center w-20"
+                    readOnly
+                    defaultValue={task?.status.pending - count}
+                    {...register(`${idx}.status.pending`)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {/* <input
+                    type="number"
+                    className="text-center w-20"
+                    value={count}
+                    readOnly
+                  /> */}
+                  <label htmlFor="">{count}</label>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex gap-2 ">
+                    <Button
+                      type="button"
+                      className="rounded-full border bg-white text-green-900"
+                      onClick={() => handleSub(idx)}
+                    >
+                      -
+                    </Button>
+                    <Button
+                      type="button"
+                      className="rounded-full border bg-white text-green-900"
+                      onClick={() => handleAdd(idx)}
+                    >
+                      +
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
+              <TableCell className="text-right">{count}₮</TableCell>
               <TableCell className="text-right">
-                <input type="number" value={selectedQuantities[i]} readOnly />
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex gap-2 ">
-                  <Button
-                    className="rounded-full border bg-white text-green-900"
-                    onClick={() => reduce(i)}
-                  >
-                    -
-                  </Button>
-                  <Button
-                    className="rounded-full border bg-white text-green-900"
-                    onClick={() => add(i)}
-                  >
-                    +
-                  </Button>
-                </div>
+                <Button
+                  variant="outline"
+                  // onClick={handleSaveTasks}
+                  className="rounded-full border-green-700"
+                >
+                  Хадгалах
+                </Button>
+                <input type="submit" />
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
-            <TableCell className="text-right">{totalPrice}₮</TableCell>
-            <TableCell className="text-right">
-              <Button
-                variant="outline"
-                // onClick={handleSaveTasks}
-                className="rounded-full border-green-700"
-              >
-                Хадгалах
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-
-      {/* {cartData && cartData.length > 0 ? (
-        <SavedTasksCard cartData={cartData} />
-      ) : (
-        <p>No saved tasks available.</p>
-      )} */}
-      <div></div>
+          </TableFooter>
+        </Table>
+      </form>
     </div>
   );
 };
