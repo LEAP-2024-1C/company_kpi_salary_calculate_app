@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { useProducts } from "@/context/product-provider";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
-import { IProduct } from "@/utils/interfaces";
+import { IProduct, ISaveTasks } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -23,6 +23,7 @@ const TaskDetail = () => {
   const { user } = useUser();
   const { id } = useParams();
   const [oneProduct, setOneProduct] = useState<IProduct>();
+  const [savedProductData, setSavedProductData] = useState<ISaveTasks>();
 
   const getCurrentProduct = async () => {
     try {
@@ -32,6 +33,9 @@ const TaskDetail = () => {
         const { oneProductDatas } = res.data;
         console.log("data", oneProductDatas);
         setOneProduct(oneProductDatas);
+        const savedProductData = oneProductDatas.components;
+        setSavedProductData(savedProductData);
+        console.log("comps", savedProductData);
       }
     } catch (error) {
       console.error(error);
