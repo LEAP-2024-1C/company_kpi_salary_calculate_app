@@ -29,7 +29,7 @@ export interface IProduct {
   images: [string];
   quantity: number;
   status: number;
-  components: [IComponents];
+  components: IComponents[];
 }
 export interface IProductStat {
   components: IComps[];
@@ -48,10 +48,6 @@ export interface IComps {
   other: number;
 }
 export interface IComponents {
-  // _id:string;
-  // categoryName:string
-  // tota: number;
-  // other: number,
   categoryName: string;
   _id: string;
   procedures: IProcedures[];
@@ -61,7 +57,7 @@ export interface IProcedures {
   quantity: number;
   status: IStatus;
   unitPrice: number;
-  _id?: string;
+  _id: string;
 }
 export interface IStatus {
   pending: number;

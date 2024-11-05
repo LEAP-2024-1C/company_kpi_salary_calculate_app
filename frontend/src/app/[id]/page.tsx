@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -32,18 +32,36 @@ const TaskDetail = () => {
     }
   };
 
-  const setPro = (pId: number, catId: number, num: number) => {
+  const setPro = (
+    pId: number,
+    catId: number,
+    num: number,
+    type: "add" | "sub"
+  ) => {
     setCurrentProduct((pre) => {
       if (!pre) {
         return pre;
       }
       const nP = { ...pre };
-      if (nP.components[pId].procedures[catId].status.pending < 1) {
+      if (type === "add") {
+        if (nP.components[pId].procedures[catId].status.pending < 1) {
+          return nP;
+        }
+        nP.components[pId].procedures[catId].status.pending -= 1;
+        console.log("num", num);
+        nP.components[pId].procedures[catId].status.progress = num;
+        return nP;
+      } else {
+        if (
+          nP.components[pId].procedures[catId].status.pending < 1 &&
+          nP.components[pId].procedures[catId].status.progress === 0
+        ) {
+          return nP;
+        }
+        nP.components[pId].procedures[catId].status.pending += 1;
+        nP.components[pId].procedures[catId].status.progress = num;
         return nP;
       }
-      nP.components[pId].procedures[catId].status.pending -= 1;
-      nP.components[pId].procedures[catId].status.progress = num;
-      return nP;
     });
   };
 
