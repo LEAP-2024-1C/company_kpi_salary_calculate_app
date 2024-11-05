@@ -32,9 +32,12 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         <div className="flex flex-col gap-4">
           {data.map((product) => (
             <div key={product._id} className="flex flex-col gap-4">
-              <h1 className="pl-2 text-left text-xl font-semibold">
-                {product.categoryName}
-              </h1>
+              <div className="flex justify-between pr-7">
+                <h1 className="pl-2 text-left text-xl font-semibold">
+                  {product.categoryName}
+                </h1>
+                <Button className="">+</Button>
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
