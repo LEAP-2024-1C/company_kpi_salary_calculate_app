@@ -288,15 +288,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         <div className="ml-10 flex flex-col">
           {categories.map(({ categoryName, procedures }, catIndex) => (
             <div key={catIndex}>
-              <div>
-                <input
-                  value={categoryName}
-                  type="checkbox"
-                  className="mr-2 "
-                  checked={isCheck[catIndex]}
-                  onChange={(e) => handleChange(e, catIndex)}
-                />
-                <label>{categoryName}</label>
+              <div className="flex justify-between px-8">
+                <div>
+                  <input
+                    value={categoryName}
+                    type="checkbox"
+                    className="mr-2 "
+                    checked={isCheck[catIndex]}
+                    onChange={(e) => handleChange(e, catIndex)}
+                  />
+                  <label>{categoryName}</label>
+                </div>
+                <Button className="rounded-full">+</Button>
               </div>
 
               {procedures.map(

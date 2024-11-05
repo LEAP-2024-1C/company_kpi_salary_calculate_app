@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { useProducts } from '@/context/admin-context';
 import { apiUrl } from '@/lib/utils';
 import axios from 'axios';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
@@ -17,14 +18,21 @@ import { useState } from 'react';
 interface CellActionProps {
   t_id: string;
   c_id: string;
+  setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
+export const CellAction: React.FC<CellActionProps> = ({
+  c_id,
+  t_id,
+  setUpdate
+}) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const updateCategory = async (updatedData) => {
+  const { setRefresh, refresh } = useProducts();
+
+  const updateProcedure = async (updatedData) => {
     try {
       setLoading(true);
       const response = await axios.put(`${apiUrl}cat/category`, {
@@ -51,7 +59,7 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
     }
   };
 
-  const deleteCategory = async () => {
+  const deleteProcedure = async () => {
     try {
       setLoading(true);
       const response = await axios.delete(`${apiUrl}cat/procedure`, {
@@ -63,6 +71,7 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
         console.log('Success: Category deleted');
         toast({ title: 'Deleted successfully' });
         router.push(`/dashboard/category`);
+        setRefresh((prev) => !prev);
       }
     } catch (error) {
       console.error('Error deleting category:', error); // Log the error for debugging
@@ -95,12 +104,10 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/category/${c_id}`)}
-          >
+          <DropdownMenuItem onClick={setUpdate(true)}>
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={deleteCategory}>
+          <DropdownMenuItem onClick={deleteProcedure}>
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

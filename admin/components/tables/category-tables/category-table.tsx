@@ -15,6 +15,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Category } from '@/constants/data';
 import { CellAction } from './cell-action';
+import { useState } from 'react';
 
 interface DataTableProps {
   data: Category[];
@@ -22,6 +23,7 @@ interface DataTableProps {
 }
 
 export function CategoryTable({ data, searchKey }: DataTableProps) {
+  const [loading, setLoading] = useState(false);
   return (
     <>
       <Input
@@ -51,13 +53,68 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                 <TableBody>
                   {product.procedures.map((task) => (
                     <TableRow key={task._id}>
-                      <TableCell className="w-[900px]">
-                        {task.taskName}
+                      <TableCell className="w-[800px]">
+                        <input
+                          type="text"
+                          value={task.taskName}
+                          disabled={loading}
+                        />
                       </TableCell>
-                      <TableCell className="w-20">{task.quantity}</TableCell>
-                      <TableCell className="w-20">{task.unitPrice}₮</TableCell>
                       <TableCell className="w-20">
-                        <CellAction t_id={task._id} c_id={product._id} />
+                        <div className="flex gap-2">
+                          <Button
+                          // className="rounded-full"
+                          // onClick={() => handleSub(index, 'quantity')}
+                          // type="button"
+                          >
+                            -
+                          </Button>
+                          <input
+                            type="number"
+                            value={task.quantity}
+                            disabled={loading}
+                            className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          />
+                          <Button
+                          // className="rounded-full"
+                          // onClick={() => handleAdd(index, 'quantity')}
+                          // type="button"
+                          >
+                            +
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-20">
+                        <div className="flex items-center gap-2">
+                          <Button
+                          // className="rounded-full"
+                          // onClick={() => handleSub(index, 'quantity')}
+                          // type="button"
+                          >
+                            -
+                          </Button>
+                          <input
+                            type="number"
+                            value={task.unitPrice}
+                            disabled={loading}
+                            className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          />
+                          ₮
+                          <Button
+                          // className="rounded-full"
+                          // onClick={() => handleAdd(index, 'quantity')}
+                          // type="button"
+                          >
+                            +
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-20">
+                        <CellAction
+                          t_id={task._id}
+                          c_id={product._id}
+                          setUpdate={setLoading}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
