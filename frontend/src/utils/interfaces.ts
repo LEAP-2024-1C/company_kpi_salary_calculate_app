@@ -26,9 +26,9 @@ export interface IProduct {
   _id: string;
   productName: string;
   description: string;
-  images?: [string];
+  images: [string];
   quantity: number;
-  status?: number;
+  status: number;
   components: [IComponents];
 }
 export interface IProductStat {

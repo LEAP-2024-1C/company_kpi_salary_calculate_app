@@ -17,7 +17,7 @@ import ProductDetailModal from "@/components/productDetailModal";
 const TaskDetail = () => {
   const { user } = useUser();
   const { id } = useParams();
-  const [currentProduct, setCurrentProduct] = useState<IProduct>();
+  const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null);
 
   const getCurrentProduct = async () => {
     try {
@@ -32,32 +32,24 @@ const TaskDetail = () => {
     }
   };
 
+  const setPro = (pId: number, catId: number, num: number) => {
+    setCurrentProduct((pre) => {
+      if (!pre) {
+        return pre;
+      }
+      const nP = { ...pre };
+      if (nP.components[pId].procedures[catId].status.pending < 1) {
+        return nP;
+      }
+      nP.components[pId].procedures[catId].status.pending -= 1;
+      nP.components[pId].procedures[catId].status.progress = num;
+      return nP;
+    });
+  };
+
   useEffect(() => {
     getCurrentProduct();
   }, []);
-
-  // const createSavedTasks = async () => {
-  //   try {
-  //     const response = await axios.post(`${apiUrl}save/employee/task`, {
-  //       user_id: user?._id,
-  //       product_id: id,
-  //     });
-
-  //     if (response.status === 200) {
-  //       console.log("success");
-  //       toast.success("Successfully added to cart");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     toast.error("Failed to add to cart");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (id) {
-  //     getCurrentProduct();
-  //   }
-  // }, [id, getCurrentProduct]);
 
   return (
     <>
@@ -108,6 +100,8 @@ const TaskDetail = () => {
                         productName={currentProduct.productName}
                         product_id={currentProduct._id}
                         quantity={currentProduct.quantity}
+                        cat_id={idx}
+                        setPro={setPro}
                       />
                     </AccordionContent>
                   </AccordionItem>

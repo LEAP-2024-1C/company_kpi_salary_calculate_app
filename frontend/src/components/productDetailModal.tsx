@@ -25,11 +25,14 @@ type Inputs = {
   quantity: string;
   status: IStatus;
 };
+
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
   productName: string;
   product_id: string;
   quantity: number;
+  cat_id: number;
+  setPro: Function;
 }
 
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({
@@ -37,22 +40,45 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   productName,
   product_id,
   quantity,
+  cat_id,
+  setPro,
 }) => {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number[]>(
+    new Array(totalTasks.length).fill(0)
+  );
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<Inputs[]>();
-  const onSubmit: SubmitHandler<Inputs[]> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs[]> = (data) => {
+    // console.log("FORM", data);
+    console.log("P", totalTasks);
+  };
 
   const handleAdd = (i: number) => {
-    setCount((prev) => prev + 1);
+    console.log("idx", i);
+    setCount((prev) => {
+      const newA = [...prev];
+      newA[i]++;
+      console.log("D", cat_id, i, newA[i]);
+      setPro(cat_id, i, newA[i]);
+      return newA;
+    });
   };
   const handleSub = (i: number) => {
-    setCount((prev) => prev - 1);
+    console.log("I", i);
+    setCount((prev) => {
+      const newA = [...prev];
+      newA[i]--;
+      console.log("D", cat_id, i, newA[i]);
+      setPro(cat_id, i, newA[i]);
+      return newA;
+    });
   };
+
+  console.log(count);
   return (
     <div className="flex ">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,8 +89,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
               <TableHead className="text-center"> Нэгж Үнэ ₮</TableHead>
               <TableHead className="text-center"> Нэгжийн тоо</TableHead>
               <TableHead>Нийт ажилбарын тоо</TableHead>
-              <TableHead className="text-center"> Үлдсэн ажилууд</TableHead>
-              <TableHead className="text-center">Миний авсан ажилууд</TableHead>
+              <TableHead className="text-center">
+                Үлдсэн ажилууд Pendig
+              </TableHead>
+              <TableHead className="text-center">
+                Миний авсан ажилууд Progress
+              </TableHead>
               <TableHead className="text-center"></TableHead>
             </TableRow>
           </TableHeader>
@@ -77,7 +107,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     type="text"
                     readOnly
                     className="bg-inherit w-[300px]"
-                    {...register(`${idx}.taskName`)}
+                    // {...register(`${idx}.taskName`)}
                   />
                 </TableCell>
                 <TableCell>
@@ -86,7 +116,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     readOnly
                     defaultValue={task.unitPrice}
                     className="bg-inherit text-center w-20"
-                    {...register(`${idx}.unitPrice`)}
+                    // {...register(`${idx}.unitPrice`)}
                   />
                 </TableCell>
                 <TableCell>
@@ -96,7 +126,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     defaultValue={task.quantity}
                     value={task.quantity}
                     className="bg-inherit text-center w-20"
-                    {...register(`${idx}.quantity`)}
+                    // {...register(`${idx}.quantity`)}
                   />
                 </TableCell>
                 <TableCell>
@@ -113,18 +143,18 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     type="text"
                     className="bg-inherit text-center w-20"
                     readOnly
-                    defaultValue={task?.status.pending - count}
-                    {...register(`${idx}.status.pending`)}
+                    defaultValue={task?.status.pending}
+                    value={task?.status.pending}
+                    // {...register(`${idx}.status.pending`)}
                   />
                 </TableCell>
                 <TableCell>
-                  {/* <input
+                  <input
                     type="number"
                     className="text-center w-20"
-                    value={count}
-                    readOnly
-                  /> */}
-                  <label htmlFor="">{count}</label>
+                    value={count[idx]}
+                    // {...register(`${idx}.status.progress`)} //
+                  />
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex gap-2 ">
@@ -138,11 +168,16 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     <Button
                       type="button"
                       className="rounded-full border bg-white text-green-900"
-                      onClick={() => handleAdd(idx)}
+                      onClick={() => {
+                        handleAdd(idx);
+                      }}
                     >
                       +
                     </Button>
                   </div>
+                  <button type="button" onClick={() => console.log("hi", idx)}>
+                    add
+                  </button>
                 </TableCell>
               </TableRow>
             ))}
