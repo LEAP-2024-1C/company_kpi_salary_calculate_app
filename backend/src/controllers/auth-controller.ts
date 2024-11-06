@@ -38,7 +38,8 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       user;
     res.status(200).json({
       message: "success",
-      user: { email, profile_img, firstName, lastName, address, phoneNumber },
+      //{ email, profile_img, firstName, lastName, address, phoneNumber },
+      user: user,
     });
   } catch (error) {
     res.status(401).json({ error });
@@ -50,10 +51,11 @@ export const createEmployee = async (req: Request, res: Response) => {
     const { data } = req.body;
     const { email, firstName, lastName, password, job_title, phoneNumber } =
       data;
-    
+
     if (!firstName || !lastName || !email || !password || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
-    }console.log(data)
+    }
+    console.log(data);
 
     // console.log("first", hashedPassword);
     const createdEmployee = await Employee.create({

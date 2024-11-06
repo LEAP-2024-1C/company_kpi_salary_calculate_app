@@ -50,6 +50,23 @@ export const ProductProvider = ({
     //     : item
     // )
     // );
+    // const getSavedTasks = async () => {
+    //   try {
+    //     const userToken = localStorage.getItem("token");
+    //     const response = await axios.get(`${apiUrl}tasks/get-savedTasks`, {
+    //       headers: { Authorization: `Bearer ${userToken}` },
+    //     });
+    //     if (response.status === 200) {
+    //       setCartData(response.data.cart.products);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching saved tasks:", error);
+    //   }
+    // };
+
+    // useEffect(() => {
+    //   getSavedTasks();
+    // }, []);
     const userToken = localStorage.getItem("token");
     try {
       const response = await axios.put(

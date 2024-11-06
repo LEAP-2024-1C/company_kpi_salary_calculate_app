@@ -17,31 +17,35 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import SavedTasksCard from "./savedTasksCard";
+import { toast } from "react-toastify";
+import UserProvider, { useUser } from "@/context/user-provider";
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
 }
 
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const { id } = useParams();
+  const { user } = useUser();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
-  const [cartData, setCartData] = useState<ISaveTasks[] | null>(null);
-  const getCurrentProduct = async () => {
+  // const [cartData, setCartData] = useState<ISaveTasks[] | null>(null);
+  const getCurrentProduct = async (id: string) => {
     try {
       const res = await axios.get(`${apiUrl}product/${id}`);
       if (res.status === 200) {
         const { oneProductDatas } = res.data;
-        console.log("data", oneProductDatas);
+        // console.log("data", oneProductDatas);
         setOneProduct(oneProductDatas);
       }
     } catch (error) {
       console.error(error);
     }
+    // console.log("user", user);
   };
-  console.log("id", id);
-  console.log("oneProductStatus", oneProductDatas);
-  useEffect(() => {
-    getCurrentProduct();
-  }, []);
+  // console.log("id", id);
+  // console.log("oneProductStatus", oneProductDatas);
+  // useEffect(() => {
+  //   getCurrentProduct();
+  // }, []);
 
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
     totalTasks.map(() => 0)
@@ -49,7 +53,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
   const [savedTasks, setSavedTasks] = useState<
     { taskId: string; quantity: number }[]
   >([]);
-  // const [savedTasks, setSavedTasks] = useState<object>();
 
   useEffect(() => {
     setSelectedQuantities(totalTasks.map(() => 0));
@@ -73,42 +76,57 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
 
   const handleSaveTasks = async () => {
     try {
-      const tasksToSave = totalTasks
+      const componentsToSave = totalTasks
         .map((task, i) => ({
-          product_id: id,
-          // components_id: ,
-          task_id: task._id,
-          progress: selectedQuantities[i],
+          _id: task._id,
+          componentName: task.taskName,
+          procedures: [
+            {
+              taskName: task.taskName,
+              quantity: selectedQuantities[i],
+              unitPrice: task.unitPrice,
+              status: {
+                pending: task.status.pending - selectedQuantities[i],
+                progress: selectedQuantities[i],
+                done: 0,
+                review: 0,
+              },
+            },
+          ],
         }))
-        .filter((task) => task.progress > 0);
-      if (tasksToSave.length === 0) {
+        .filter((component) => component.procedures[0].quantity > 0);
+
+      if (componentsToSave.length === 0) {
         console.log("No tasks to save.");
         return;
       }
+      const tasksToSave = {
+        user: user?._id,
+        products: [
+          {
+            product_id: id,
+            productName: oneProductDatas?.productName || "",
+            components: componentsToSave,
+          },
+        ],
+      };
       console.log("Tasks to save:", tasksToSave);
-      await axios.post(`${apiUrl}save/employee/task`, { tasks: tasksToSave });
+      await axios.post(`${apiUrl}save/employee/task`, tasksToSave, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       setSelectedQuantities(totalTasks.map(() => 0));
+      console.log("Tasks saved successfully.");
     } catch (error) {
       console.error("Error sending saved tasks", error);
     }
   };
-  const getSavedTasks = async () => {
-    try {
-      const userToken = localStorage.getItem("token");
-      const response = await axios.get(`${apiUrl}tasks/get-savedTasks`, {
-        headers: { Authorization: `Bearer ${userToken}` },
-      });
-      if (response.status === 200) {
-        setCartData(response.data.cart.products);
-      }
-    } catch (error) {
-      console.error("Error fetching saved tasks:", error);
-    }
-  };
 
   useEffect(() => {
-    getSavedTasks();
-  }, []);
+    if (id && typeof id === "string") {
+      getCurrentProduct(id);
+    }
+  }, [id, getCurrentProduct]);
 
   const taskTotals = totalTasks.map(
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity

@@ -13,6 +13,28 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       const savedTasks = await SavedTasks.create({
         user: user_id,
         products: product,
+        // user: user_id,
+        // products: [
+        //   {
+        //     product_id: product_id,
+        //     productName: productName,
+        //     components: [ _id:_id,
+        //       componentName: taskName,
+        //       procedures: [
+        //         {
+        //           taskName: taskName,
+        //           quantity:
+        //           unitPrice: unitPrice
+        //           status: {
+        //             pending:0 ,
+        //             progress:0 ,
+        //             done: 0,
+        //             review: 0,
+        //           },
+        //         },
+        //       ],],
+        //   },
+        // ],
       });
       console.log(savedTasks);
       return res.status(200).json({

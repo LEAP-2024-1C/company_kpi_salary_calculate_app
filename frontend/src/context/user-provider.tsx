@@ -59,6 +59,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     getCurrentUser();
   }, [loggedIn]);
 
+  console.log("user", user);
   return (
     <UserContext.Provider value={{ user, setUser, loading, setIsLoggedIn }}>
       {children}
