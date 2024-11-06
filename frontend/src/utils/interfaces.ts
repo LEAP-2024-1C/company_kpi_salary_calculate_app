@@ -64,6 +64,7 @@ export interface IStatus {
   progress: number;
   done: number;
   review: number;
+  assign: number;
 }
 
 export interface ISaveTasks {
@@ -79,7 +80,7 @@ export interface ISavedTasks {
 }
 export interface ISavedProduct {
   product_id: string;
-  productName: String;
+  productName: string;
   components: ISavedComponents[];
 }
 export interface ISavedComponents {

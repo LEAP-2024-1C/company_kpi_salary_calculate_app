@@ -32,12 +32,7 @@ const TaskDetail = () => {
     }
   };
 
-  const setPro = (
-    pId: number,
-    catId: number,
-    num: number,
-    type: "add" | "sub"
-  ) => {
+  const setPro = (pId: number, catId: number, type: "add" | "sub") => {
     setCurrentProduct((pre) => {
       if (!pre) {
         return pre;
@@ -47,19 +42,18 @@ const TaskDetail = () => {
         if (nP.components[pId].procedures[catId].status.pending < 1) {
           return nP;
         }
+
         nP.components[pId].procedures[catId].status.pending -= 1;
-        console.log("num", num);
-        nP.components[pId].procedures[catId].status.progress = num;
+        nP.components[pId].procedures[catId].status.progress += 1;
+        nP.components[pId].procedures[catId].status.assign += 1;
         return nP;
       } else {
-        if (
-          nP.components[pId].procedures[catId].status.pending < 1 &&
-          nP.components[pId].procedures[catId].status.progress === 0
-        ) {
+        if (nP.components[pId].procedures[catId].status.assign < 1) {
           return nP;
         }
         nP.components[pId].procedures[catId].status.pending += 1;
-        nP.components[pId].procedures[catId].status.progress = num;
+        nP.components[pId].procedures[catId].status.progress -= 1;
+        nP.components[pId].procedures[catId].status.assign -= 1;
         return nP;
       }
     });
@@ -102,7 +96,7 @@ const TaskDetail = () => {
             </div>
           </div>
           {currentProduct?.components.map(
-            ({ categoryName, procedures }, idx) => (
+            ({ categoryName, procedures, _id }, idx) => (
               <div
                 className="bg-white p-5 rounded-lg border border-green-900"
                 key={idx}
@@ -118,7 +112,9 @@ const TaskDetail = () => {
                         productName={currentProduct.productName}
                         product_id={currentProduct._id}
                         quantity={currentProduct.quantity}
-                        cat_id={idx}
+                        cat_idx={idx}
+                        cat_id={_id}
+                        categoryName={categoryName}
                         setPro={setPro}
                       />
                     </AccordionContent>

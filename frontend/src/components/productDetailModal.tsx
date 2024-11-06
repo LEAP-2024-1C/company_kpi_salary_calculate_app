@@ -12,19 +12,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IProcedures, IProduct, ISaveTasks, IStatus } from "@/utils/interfaces";
+import {
+  IProcedures,
+  IProduct,
+  ISavedTasks,
+  ISaveTasks,
+  IStatus,
+} from "@/utils/interfaces";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import SavedTasksCard from "./savedTasksCard";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useUser } from "@/context/user-provider";
 
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
   productName: string;
   product_id: string;
   quantity: number;
-  cat_id: number;
+  cat_id: string;
+  cat_idx: number;
+  categoryName: string;
   setPro: Function;
 }
 
@@ -34,25 +43,20 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   product_id,
   quantity,
   cat_id,
+  cat_idx,
   setPro,
+  categoryName,
 }) => {
-  const [count, setCount] = useState<number[]>(
-    new Array(totalTasks.length).fill(0)
-  );
+  // const [count, setCount] = useState<number[]>(
+  //   new Array(totalTasks.length).fill(0)
+  // );
+  const { user } = useUser();
   const [tasks, setTasks] = useState<IProcedures[]>([]);
+  const [saveProduct, setSaveProduct] = useState<ISavedTasks>();
 
   const handleAdd = (i: number) => {
     console.log("idx", i);
-    setCount((prev) => {
-      const newCount = [...prev];
-      if (totalTasks[i].status.pending === 0) {
-        return newCount;
-      }
-      newCount[i]++;
-      console.log("D", cat_id, i, newCount[i]);
-      setPro(cat_id, i, newCount[i], "add");
-      return newCount;
-    });
+    setPro(cat_idx, i, "add");
 
     setTasks((prev) => {
       if (!prev) return prev;
@@ -69,33 +73,46 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
     });
   };
   const handleSub = (i: number) => {
-    console.log("I", i);
-    setCount((prev) => {
-      const newA = [...prev];
-      if (newA[i] === 0) {
-        return newA;
-      }
-      newA[i]--;
-      console.log("D", cat_id, i, newA[i]);
-      setPro(cat_id, i, newA[i], "sub");
-      return newA;
-    });
-
+    console.log("handleSub called for index:", i);
+    setPro(cat_idx, i, "sub");
     setTasks((prev) => {
+      if (prev.length === 0) {
+        console.error("Index out of bounds:", i);
+        return prev;
+      }
       const newTask = [...prev];
-      const findDuplicate = newTask.some(
+      console.log("Before removing, tasks:", prev);
+      const assignStatus = totalTasks[i]?.status?.assign;
+      const findIndex = newTask.findIndex(
         (item) => item._id === totalTasks[i]._id
       );
-      console.log(findDuplicate);
-      if (findDuplicate) {
-        newTask.splice(i, 1);
+      if (assignStatus === 0) {
+        newTask.splice(findIndex, 1);
       }
-
-      // newTask[i].status.progress = totalTasks[i].status.progress + 1;
-      console.log("newTask", newTask);
+      console.log("Updated tasks:", newTask);
       return newTask;
     });
   };
+  const handleSubmit = () => {
+    setSaveProduct((prev) => {
+      const newSaveTask: ISavedTasks = {
+        user: user ? user._id : "",
+        products: prev?.products || [],
+      };
+
+      newSaveTask.products.push({
+        product_id,
+        productName,
+        components: [
+          { _id: cat_id, componentName: categoryName, procedures: tasks },
+        ],
+      });
+
+      console.log("Saved product:", newSaveTask);
+      return newSaveTask;
+    });
+  };
+
   return (
     <div className="flex ">
       <Table>
@@ -131,7 +148,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                 <label htmlFor="">{task.status.pending}</label>
               </TableCell>
               <TableCell>
-                <label htmlFor="">{count[idx]}</label>
+                <label htmlFor="">{task.status.assign}</label>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex gap-2 ">
@@ -152,9 +169,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
                     +
                   </Button>
                 </div>
-                <button type="button" onClick={() => console.log("hi", idx)}>
-                  add
-                </button>
               </TableCell>
             </TableRow>
           ))}
@@ -162,11 +176,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
-            <TableCell className="text-right">{count}₮</TableCell>
+            <TableCell className="text-right">{}₮</TableCell>
             <TableCell className="text-right">
               <Button
                 variant="outline"
                 className="rounded-full border-green-700"
+                onClick={handleSubmit}
               >
                 Хадгалах
               </Button>
