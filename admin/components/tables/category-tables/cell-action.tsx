@@ -24,19 +24,48 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
+  const updateCategory = async (updatedData) => {
+    try {
+      setLoading(true);
+      const response = await axios.put(`${apiUrl}cat/category`, {
+        c_id,
+        t_id,
+        ...updatedData // Spread the updated data into the request body
+      });
+
+      if (response.status === 200) {
+        router.refresh();
+        console.log('Success: Category updated');
+        toast({ title: 'Updated successfully' });
+        router.push(`/dashboard/category`);
+      }
+    } catch (error) {
+      console.error('Error updating category:', error); // Log the error for debugging
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteCategory = async () => {
     try {
       setLoading(true);
-      const res = await axios.delete(`${apiUrl}cat/category`, {
-        data: { c_id: c_id, t_id: t_id }
+      const response = await axios.delete(`${apiUrl}cat/procedure`, {
+        data: { c_id, t_id } // Assuming c_id and t_id are in scope
       });
-      if (res.status === 200) {
+
+      if (response.status === 200) {
         router.refresh();
-        console.log('success');
+        console.log('Success: Category deleted');
+        toast({ title: 'Deleted successfully' });
         router.push(`/dashboard/category`);
-        toast({ title: 'Deleted succesfully' });
       }
     } catch (error) {
+      console.error('Error deleting category:', error); // Log the error for debugging
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
@@ -66,7 +95,9 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`/dashboard/category/${c_id}`)}
+          >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem onClick={deleteCategory}>

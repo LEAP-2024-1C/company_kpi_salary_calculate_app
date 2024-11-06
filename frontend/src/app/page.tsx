@@ -1,78 +1,124 @@
 "use client";
 
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { apiUrl } from "@/lib/utils";
+import Link from "next/link";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
-export default function Login() {
+import { formPage } from "@/utils/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import exp from "constants";
+interface IPage {
+  email: string;
+  password: string;
+}
+
+const Login = () => {
   const router = useRouter();
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+  const form = useForm<z.infer<typeof formPage>>({
+    resolver: zodResolver(formPage),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const logIn = async () => {
-    const { email, password } = userData;
-
+  const logIn = async (value: IPage) => {
+    const { email, password } = value;
     try {
       const response = await axios.post(`${apiUrl}auth/login`, {
         email,
         password,
       });
-
       if (response.status === 200) {
-        toast.success("User successfully signed in", { autoClose: 1000 });
+        toast.success("амжилттай нэвтэрлээ", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
         router.push("/dashboard");
       }
-      console.log("medeelel", userData);
     } catch (error) {
-      console.error("There was an error signing in:", error);
-      toast.error("Failed to sign in. Please try again.");
+      toast.error("имэил эсвэл нууц үг буруу байна", { autoClose: 1000 });
     }
   };
+
+  const onSubmit = (values: z.infer<typeof formPage>) => {
+    logIn(values);
+    console.log("pass", values);
+  };
+
   return (
-    <div className=" p-16 m-16 w-full">
+    <div className=" p-16 m-16 w-full h-screen">
       <div className="flex flex-col gap-5 text-center p-16 m-16">
         <h1 className="text-3xl font-bold">Нэвтрэх</h1>
-        <div className="flex flex-col gap-7 items-center">
-          <Input
-            className=" w-1/4 p-2 flex items-center justify-center rounded-full"
-            placeholder="Имэйл хаяг"
-            onChange={(e) =>
-              setUserData({ ...userData, email: e.target.value })
-            }
-          ></Input>
-          <Input
-            className="w-1/4  p-2 flex items-center justify-center rounded-full"
-            placeholder="Нууц үг"
-            onChange={(e) =>
-              setUserData({ ...userData, password: e.target.value })
-            }
-          ></Input>
-        </div>
-
-        <div className="flex flex-col gap-5 items-center">
-          <Button
-            className="w-1/4 flex items-center justify-center  bg-blue-700 rounded-full"
-            onClick={logIn}
-          >
-            Нэвтрэх
-          </Button>
-
-          <div className="flex gap-3">
-            <p className="border-b text-gray-500">
-              {/* <Link href={"/forgetpass/email"}
-			  >Нууц үг мартсан</Link> */}
-            </p>
-          </div>
-        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
+            <div className="flex flex-col gap-7 items-center">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="email"
+                        {...field}
+                        className="w-[334px] h-[36px] bg-[#FFFFFF] rounded-[18px] pl-4 border"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="password"
+                        {...field}
+                        className="w-[334px] h-[36px] bg-[#FFFFFF] rounded-[18px] pl-4 border"
+                        type="password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-5 items-center">
+              <Button
+                className="btn bg-[#0166FF] text-white rounded-[20px] w-[334px] h-[36px] "
+                type="submit"
+              >
+                Нэвтрэх
+              </Button>
+              <div className="flex gap-3">
+                <p className="border-b text-gray-500">
+                  <Link href={"/forgetpass/email"}>
+                    Нууц үг мартсан / анх удаа нэвтрэх
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );
-}
+};
+export default Login;

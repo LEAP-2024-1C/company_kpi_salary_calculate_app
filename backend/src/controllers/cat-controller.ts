@@ -80,25 +80,95 @@ export const getAllCategories = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
-  const { data } = req.body;
+export const updateProcedure = async (req: Request, res: Response) => {
+  const data = req.body;
+  console.log(data);
+
+  try {
+    const { c_id, t_id, updatedData } = data;
+
+    // Validate input
+    if (!c_id || !t_id || !updatedData) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Устгалт амжилтгүй: c_id, t_id, болон updatedData заавал байх ёстой.",
+        });
+    }
+
+    const findCategory = await Category.findById(c_id);
+    console.log("FC", findCategory);
+
+    if (!findCategory) {
+      return res.status(404).json({ message: "Ангилал олдсонгүй." });
+    }
+
+    // Find the procedure by t_id
+    const procedure = findCategory.procedures.find(
+      (proc) => proc._id.toString() === t_id
+    );
+
+    if (!procedure) {
+      return res.status(404).json({ message: "Procedure олдсонгүй." });
+    }
+
+    // Update the procedure with the new data
+    Object.assign(procedure, updatedData);
+
+    await findCategory.save(); // Save the updated category
+
+    return res.status(200).json({
+      message: "Procedures амжилттай шинэчилэв.",
+      updatedProcedure: procedure,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Алдаа гарлаа." });
+  }
+};
+
+export const deleteProcedure = async (req: Request, res: Response) => {
+  const data = req.body;
+  console.log(data);
+
   try {
     const { c_id, t_id } = data;
+
+    // Validate input
     if (!t_id || !c_id) {
-      return res.status(400).json({ message: " Устгалт амжилтгүй" });
+      return res.status(400).json({
+        message: "Устгалт амжилтгүй: c_id болон t_id заавал байх ёстой.",
+      });
     }
-    const findCategory = await Category.findById({ c_id });
+
+    const findCategory = await Category.findById(c_id);
     console.log("FC", findCategory);
-    if (findCategory) {
-      const deletedCategory = await Category.findByIdAndDelete({
-        t_id,
-      });
-      return res.status(200).json({
-        message: "deleted procedure",
-        deletedCategory,
-      });
+
+    if (!findCategory) {
+      return res.status(404).json({ message: "Ангилал олдсонгүй." });
     }
+
+    // Assuming `procedures` is an array and you want to remove an item by t_id
+    const index = findCategory.procedures.findIndex(
+      (proc) => proc._id.toString() === t_id
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ message: "Procedure олдсонгүй." });
+    }
+
+    const deletedProcedure = findCategory.procedures.splice(index, 1); // Remove the procedure
+
+    await findCategory.save(); // Save the updated category
+
+    console.log(deletedProcedure);
+    return res.status(200).json({
+      message: "Procedures амжилттай устгав.",
+      deletedProcedure,
+    });
   } catch (error) {
-    res.status(404).json({ error });
+    console.error(error);
+    return res.status(500).json({ error: "Алдаа гарлаа." });
   }
 };

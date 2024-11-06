@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/header/header";
 import UserProvider from "@/context/user-provider";
 import { ProductProvider } from "@/context/product-provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,6 +38,7 @@ export default function RootLayout({
             <Header />
             <div className=" flex flex-col items-center bg-gray-100">
               {children}
+              <ToastContainer />
             </div>
           </UserProvider>
         </ProductProvider>
