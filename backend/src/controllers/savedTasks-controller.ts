@@ -2,39 +2,20 @@ import { Request, Response } from "express";
 import SavedTasks from "../models/savedTasks.model";
 
 export const createSavedTasks = async (req: Request, res: Response) => {
-  const { user_id, product } = req.body;
+  const { user_id, products } = req.body;
+
+  console.log("body", req.body);
   try {
     console.log("user_id", user_id);
-    console.log("product", product);
-    const { product_id } = product;
+    console.log("products", products);
+    const { product_id,productName,components } = products;
+    console.log("PRODUCTS", products)
     const findSavedTasks = await SavedTasks.findOne({ user: user_id });
 
     if (!findSavedTasks) {
       const savedTasks = await SavedTasks.create({
         user: user_id,
-        products: product,
-        // user: user_id,
-        // products: [
-        //   {
-        //     product_id: product_id,
-        //     productName: productName,
-        //     components: [ _id:_id,
-        //       componentName: taskName,
-        //       procedures: [
-        //         {
-        //           taskName: taskName,
-        //           quantity:
-        //           unitPrice: unitPrice
-        //           status: {
-        //             pending:0 ,
-        //             progress:0 ,
-        //             done: 0,
-        //             review: 0,
-        //           },
-        //         },
-        //       ],],
-        //   },
-        // ],
+        products:{product_id,productName,components}
       });
       console.log(savedTasks);
       return res.status(200).json({
@@ -51,7 +32,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       res.status(404).json({ message: "хадгалсан бараа байна" });
       return;
     } else {
-      findSavedTasks.products.push(product);
+      findSavedTasks.products.push(products);
     }
 
     const updatedSavedTasks = await findSavedTasks.save();
@@ -60,7 +41,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       updatedSavedTasks,
     });
   } catch (error) {
-    console.log(error);
+    console.log("CREATE-ERR",error);
     res.status(400).json({
       message: "failed to create carts",
     });

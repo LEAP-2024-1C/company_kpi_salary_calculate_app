@@ -57,6 +57,7 @@ export const ProductProvider = ({
   // };
 
   useEffect(() => {
+    console.log("CP");
     getAllProducts();
     // getProduct();
   }, []);

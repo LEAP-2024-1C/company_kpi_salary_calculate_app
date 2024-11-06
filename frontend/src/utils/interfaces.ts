@@ -48,10 +48,7 @@ export interface IComps {
   other: number;
 }
 export interface IComponents {
-  // _id:string;
-  // categoryName:string
-  // tota: number;
-  // other: number,
+
   categoryName: string;
   _id: string;
   procedures: IProcedures[];
@@ -61,8 +58,7 @@ export interface IProcedures {
   quantity: number;
   status: IStatus;
   unitPrice: number;
-  _id?: string;
-  categoryName: string;
+  _id: string;
 }
 export interface IStatus {
   pending: number;

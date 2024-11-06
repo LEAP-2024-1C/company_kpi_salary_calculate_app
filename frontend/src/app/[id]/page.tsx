@@ -26,6 +26,7 @@ const TaskDetail = () => {
   const [savedProductData, setSavedProductData] = useState<ISaveTasks>();
 
   const getCurrentProduct = async () => {
+    console.log("CURRENT P");
     try {
       console.log("id", id);
       const res = await axios.get(`${apiUrl}product/${id}`);
@@ -46,29 +47,6 @@ const TaskDetail = () => {
   useEffect(() => {
     getCurrentProduct();
   }, []);
-
-  // const createSavedTasks = async () => {
-  //   try {
-  //     const response = await axios.post(`${apiUrl}save/employee/task`, {
-  //       user_id: user?._id,
-  //       product_id: id,
-  //     });
-
-  //     if (response.status === 200) {
-  //       console.log("success");
-  //       toast.success("Successfully added to cart");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     toast.error("Failed to add to cart");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (id) {
-  //     getCurrentProduct();
-  //   }
-  // }, [id, getCurrentProduct]);
 
   return (
     <>
@@ -102,21 +80,30 @@ const TaskDetail = () => {
               <p className="text-green-800 w-[700px]">Төлөв: </p>
             </div>
           </div>
-          {oneProduct?.components.map(({ categoryName, procedures }) => (
-            <div className="bg-white p-5 rounded-lg border border-green-900">
-              <Accordion type="single" collapsible className=" w-[900px]">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-green-900">
-                    <p>{categoryName}</p>
-                    <p></p>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ProductDetailModal totalTasks={procedures} />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          ))}
+          {oneProduct?.components.map(
+            ({ categoryName, procedures, _id }, i) => (
+              <div
+                key={i}
+                className="bg-white p-5 rounded-lg border border-green-900"
+              >
+                <Accordion type="single" collapsible className=" w-[900px]">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-green-900">
+                      <p>{categoryName}</p>
+                      <p></p>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ProductDetailModal
+                        totalTasks={procedures}
+                        categoryName={categoryName}
+                        _id={_id}
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )
+          )}
         </div>
       </div>
     </>

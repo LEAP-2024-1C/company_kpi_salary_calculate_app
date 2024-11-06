@@ -43,12 +43,13 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getCurrentProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    console.log("++++++")
   
     const oneProductDatas = await Product.findById(id).populate("components");
 console.log("oneProductDatas",oneProductDatas)
     res
       .status(200)
-      .json({ message: "Success to get a product", oneProductDatas });
+      .json({ message: "Success to get a product", oneProductDatas  });
   } catch (error) {
     console.error(error);
     res.status(400).json({

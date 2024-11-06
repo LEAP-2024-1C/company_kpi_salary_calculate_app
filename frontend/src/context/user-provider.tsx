@@ -34,11 +34,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loggedIn, setIsLoggedIn] = useState(false);
 
   const getCurrentUser = async () => {
+    console.log("GET CURRENT USER");
     try {
       const userToken = localStorage.getItem("token");
       if (userToken) {
+        console.log("FOUND USER");
         const response = await axios.get(`${apiUrl}auth/get-employee`, {
-          headers: { Authorization: `Bearer ${userToken}` },
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
         });
         if (response.status === 200) {
           const { user } = response.data;
@@ -46,6 +50,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
           console.log(user);
         }
       } else {
+        console.log("NOT FOUND USER");
         setUser(null);
       }
     } catch (error) {

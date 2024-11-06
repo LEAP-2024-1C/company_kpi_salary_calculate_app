@@ -12,7 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IProcedures, IProduct, ISaveTasks } from "@/utils/interfaces";
+import {
+  IComponents,
+  IProcedures,
+  IProduct,
+  ISavedTasks,
+  ISaveTasks,
+} from "@/utils/interfaces";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
@@ -21,31 +27,33 @@ import { toast } from "react-toastify";
 import UserProvider, { useUser } from "@/context/user-provider";
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
+  categoryName: string;
+  _id: string;
 }
 
-const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
+const ProductDetailModal: React.FC<TaskTrackerProps> = ({
+  totalTasks,
+  categoryName,
+  _id,
+}) => {
   const { id } = useParams();
   const { user } = useUser();
   const [oneProductDatas, setOneProduct] = useState<IProduct>();
-  // const [cartData, setCartData] = useState<ISaveTasks[] | null>(null);
-  const getCurrentProduct = async (id: string) => {
+  const getCurrentProduct = async () => {
     try {
       const res = await axios.get(`${apiUrl}product/${id}`);
       if (res.status === 200) {
         const { oneProductDatas } = res.data;
-        // console.log("data", oneProductDatas);
         setOneProduct(oneProductDatas);
       }
     } catch (error) {
       console.error(error);
     }
-    // console.log("user", user);
   };
-  // console.log("id", id);
-  // console.log("oneProductStatus", oneProductDatas);
-  // useEffect(() => {
-  //   getCurrentProduct();
-  // }, []);
+
+  useEffect(() => {
+    getCurrentProduct();
+  }, []);
 
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>(
     totalTasks.map(() => 0)
@@ -78,10 +86,11 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     try {
       const componentsToSave = totalTasks
         .map((task, i) => ({
-          _id: task._id,
-          componentName: task.taskName,
+          _id: _id,
+          categoryName: categoryName,
           procedures: [
             {
+              _id: task._id,
               taskName: task.taskName,
               quantity: selectedQuantities[i],
               unitPrice: task.unitPrice,
@@ -101,19 +110,18 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
         return;
       }
       const tasksToSave = {
-        user: user?._id,
+        user_id: user?._id,
         products: [
           {
             product_id: id,
-            productName: oneProductDatas?.productName || "",
+            productName: oneProductDatas?.productName,
             components: componentsToSave,
           },
         ],
       };
+      console.log("Tasks to user:", user);
       console.log("Tasks to save:", tasksToSave);
-      await axios.post(`${apiUrl}save/employee/task`, tasksToSave, {
-        headers: { "Content-Type": "application/json" },
-      });
+      await axios.post(`${apiUrl}save/employee/task`, tasksToSave);
 
       setSelectedQuantities(totalTasks.map(() => 0));
       console.log("Tasks saved successfully.");
@@ -122,18 +130,68 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
     }
   };
 
-  useEffect(() => {
-    if (id && typeof id === "string") {
-      getCurrentProduct(id);
-    }
-  }, [id, getCurrentProduct]);
+  // useEffect(() => {
+  //   if (id && typeof id === "string") {
+  //     getCurrentProduct(id);
+  //   }
+  // }, [id, getCurrentProduct]);
 
   const taskTotals = totalTasks.map(
     (task, i) => selectedQuantities[i] * task.unitPrice * task.quantity
   );
   const totalPrice = taskTotals.reduce((sum, taskTotal) => sum + taskTotal, 0);
+
+  // const [savedTasksData, setSavedTasksData] = useState<ISavedTasks>({
+  //   user: "",
+  //   products: [],
+  // });
+  // const getSavedTasksData = async () => {
+  //   try {
+  //     const userToken = localStorage.getItem("token");
+  //     console.log("User Token:", userToken);
+  //     const response = await axios.get(`${apiUrl}get-savedTaks`, {
+  //       headers: { Authorization: `Bearer ${userToken}` },
+  //     });
+  //     console.log("response:", response);
+  //     if (response.status === 200) {
+  //       console.log("Cart Data:", response.data.cart.products);
+  //       setSavedTasksData(response.data.cart.products);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:");
+  //     toast.error("Failed to fetch cart data");
+  //   }
+  // };
+
+  // const updateQuanity = async (productId: string, newQuantity: number) => {
+  //   setSavedTasksData((prevSavedTasks) =>
+  //     prevSavedTasks.map((item) =>
+  //       item.product._id === productId
+  //         ? { ...item, quantity: newQuantity }
+  //         : item
+  //     )
+  //   );
+  //   const userToken = localStorage.getItem("token");
+  //   try {
+  //     const response = await axios.put(
+  //       `${apiUrl}update-cart`,
+  //       {
+  //         productId,
+  //         newQuantity,
+  //       },
+  //       { headers: { Authorization: `Bearer ${userToken}` } }
+  //     );
+
+  //     if (response.status === 200) {
+  //       toast.success("Successfully updated");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     toast.error("Failed to add to cart");
+  //   }
+  // };
   return (
-    <div className="flex ">
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -142,8 +200,8 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
             <TableHead className="text-right"> Нэгжийн тоо</TableHead>
             <TableHead> Бүтээгдэхүүний нийт тоо</TableHead>
             <TableHead className="text-right"> Үлдсэн ажилууд</TableHead>
-            <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
             <TableHead className="text-right"></TableHead>
+            <TableHead className="text-right"> Миний авсан ажилууд</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -200,7 +258,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       ) : (
         <p>No saved tasks available.</p>
       )} */}
-      <div></div>
     </div>
   );
 };

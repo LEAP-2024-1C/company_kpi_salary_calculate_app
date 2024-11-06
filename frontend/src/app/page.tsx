@@ -7,9 +7,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { apiUrl } from "@/lib/utils";
+import { useUser } from "@/context/user-provider";
 
 export default function Login() {
   const router = useRouter();
+  const { setIsLoggedIn } = useUser();
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -27,7 +29,10 @@ export default function Login() {
       if (response.status === 200) {
         toast.success("User successfully signed in", { autoClose: 1000 });
         const { token } = response.data;
+        // setUser(response.data.user);
+        setIsLoggedIn(true);
         localStorage.setItem("token", token);
+
         router.push("/dashboard");
       }
       console.log("medeelel", userData);

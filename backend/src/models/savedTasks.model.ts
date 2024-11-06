@@ -76,6 +76,10 @@ const savedTasksSchema = new Schema<ISavedTasks>(
                   type: Number,
                   required: [true],
                 },
+                _id:{
+                  type: Schema.Types.ObjectId,
+                  required: true,
+                }
               },
             ],
           },
