@@ -55,7 +55,6 @@ const formSchema = z.object({
     .string()
     .min(3, { message: 'Product description must be at least 3 characters' }),
   phoneNumber: z.coerce.number(),
-  password: z.string(),
   job_title: z.string()
 });
 
@@ -107,9 +106,8 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
 
       if (res.status === 200) {
         toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
+          variant: 'default',
+          title: 'амжилттай шинэ хэрэглэгч үүсэглээ.'
         });
       }
     } catch (error: any) {
@@ -234,24 +232,6 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="job_title"

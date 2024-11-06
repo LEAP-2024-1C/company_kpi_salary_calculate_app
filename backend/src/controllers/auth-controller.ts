@@ -50,10 +50,10 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const { data } = req.body;
-    const { email, firstName, lastName, password, job_title, phoneNumber } =
-      data;
+    console.log("data", req.body);
+    const { email, firstName, lastName, job_title, phoneNumber } = data;
 
-    if (!firstName || !lastName || !email || !password || !job_title) {
+    if (!firstName || !lastName || !email || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
     console.log(data);
@@ -63,7 +63,6 @@ export const createEmployee = async (req: Request, res: Response) => {
       firstName,
       lastName,
       email,
-      password,
       job_title,
       phoneNumber,
     });

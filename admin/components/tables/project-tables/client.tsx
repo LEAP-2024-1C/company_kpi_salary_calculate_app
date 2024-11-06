@@ -24,18 +24,10 @@ export const ProjectClient: React.FC<ProductsClientProps> = ({ data }) => {
       if (res.status === 200) {
         const { productStat } = res.data;
         setProductData(productStat);
-
-        console.log('product stat', productStat);
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
-        });
       }
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
         description: 'There was a problem with your request.'
       });
     }
