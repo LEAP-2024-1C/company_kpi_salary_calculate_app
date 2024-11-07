@@ -88,7 +88,7 @@ export interface ISaveTasks{
   }
   export  interface ISavedComponents {
     _id: string;
-    componentName: string;
+    categoryName: string;
     procedures: ITask[];}
 
     export interface ITask {
@@ -98,4 +98,6 @@ export interface ISaveTasks{
       status: IStatus;
       unitPrice: number;
     }
-  
+  export interface SavedTasks{
+    products: ISavedProduct
+  }

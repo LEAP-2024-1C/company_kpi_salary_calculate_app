@@ -12,19 +12,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
 import { toast } from "react-toastify";
-import { Button } from "react-day-picker";
 import Loader from "@/components/loader/loader";
 import { useUser } from "@/context/user-provider";
 import { apiUrl } from "@/lib/utils";
+import { userSchema } from "@/utils/validationSchema";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 // const [image, setImage] = useState<string | null>(null);
 const UserInfoForm = () => {
+  const router = useRouter();
   const { user } = useUser();
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
@@ -77,8 +78,9 @@ const UserInfoForm = () => {
       toast.warning("Authentication token is missing. Please log in.");
       return;
     }
+    console.log("values", values);
     try {
-      const res = await axios.put(`${apiUrl}/update/profile`, values, {
+      const res = await axios.put(`${apiUrl}auth/update/profile`, values, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,122 +90,117 @@ const UserInfoForm = () => {
       }
     } catch (error) {
       console.log("error", error);
-      toast.warning("Failed to sign in. Please try again.");
+      toast.warning("Failed to update. Please try again.");
     }
   };
 
   const onSubmit = (values: z.infer<typeof userSchema>) => {
     console.log(values);
     updateUserData(values);
+    router.push("/userInfo");
   };
 
+  console.log("image", image);
   return (
-    <div className="w-[620px]">
-      <h1 className="font-bold text-xl text-foreground">Хэрэглэгчийн хэсэг</h1>
-      <div className="border-t border-gray-700 mt-6">
-        {user ? (
-          <>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col gap-2  w-full"
-              >
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Овог</FormLabel>
-                      <FormControl>
-                        <Input placeholder="" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Нэр</FormLabel>
-                      <FormControl>
-                        <Input placeholder="" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Имейл хаяг</FormLabel>
-                      <FormControl>
-                        <Input placeholder="" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Утасны дугаар</FormLabel>
-                      <FormControl>
-                        <Input placeholder="" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Хаяг</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="profile_img"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Профайл зураг</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            e.target.files &&
-                            handleImageUpload(e.target.files[0])
-                          }
-                        />
-                      </FormControl>
-                      {uploading && <p>Uploading...</p>}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+    <div className="w-full  flex justify-center items-center p-40 m-26">
+      <div className="w-[620px]">
+        <h1 className="font-bold text-xl text-foreground">
+          Хэрэглэгчийн хэсэг
+        </h1>
+        <div className="border-t border-gray-700 mt-6">
+          {user ? (
+            <>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="flex flex-col gap-2  w-full"
+                >
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Овог</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Нэр</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Имейл хаяг</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Утасны дугаар</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="profile_img"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Профайл зураг</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              e.target.files &&
+                              handleImageUpload(e.target.files[0])
+                            }
+                          />
+                        </FormControl>
+                        {uploading && <p>Uploading...</p>}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <div className="flex justify-end">
-                  <Button type="submit">Мэдээлэл шинэчлэх</Button>
-                </div>
-              </form>
-            </Form>
-          </>
-        ) : (
-          <Loader />
-        )}
+                  <div className="flex justify-end">
+                    <Button variant={"myBtn"} type="submit">
+                      Мэдээлэл шинэчлэх
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </>
+          ) : (
+            <Loader />
+          )}
+        </div>
       </div>
     </div>
   );

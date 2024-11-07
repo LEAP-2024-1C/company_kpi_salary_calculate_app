@@ -7,6 +7,7 @@ import {
   verifyPassword,
   forgetPassword,
   verifyOtp,
+  updateUserInfo,
 } from "../controllers/auth-controller";
 
 import { auth } from "../middlewares/auth";
@@ -20,4 +21,5 @@ router.route("/get-employee").get(auth, getCurrentUser);
 router.route("/verify-password").post(verifyPassword);
 router.route("/forget-password").post(forgetPassword);
 router.route("/verify-otp").post(verifyOtp);
+router.route("/update/profile").put(auth, updateUserInfo);
 export default router;

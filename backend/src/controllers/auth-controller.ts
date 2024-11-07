@@ -166,3 +166,36 @@ export const verifyPassword = async (req: Request, res: Response) => {
     res.status(401).json({ message: error });
   }
 };
+
+export const updateUserInfo = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const { email, firstName, lastName, phoneNumber, address, profile_img } =
+    req.body;
+    console.log("phoneNumber",firstName, lastName, phoneNumber, address, profile_img)
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phoneNumber ||
+      !address
+    ) {
+      return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
+    }
+
+    const update = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      profile_img,
+    };
+    const updatedUser = await Employee.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+    res.status(200).json({ message: "success", updatedUser });
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
