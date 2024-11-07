@@ -74,9 +74,9 @@ export interface ISaveTasks {
   quantity: number;
   selectedQuantity: number;
 }
-export interface ISavedTasks {
-  products: ISavedProduct[];
-}
+// export interface ISavedTasks {
+//   products: ISavedProduct[];
+// }
 export interface ISavedProduct {
   product_id: string;
   productName: string;
@@ -94,4 +94,8 @@ export interface ITask {
   quantity: number;
   status: IStatus;
   unitPrice: number;
+}
+export interface IChooseTasks {
+  component_id: string;
+  procedures: IProcedures[];
 }

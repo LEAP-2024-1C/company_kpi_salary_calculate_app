@@ -190,6 +190,22 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
   }
 };
 
+// export const updateProdct = async (req: Request, res: Response) => {
+//   const { component_id, pro } = req.body;
+//   const { _id } = pro;
+//   const products = await Components.findById(component_id);
+
+//   const newProc = products?.procedures.map((p) => {
+//     const fpId = pro.findIndex((f) => f._id === p._id);
+//     if (fpId > -1) {
+//       return pro[fpId];
+//     }
+//     return p;
+//   }); // [1,2,3,4]
+//   products?.procedures = newProc;
+//   products?.save();
+// };
+
 // export const getAllProductsStatEmployee = async (
 //   req: Request,
 //   res: Response

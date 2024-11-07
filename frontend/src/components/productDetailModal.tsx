@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IProcedures, ISavedTasks } from "@/utils/interfaces";
+import { IChooseTasks, IProcedures, ISavedProduct } from "@/utils/interfaces";
 
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
@@ -42,9 +42,10 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   // );
 
   const [tasks, setTasks] = useState<IProcedures[]>([]);
-  const [saveProduct, setSaveProduct] = useState<ISavedTasks>();
+  const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
+  const [chooseTask, setChooseTask] = useState<IChooseTasks>();
 
-  const createSelectedTasks = async (saveProduct: ISavedTasks) => {
+  const createSelectedTasks = async (saveProduct: ISavedProduct) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
@@ -106,24 +107,33 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
 
   const handleSubmit = () => {
     setSaveProduct((prev) => {
-      const newSaveTask: ISavedTasks = {
-        products: prev?.products || [],
-      };
-
-      newSaveTask.products.push({
+      const newSaveTask = {
+        ...prev,
         product_id,
         productName,
-        components: [
-          { _id: cat_id, categoryName: categoryName, procedures: tasks },
-        ],
-      });
-
+        components: [{ _id: cat_id, categoryName, procedures: tasks }],
+      };
       console.log("Saved product:", newSaveTask);
-      createSelectedTasks(newSaveTask);
+      // createSelectedTasks(newSaveTask);
       return newSaveTask;
     });
+    const deleteAssign = tasks.map((item) => {
+      return {
+        ...item,
+        status: {
+          ...item.status,
+          assign: 0,
+        },
+      };
+    });
+    console.log("deleteAssign", deleteAssign);
+    setChooseTask({
+      ...chooseTask,
+      component_id: cat_id,
+      procedures: deleteAssign,
+    });
   };
-
+  console.log("choose", chooseTask);
   return (
     <div className="flex ">
       <Table>

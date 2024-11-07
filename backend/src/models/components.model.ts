@@ -18,7 +18,7 @@ export interface IStatus {
 export type ICategory = {
   _id: Schema.Types.ObjectId;
   categoryName: String;
-  procedures: [ITask];
+  procedures: ITask[];
   created_at: Date;
   updated_at: Date;
 };
