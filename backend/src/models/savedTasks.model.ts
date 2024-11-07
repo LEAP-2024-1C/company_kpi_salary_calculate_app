@@ -55,6 +55,10 @@ const savedTasksSchema = new Schema<ISavedTasks>(
                   required: [true],
                 },
                 status: {
+                  assign: {
+                    type: Number,
+                    default: 0,
+                  },
                   pending: {
                     type: Number,
                     default: 0,

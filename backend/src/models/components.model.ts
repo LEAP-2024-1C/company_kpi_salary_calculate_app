@@ -13,11 +13,12 @@ export interface IStatus {
   progress: number;
   done: number;
   review: number;
+  assign: number;
 }
 export type ICategory = {
   _id: Schema.Types.ObjectId;
   categoryName: String;
-  procedures: [ITask];
+  procedures: ITask[];
   created_at: Date;
   updated_at: Date;
 };
@@ -50,6 +51,10 @@ const componentSchema = new Schema<ICategory>({
           default: 0,
         },
         review: {
+          type: Number,
+          default: 0,
+        },
+        assign: {
           type: Number,
           default: 0,
         },

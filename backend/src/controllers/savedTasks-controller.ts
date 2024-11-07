@@ -2,17 +2,19 @@ import { Request, Response } from "express";
 import SavedTasks from "../models/savedTasks.model";
 
 export const createSavedTasks = async (req: Request, res: Response) => {
-  const { user_id, product } = req.body;
+  const { id } = req.user;
+  const { saveProduct } = req.body;
   try {
-    console.log("user_id", user_id);
-    console.log("product", product);
-    const { product_id } = product;
-    const findSavedTasks = await SavedTasks.findOne({ user: user_id });
+    console.log("user_id", id);
+    console.log("product", saveProduct);
 
+    const { product_id } = saveProduct;
+    const findSavedTasks = await SavedTasks.findOne({ user: id });
+    console.log("findSavedTasks", findSavedTasks);
     if (!findSavedTasks) {
       const savedTasks = await SavedTasks.create({
-        user: user_id,
-        products: product,
+        user: id,
+        products: saveProduct,
       });
       console.log(savedTasks);
       return res.status(200).json({
@@ -21,15 +23,19 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       });
     }
 
-    const findDuplicated = findSavedTasks.products.findIndex(
+    const findIndex = findSavedTasks.products.findIndex(
       (item) => item.product_id.toString() === product_id
     );
+    console.log("findIndex", findIndex);
 
-    if (findDuplicated > -1) {
-      res.status(404).json({ message: "хадгалсан бараа байна" });
+    if (findIndex < 0) {
+      findSavedTasks.products.push(saveProduct.components[0]);
+      res.status(202).json({ message: "хадгалсан бараа байн" });
       return;
     } else {
-      findSavedTasks.products.push(product);
+      const comp = saveProduct.components[0];
+      console.log("comp", comp);
+      findSavedTasks.products[findIndex].components.push(comp);
     }
 
     const updatedSavedTasks = await findSavedTasks.save();

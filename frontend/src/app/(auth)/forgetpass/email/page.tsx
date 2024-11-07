@@ -73,7 +73,7 @@ const ForgetPassword = () => {
   }, [countDown]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen	 gap-10">
+    <div className="flex flex-col items-center justify-center h-screen gap-10">
       {step === 1 && (
         <>
           <h1>Нууц үг сэргээх</h1>
