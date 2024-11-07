@@ -130,27 +130,21 @@ export const columns: ColumnDef<Payment>[] = [
 ];
 
 export function DataTableDemo() {
-  const [productData, setProductData] = useState<IProductStat[]>([]);
   const getAllProduct = async () => {
     try {
-      const res = await axios.get(`${apiUrl}product/stat`);
+      const res = await axios.get(`${apiUrl}get-savedTasks`);
       if (res.status === 200) {
-        const { productStat } = res.data;
-        setProductData(productStat);
-
-        console.log('product stat', productStat);
         toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
+          variant: 'default',
+          title: 'Right.'
         });
       }
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.'
+        title: 'Uh oh! Something went wrong.'
       });
+      console.log('error', error);
     }
   };
 
