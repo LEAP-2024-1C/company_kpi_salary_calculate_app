@@ -14,7 +14,6 @@ import { apiUrl } from '@/lib/utils';
 interface ProductFormProps {
   initialData: any | null;
 }
-
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();

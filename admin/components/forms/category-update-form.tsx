@@ -3,8 +3,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useParams, useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -22,9 +21,6 @@ import { apiUrl } from '@/lib/utils';
 import CategoryInput from '../inputs/category-inputs';
 
 const formSchema = z.object({
-  categoryName: z
-    .string()
-    .min(3, { message: 'Category Name must be at least 3 characters' }),
   procedures: z.array(
     z.object({
       taskName: z
@@ -40,24 +36,25 @@ type ProductFormValues = z.infer<typeof formSchema>;
 
 interface ProductFormProps {
   initialData: any | null;
-  categories: any;
 }
 
-export const CategoryForm: React.FC<ProductFormProps> = ({
-  initialData,
-  categories
+export const CategoryUpdateForm: React.FC<ProductFormProps> = ({
+  initialData
 }) => {
-  const params = useParams();
+  const query = useSearchParams();
+  const params = useParams<{ categoryId: string }>();
+  const t_id = query.get('t_id');
+  const c_id = params.categoryId;
+  console.log('dada', c_id);
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const title = initialData ? 'Edit product' : 'Create category';
   const description = initialData ? 'Edit a product.' : 'Add a new category';
   const toastMessage = initialData ? 'Category updated.' : 'Category created.';
-  const action = initialData ? 'Create' : 'Save changes';
+  const action = initialData ? 'Save changes' : 'Create';
 
   const defaultValues = {
-    categoryName: '',
     procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   };
 
@@ -71,17 +68,23 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     name: 'procedures'
   });
 
-  const createCategory = async (data: ProductFormValues) => {
+  const updateProcedure = async (updatedData: ProductFormValues) => {
     try {
       setLoading(true);
-      const res = await axios.post(`${apiUrl}cat/category`, { data });
-      if (res.status === 200) {
+      const response = await axios.put(`${apiUrl}cat/category`, {
+        c_id: c_id,
+        t_id: t_id,
+        ...updatedData // Spread the updated data into the request body
+      });
+
+      if (response.status === 200) {
         router.refresh();
-        console.log('success');
+        console.log('Success: Category updated');
+        toast({ title: 'Updated successfully' });
         router.push(`/dashboard/category`);
-        toast({ title: toastMessage });
       }
     } catch (error) {
+      console.error('Error updating category:', error); // Log the error for debugging
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
@@ -92,9 +95,9 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  const onSubmit = (data: ProductFormValues) => {
-    console.log(data);
-    createCategory(data);
+  const onSubmit = (updatedData: ProductFormValues) => {
+    console.log(updatedData);
+    updateProcedure(updatedData);
   };
 
   const handleSub = (index: number, type: 'quantity' | 'unitPrice') => {
@@ -135,23 +138,6 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <FormField
-            control={form.control}
-            name="categoryName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category Name</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={loading}
-                    placeholder="Category name"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           {fields.map((pro, index) => {
             return (
               <CategoryInput

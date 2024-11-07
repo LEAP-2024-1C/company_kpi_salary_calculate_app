@@ -15,15 +15,46 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Category } from '@/constants/data';
 import { CellAction } from './cell-action';
-import { useState } from 'react';
+import { EventHandler, useState } from 'react';
 
 interface DataTableProps {
   data: Category[];
   searchKey: string;
 }
+type UpdateForm = {
+  taskName: string;
+  unit: number;
+  unitPrice: number;
+};
 
 export function CategoryTable({ data, searchKey }: DataTableProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [taskName, setTaskName] = useState();
+  const [form, setForm] = useState<UpdateForm>();
+  const [cellconfirm, setCellconfirm] = useState(true);
+
+  const handleInput = () => {
+    setCellconfirm(false);
+    setLoading(false);
+  };
+
+  const handleSaveChanges = () => {
+    setCellconfirm(true);
+    setLoading(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!form) {
+      return form;
+    }
+    console.log('form', form);
+
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    console.log('form', form);
+  };
+  console.log('form', form);
+
   return (
     <>
       <Input
@@ -54,67 +85,48 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   {product.procedures.map((task) => (
                     <TableRow key={task._id}>
                       <TableCell className="w-[800px]">
-                        <input
+                        <Input
+                          name="taskName"
+                          onChange={handleChange}
                           type="text"
-                          value={task.taskName}
+                          defaultValue={task.taskName}
                           disabled={loading}
                         />
                       </TableCell>
-                      <TableCell className="w-20">
-                        <div className="flex gap-2">
-                          <Button
-                          // className="rounded-full"
-                          // onClick={() => handleSub(index, 'quantity')}
-                          // type="button"
-                          >
-                            -
-                          </Button>
-                          <input
-                            type="number"
-                            value={task.quantity}
-                            disabled={loading}
-                            className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          />
-                          <Button
-                          // className="rounded-full"
-                          // onClick={() => handleAdd(index, 'quantity')}
-                          // type="button"
-                          >
-                            +
-                          </Button>
-                        </div>
+                      <TableCell className="w-10">
+                        <Input
+                          name="quantity"
+                          onChange={handleChange}
+                          type="number"
+                          defaultValue={task.quantity}
+                          disabled={loading}
+                          className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        />
                       </TableCell>
-                      <TableCell className="w-20">
-                        <div className="flex items-center gap-2">
-                          <Button
-                          // className="rounded-full"
-                          // onClick={() => handleSub(index, 'quantity')}
-                          // type="button"
-                          >
-                            -
-                          </Button>
-                          <input
+                      <TableCell className="w-10">
+                        <div className="flex">
+                          <Input
+                            name="unitPrice"
+                            onChange={handleChange}
                             type="number"
-                            value={task.unitPrice}
+                            defaultValue={task.unitPrice}
                             disabled={loading}
                             className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           />
                           ₮
-                          <Button
-                          // className="rounded-full"
-                          // onClick={() => handleAdd(index, 'quantity')}
-                          // type="button"
-                          >
-                            +
-                          </Button>
                         </div>
                       </TableCell>
-                      <TableCell className="w-20">
-                        <CellAction
-                          t_id={task._id}
-                          c_id={product._id}
-                          setUpdate={setLoading}
-                        />
+                      <TableCell className="w-10">
+                        {cellconfirm ? (
+                          <CellAction
+                            t_id={task._id}
+                            c_id={product._id}
+                            setCellconfirm={setCellconfirm}
+                            handleInput={handleInput}
+                          />
+                        ) : (
+                          <Button onClick={handleSaveChanges}>Save</Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
