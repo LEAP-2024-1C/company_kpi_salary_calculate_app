@@ -16,7 +16,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
         user: id,
         products: saveProduct,
       });
-      // console.log(savedTasks);
+      console.log(savedTasks);
       return res.status(200).json({
         message: "created new savedTasks",
         savedTasks,
@@ -24,19 +24,21 @@ export const createSavedTasks = async (req: Request, res: Response) => {
     }
 
     const findIndex = findSavedTasks.products.findIndex(
-      (item) => item.product_id.toString() === product_id
+      (item) => item.product_id.toString() === product_id.toString()
     );
     // console.log("findIndex", findIndex);
 
     if (findIndex < 0) {
-      findSavedTasks.products.push(saveProduct.components[0]);
-      res.status(202).json({ message: "хадгалсан бараа байн" });
+      findSavedTasks.products.push(saveProduct);
+      const updatedSavedTasks = await findSavedTasks.save();
+      res
+        .status(200)
+        .json({ message: "шинэ ажилбар нэмэгдлээ", updatedSavedTasks });
       return;
-    } else {
-      const comp = saveProduct.components[0];
-      // console.log("comp", comp);
-      findSavedTasks.products[findIndex].components.push(comp);
     }
+    const comp = saveProduct.components[0];
+    // console.log("comp", comp);
+    findSavedTasks.products[findIndex].components.push(comp);
 
     const updatedSavedTasks = await findSavedTasks.save();
     res.status(200).json({
@@ -52,14 +54,14 @@ export const createSavedTasks = async (req: Request, res: Response) => {
 };
 
 export const getCurrentTask = async (req: Request, res: Response) => {
-  const { product_id } = req.body;
+  const { id } = req.user;
 
   try {
-    const cart = await SavedTasks.findOne({});
+    const currentSavedTask = await SavedTasks.findOne({ user: id });
     // console.log(id);
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
-      cart: cart,
+      cart: currentSavedTask,
     });
   } catch (error) {
     console.error(error);

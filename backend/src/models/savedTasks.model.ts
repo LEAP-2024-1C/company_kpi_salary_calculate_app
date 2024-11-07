@@ -80,6 +80,11 @@ const savedTasksSchema = new Schema<ISavedTasks>(
                   type: Number,
                   required: [true],
                 },
+                taskStatus: {
+                  type: String,
+                  enum: ["progress", "review", "done"],
+                  default: "progress",
+                },
               },
             ],
           },

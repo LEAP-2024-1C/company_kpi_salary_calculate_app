@@ -43,6 +43,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (response.status === 200) {
           const { user } = response.data;
           setUser(user);
+          console.log("user", user);
         }
       } else {
         setUser(null);

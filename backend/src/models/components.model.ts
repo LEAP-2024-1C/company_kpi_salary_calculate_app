@@ -7,6 +7,7 @@ export interface ITask {
   quantity: number;
   status: IStatus;
   unitPrice: number;
+  taskStatus?: string;
 }
 export interface IStatus {
   pending: number;

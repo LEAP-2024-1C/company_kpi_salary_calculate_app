@@ -59,7 +59,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
-        console.log("success");
+        console.log("created new employee task success");
       }
     } catch (error) {
       console.error(error);
@@ -82,7 +82,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
-        console.log("success");
+        console.log("updated components success");
       }
     } catch (error) {
       console.error(error);
@@ -107,23 +107,23 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
     });
   };
   const handleSub = (i: number) => {
-    console.log("handleSub called for index:", i);
+    // console.log("handleSub called for index:", i);
     setPro(cat_idx, i, "sub");
     setTasks((prev) => {
       if (prev.length === 0) {
-        console.error("Index out of bounds:", i);
+        // console.error("Index out of bounds:", i);
         return prev;
       }
       const newTask = [...prev];
-      console.log("Before removing, tasks:", prev);
-      const assignStatus = totalTasks[i]?.status?.assign;
+      // console.log("Before removing, tasks:", prev);
+      const assignStatus = newTask[i]?.status?.assign;
       const findIndex = newTask.findIndex(
         (item) => item._id === totalTasks[i]._id
       );
       if (assignStatus === 0) {
         newTask.splice(findIndex, 1);
       }
-      console.log("Updated tasks:", newTask);
+      // console.log("Updated tasks:", newTask);
       return newTask;
     });
   };
@@ -155,7 +155,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       component_id: cat_id,
       procedures: deleteAssign,
     };
-    updateProducts(updatedTask);
+    // updateProducts(updatedTask);
     setChooseTask(updatedTask);
   };
 
@@ -222,7 +222,16 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
-            <TableCell className="text-right">{}₮</TableCell>
+            <TableCell className="text-right">
+              {tasks
+                .map((el) => {
+                  let total = 0;
+                  total = el.quantity * el.unitPrice * el.status.assign;
+                  return total;
+                })
+                .reduce((acc, total) => acc + total, 0)}
+              ₮
+            </TableCell>
             <TableCell className="text-right">
               <Button
                 variant="outline"
