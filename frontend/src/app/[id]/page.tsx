@@ -9,16 +9,15 @@ import {
 
 import { useUser } from "@/context/user-provider";
 import { useParams } from "next/navigation";
-import { useProducts } from "@/context/product-provider";
+
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
 import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
-import { toast } from "react-toastify";
 // import { useTasks } from "@/context/task-provider";
 
 const TaskDetail = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
   const { id } = useParams();
   const [oneProduct, setOneProduct] = useState<IProduct>();
 
@@ -97,7 +96,10 @@ const TaskDetail = () => {
             </div>
           </div>
           {oneProduct?.components.map(({ categoryName, procedures }) => (
-            <div className="bg-white p-5 rounded-lg border border-green-900">
+            <div
+              key={oneProduct.product_id}
+              className="bg-white p-5 rounded-lg border border-green-900"
+            >
               <Accordion type="single" collapsible className=" w-[900px]">
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-green-900">
