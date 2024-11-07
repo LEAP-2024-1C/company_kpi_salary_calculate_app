@@ -2,15 +2,24 @@
 
 import { useUser } from "@/context/user-provider";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 import React from "react";
+import { FaRegEdit } from "react-icons/fa";
 
 const UserInfo = () => {
+  const router = useRouter();
   const { user } = useUser();
   const { id } = useParams();
+  const edit = () => {
+    router.push("/edit-profile");
+  };
   return (
     <div className="w-full h-full p-5">
-      <div className="font-semibold text-2xl text-gray-800 mb-5">
-        Ажилтны хувийн мэдээлэл
+      <div className="font-semibold text-2xl text-gray-800 mb-5 flex gap-5">
+        <p>Ажилтны хувийн мэдээлэл</p>
+        <div onClick={edit}>
+          <FaRegEdit />
+        </div>
       </div>
       <div className="flex gap-5">
         <div

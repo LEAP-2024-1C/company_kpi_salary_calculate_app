@@ -76,7 +76,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({ totalTasks }) => {
       const tasksToSave = totalTasks
         .map((task, i) => ({
           product_id: id,
-          components_id: ,
+          // components_id: ,
           task_id: task._id,
           progress: selectedQuantities[i],
         }))
