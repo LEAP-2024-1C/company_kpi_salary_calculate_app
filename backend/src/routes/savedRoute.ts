@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-router.route("/save/employee/task").post(createSavedTasks);
+router.route("/save/employee/task").post(auth, createSavedTasks);
 router.route("/get-savedTaks").get(auth, getUserSavedTasks);
 
 export default router;

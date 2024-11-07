@@ -8,7 +8,7 @@ import { sendEmail } from "../utils/send-email";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("user", email, password);
+
   try {
     const user = await Employee.findOne({ email });
     if (!user) {
@@ -56,7 +56,6 @@ export const createEmployee = async (req: Request, res: Response) => {
     if (!firstName || !lastName || !email || !job_title) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
-    console.log(data);
 
     // console.log("first", hashedPassword);
     const createdEmployee = await Employee.create({
@@ -85,14 +84,14 @@ export const getAllEmployees = async (req: Request, res: Response) => {
 export const forgetPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    console.log("email", email);
+
     const findEmployee = await Employee.findOne({ email });
     if (!findEmployee) {
       return res
         .status(400)
         .json({ message: "Бүртгэлтэй хэрэглэгч олдсонгүй" });
     }
-    console.log("findemail", findEmployee);
+
     const otp = Math.floor(Math.random() * 10_000)
       .toString()
       .padStart(4, "0");
@@ -101,7 +100,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
     await findEmployee.save();
 
     await sendEmail(email, otp);
-    console.log("success");
+
     res.status(200).json({ message: "OTP code is sent email successfully" });
   } catch (error) {
     res.status(404).json({ message: error });
@@ -110,7 +109,7 @@ export const forgetPassword = async (req: Request, res: Response) => {
 
 export const verifyOtp = async (req: Request, res: Response) => {
   const { email, otpValue } = req.body;
-  console.log("email, otpValue", email, otpValue);
+
   const findUser = await Employee.findOne({ email: email, otp: otpValue });
   if (!findUser) {
     return res
@@ -128,7 +127,6 @@ export const verifyOtp = async (req: Request, res: Response) => {
   findUser.passwordResetTokenExpire = new Date(Date.now() + 10 * 60 * 1000);
   await findUser.save();
 
-  console.log("RT", resetToken);
   await sendEmail(
     email,
     `<a href="http://localhost:3000/forgetpass/newpass?resettoken=${resetToken}"&email=${email}>Нууц үг сэргээх холбоос</a>`

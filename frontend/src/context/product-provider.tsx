@@ -31,7 +31,6 @@ export const ProductProvider = ({
   children: React.ReactNode;
 }) => {
   const [products, setProducts] = useState<IProduct[] | null>(null);
-  // const [oneProduct, setOneProduct] = useState<IProduct[]>([]);
   const [productStat, setProductStat] = useState<IProductStat[] | null>(null);
 
   const getAllProducts = async () => {
@@ -42,19 +41,10 @@ export const ProductProvider = ({
     });
     const products = response.data.products;
     setProducts(products);
-    console.log("products", products);
     const productStat = response.data.productStat;
     setProductStat(productStat);
-    console.log("productStat", productStat);
   };
-  // const getProduct = async (id: string) => {
-  //   try {
-  //     const response = await axios.get(`${apiUrl}pro/product/${id}`);
-  //     setOneProduct(response.data.product);
-  //   } catch (err) {
-  //     console.log("Failed to fetch product");
-  //   }
-  // };
+
 
   useEffect(() => {
     getAllProducts();
