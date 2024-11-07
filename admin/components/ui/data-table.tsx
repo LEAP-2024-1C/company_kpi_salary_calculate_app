@@ -13,10 +13,6 @@ import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
 import { CellAction } from '../tables/user-tables/cell-action';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import axios from 'axios';
-import { apiUrl } from '@/lib/utils';
-import { toast } from './use-toast';
-import { useEffect, useState } from 'react';
 import { IUser } from '@/constants/data';
 
 interface DataTableProps {

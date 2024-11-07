@@ -60,7 +60,7 @@ const Login = () => {
   };
 
   return (
-    <div className=" p-16 m-16 w-full h-screen">
+    <div className="flex flex-col items-center justify-center h-screen gap-10">
       <div className="flex flex-col gap-5 text-center p-16 m-16">
         <h1 className="text-3xl font-bold">Нэвтрэх</h1>
         <Form {...form}>
