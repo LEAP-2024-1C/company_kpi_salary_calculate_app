@@ -8,8 +8,9 @@ export type IProduct = {
   quantity: number;
   status: number;
   components: [Schema.Types.ObjectId];
+  employees: [Schema.Types.ObjectId];
   createdAt: Date;
-  _id:Schema.Types.ObjectId
+  _id: Schema.Types.ObjectId;
 };
 export type IComponent = {
   components: ICategory[];
@@ -41,6 +42,11 @@ const productSchema = new Schema<IProduct>(
       type: [Schema.Types.ObjectId],
       required: true,
       ref: "Components",
+    },
+    employees: {
+      type: [Schema.Types.ObjectId],
+      required: true,
+      ref: "SavedTasks",
     },
   },
   {
