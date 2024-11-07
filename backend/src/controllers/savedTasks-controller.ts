@@ -2,17 +2,18 @@ import { Request, Response } from "express";
 import SavedTasks from "../models/savedTasks.model";
 
 export const createSavedTasks = async (req: Request, res: Response) => {
-  const { user_id, product } = req.body;
+  const { id } = req.user;
+  const { saveProduct } = req.body;
   try {
-    console.log("user_id", user_id);
-    console.log("product", product);
-    const { product_id } = product;
-    const findSavedTasks = await SavedTasks.findOne({ user: user_id });
+    console.log("user_id", id);
+    console.log("product", saveProduct);
+    const { product_id } = saveProduct;
+    const findSavedTasks = await SavedTasks.findOne({ user: id });
 
     if (!findSavedTasks) {
       const savedTasks = await SavedTasks.create({
-        user: user_id,
-        products: product,
+        user: id,
+        products: saveProduct,
       });
       console.log(savedTasks);
       return res.status(200).json({
@@ -29,7 +30,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       res.status(404).json({ message: "хадгалсан бараа байна" });
       return;
     } else {
-      findSavedTasks.products.push(product);
+      findSavedTasks.products.push(saveProduct);
     }
 
     const updatedSavedTasks = await findSavedTasks.save();

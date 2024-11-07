@@ -6,12 +6,10 @@ import Product, { IComponent, IProduct } from "../models/product.model";
 export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
   try {
-    console.log("first", components);
-
     const createdComp = await Components.insertMany(components);
-    console.log("createdcomp", createdComp);
+
     const compIDs = createdComp.map((item) => item._id);
-    console.log("res", res);
+
     const { productName, description, quantity } = productForm;
     const createProduct = await Product.create({
       productName,
@@ -32,7 +30,7 @@ export const createProduct = async (req: Request, res: Response) => {
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find().populate("components");
-    console.log("product", products);
+
     res.status(200).json({ message: "success", products });
   } catch (error) {
     res.status(401).json({ error });
@@ -43,9 +41,9 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getCurrentProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-  
+
     const oneProductDatas = await Product.findById(id).populate("components");
-console.log("oneProductDatas",oneProductDatas)
+
     res
       .status(200)
       .json({ message: "Success to get a product", oneProductDatas });
@@ -133,7 +131,7 @@ export const getAllProductsStatEmployee = async (
         productName: c.productName,
         description: c.description,
         image: c.images,
-        _id:c._id
+        _id: c._id,
       };
     });
 

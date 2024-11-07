@@ -75,7 +75,6 @@ export interface ISaveTasks {
   selectedQuantity: number;
 }
 export interface ISavedTasks {
-  user: string;
   products: ISavedProduct[];
 }
 export interface ISavedProduct {
@@ -85,7 +84,7 @@ export interface ISavedProduct {
 }
 export interface ISavedComponents {
   _id: string;
-  componentName: string;
+  categoryName: string;
   procedures: ITask[];
 }
 

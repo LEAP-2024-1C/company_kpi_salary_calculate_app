@@ -1,30 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  IProcedures,
-  IProduct,
-  ISavedTasks,
-  ISaveTasks,
-  IStatus,
-} from "@/utils/interfaces";
-import { useParams } from "next/navigation";
+import { IProcedures, ISavedTasks } from "@/utils/interfaces";
+
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
-import SavedTasksCard from "./savedTasksCard";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useUser } from "@/context/user-provider";
 
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
@@ -50,10 +40,30 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   // const [count, setCount] = useState<number[]>(
   //   new Array(totalTasks.length).fill(0)
   // );
-  const { user } = useUser();
+
   const [tasks, setTasks] = useState<IProcedures[]>([]);
   const [saveProduct, setSaveProduct] = useState<ISavedTasks>();
 
+  const createSelectedTasks = async (saveProduct: ISavedTasks) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${apiUrl}save/employee/task`,
+        {
+          saveProduct,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.status === 200) {
+        console.log("success");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleAdd = (i: number) => {
     console.log("idx", i);
     setPro(cat_idx, i, "add");
@@ -93,10 +103,10 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       return newTask;
     });
   };
+
   const handleSubmit = () => {
     setSaveProduct((prev) => {
       const newSaveTask: ISavedTasks = {
-        user: user ? user._id : "",
         products: prev?.products || [],
       };
 
@@ -104,11 +114,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         product_id,
         productName,
         components: [
-          { _id: cat_id, componentName: categoryName, procedures: tasks },
+          { _id: cat_id, categoryName: categoryName, procedures: tasks },
         ],
       });
 
       console.log("Saved product:", newSaveTask);
+      createSelectedTasks(newSaveTask);
       return newSaveTask;
     });
   };

@@ -23,16 +23,20 @@ const TaskTracker = () => {
   return (
     <>
       {productStat?.map(
-        ({
-          productName,
-          components,
-          image,
-          description,
-          createdAt,
-          quantity,
-          _id,
-        }) => (
+        (
+          {
+            productName,
+            components,
+            image,
+            description,
+            createdAt,
+            quantity,
+            _id,
+          },
+          idx
+        ) => (
           <div
+            key={idx}
             className="bg-gray-200 rounded-xl p-5 flex flex-col border text-green-900"
             // style={{ borderColor: getColor() }}
           >
@@ -60,7 +64,7 @@ const TaskTracker = () => {
                   <Link href={"/" + _id}>
                     {components.map(
                       ({ categoryName, cat_id, total, other }) => (
-                        <ul>
+                        <ul key={cat_id}>
                           <li className="flex items-center gap-3">
                             <div>{categoryName}</div>
                             <p>
