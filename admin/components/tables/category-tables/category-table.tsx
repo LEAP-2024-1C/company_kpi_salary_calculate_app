@@ -84,7 +84,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                 <TableBody>
                   {product.procedures.map((task) => (
                     <TableRow key={task._id}>
-                      <TableCell className="w-[800px]">
+                      <TableCell className="w-1/2">
                         <Input
                           name="taskName"
                           onChange={handleChange}
@@ -100,23 +100,23 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                           type="number"
                           defaultValue={task.quantity}
                           disabled={loading}
-                          className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          className="w-10 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
                       </TableCell>
-                      <TableCell className="w-10">
-                        <div className="flex">
+                      <TableCell className="w-20">
+                        <div className="flex w-20 items-center">
                           <Input
                             name="unitPrice"
                             onChange={handleChange}
                             type="number"
                             defaultValue={task.unitPrice}
                             disabled={loading}
-                            className="text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            className="w-20 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           />
                           ₮
                         </div>
                       </TableCell>
-                      <TableCell className="w-10">
+                      <TableCell className="w-5">
                         {cellconfirm ? (
                           <CellAction
                             t_id={task._id}
@@ -125,7 +125,9 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                             handleInput={handleInput}
                           />
                         ) : (
-                          <Button onClick={handleSaveChanges}>Save</Button>
+                          <Button className="w-10" onClick={handleSaveChanges}>
+                            Save
+                          </Button>
                         )}
                       </TableCell>
                     </TableRow>

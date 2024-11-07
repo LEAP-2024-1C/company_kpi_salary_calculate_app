@@ -22,7 +22,7 @@ interface CellActionProps {
   c_id: string;
   setCellconfirm: Dispatch<SetStateAction<boolean>>;
   handleInput: () => void;
-  data: any[];  // Assuming this prop contains the product's procedure data
+  data: any[]; // Assuming this prop contains the product's procedure data
 }
 
 const formSchema = z.object({
@@ -43,14 +43,12 @@ export const CellAction: React.FC<CellActionProps> = ({
   c_id,
   t_id,
   setCellconfirm,
-  handleInput,
-  data
+  handleInput
 }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { setRefresh, refresh } = useProducts();
-  const [editedData, setEditedData] = useState(data);
 
   const handleEdit = (rowIndex: number, field: string, value: any) => {
     const updatedData = [...editedData];
@@ -144,8 +142,6 @@ export const CellAction: React.FC<CellActionProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      
     </>
   );
 };
