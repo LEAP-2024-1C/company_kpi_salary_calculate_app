@@ -110,6 +110,7 @@ export interface IStatus {
 }
 
 export interface IProductStat {
+  toLowerCase: any;
   components: IStatus;
   total: number;
   description: string;
