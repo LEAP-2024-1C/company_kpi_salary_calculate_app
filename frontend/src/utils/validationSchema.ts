@@ -23,3 +23,15 @@ export const formPage = z.object({
     .trim(),
   password: z.string(),
 });
+
+export const userSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Must be a valid mobile number" })
+    .max(14, { message: "Must be a valid mobile number" }),
+  address: z.string(),
+  profile_img: z.string(),
+});

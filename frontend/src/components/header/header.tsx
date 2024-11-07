@@ -17,7 +17,7 @@ const Header = () => {
     router.push("/dashboard");
   };
   return (
-    <div className="bg-black p-5 grid grid-cols-3 w-full justify-between items-center">
+    <div className="bg-gray-900 p-5 flex w-full justify-between items-center">
       <div
         className="flex items-center justify-start gap-5 text-white"
         onClick={handleClick}
@@ -26,12 +26,12 @@ const Header = () => {
       </div>
       <div className="flex items-center gap-3  text-center justify-center">
         {/* <CiSearch className="text-gray-100" /> */}
-        <Input
-          className="bg-gray-300 rounded-full text-gray-400 w-1/7 border-none"
+        {/* <Input
+          className="bg-gray-400 rounded-full text-gray-400 w-1/7 border-none"
           placeholder="Боломжит ажлуудыг хайх"
-        />
+        /> */}
       </div>
-      <div className="  self-end  ">
+      <div className=" ">
         {/* <Button
           className=" w-[50px] h-[50px] rounded-full  bg-cover"
           style={{

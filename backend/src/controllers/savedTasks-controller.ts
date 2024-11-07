@@ -60,7 +60,9 @@ export const getCurrentTask = async (req: Request, res: Response) => {
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
       cart: cart,
+      
     });
+    console.log("cart",cart)
   } catch (error) {
     console.error(error);
     res.status(400).json({

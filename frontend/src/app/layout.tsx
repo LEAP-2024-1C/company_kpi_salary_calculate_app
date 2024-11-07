@@ -36,7 +36,7 @@ export default function RootLayout({
         <ProductProvider>
           <UserProvider>
             <Header />
-            <div className=" flex flex-col items-center bg-gray-100">
+            <div className=" flex flex-col items-center bg-gray-100 w-screen h-screen">
               {children}
               <ToastContainer />
             </div>
