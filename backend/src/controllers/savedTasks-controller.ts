@@ -5,18 +5,18 @@ export const createSavedTasks = async (req: Request, res: Response) => {
   const { id } = req.user;
   const { saveProduct } = req.body;
   try {
-    console.log("user_id", id);
-    console.log("product", saveProduct);
+    // console.log("user_id", id);
+    // console.log("product", saveProduct);
 
     const { product_id } = saveProduct;
     const findSavedTasks = await SavedTasks.findOne({ user: id });
-    console.log("findSavedTasks", findSavedTasks);
+    // console.log("findSavedTasks", findSavedTasks);
     if (!findSavedTasks) {
       const savedTasks = await SavedTasks.create({
         user: id,
         products: saveProduct,
       });
-      console.log(savedTasks);
+      // console.log(savedTasks);
       return res.status(200).json({
         message: "created new savedTasks",
         savedTasks,
@@ -26,7 +26,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
     const findIndex = findSavedTasks.products.findIndex(
       (item) => item.product_id.toString() === product_id
     );
-    console.log("findIndex", findIndex);
+    // console.log("findIndex", findIndex);
 
     if (findIndex < 0) {
       findSavedTasks.products.push(saveProduct.components[0]);
@@ -34,7 +34,7 @@ export const createSavedTasks = async (req: Request, res: Response) => {
       return;
     } else {
       const comp = saveProduct.components[0];
-      console.log("comp", comp);
+      // console.log("comp", comp);
       findSavedTasks.products[findIndex].components.push(comp);
     }
 

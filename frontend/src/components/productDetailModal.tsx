@@ -65,6 +65,29 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       console.error(error);
     }
   };
+  const updateProducts = async (updateComp: IChooseTasks) => {
+    try {
+      if (!chooseTask) {
+        return chooseTask;
+      }
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `${apiUrl}comp/update`,
+        {
+          updateComp,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.status === 200) {
+        console.log("success");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleAdd = (i: number) => {
     console.log("idx", i);
     setPro(cat_idx, i, "add");
@@ -114,7 +137,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         components: [{ _id: cat_id, categoryName, procedures: tasks }],
       };
       console.log("Saved product:", newSaveTask);
-      // createSelectedTasks(newSaveTask);
+      createSelectedTasks(newSaveTask);
       return newSaveTask;
     });
     const deleteAssign = tasks.map((item) => {
@@ -126,14 +149,16 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         },
       };
     });
-    console.log("deleteAssign", deleteAssign);
-    setChooseTask({
+
+    const updatedTask = {
       ...chooseTask,
       component_id: cat_id,
       procedures: deleteAssign,
-    });
+    };
+    updateProducts(updatedTask);
+    setChooseTask(updatedTask);
   };
-  console.log("choose", chooseTask);
+
   return (
     <div className="flex ">
       <Table>

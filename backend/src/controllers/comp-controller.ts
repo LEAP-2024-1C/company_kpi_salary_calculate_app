@@ -2,22 +2,29 @@ import { Request, Response } from "express";
 import Components, { ITask } from "../models/components.model";
 
 export const updateComponent = async (req: Request, res: Response) => {
-  const { component_id, updateComp } = req.body;
-
+  const { updateComp } = req.body;
+  console.log("updateComp", updateComp);
+  const { component_id, procedures } = updateComp;
   try {
     const component = await Components.findById(component_id);
 
     if (!component) {
       return res.status(404).json({ message: "Component not found" });
     }
-
+    console.log("component", component);
     const newProc = component.procedures.map((p) => {
-      const fpId = updateComp.findIndex((f: ITask) => f._id === p._id);
+      const fpId = procedures.findIndex(
+        (f: ITask) => f._id.toString() === p._id.toString()
+      );
+
       if (fpId > -1) {
-        return updateComp[fpId];
+        console.log("idtai", procedures[fpId]);
+        return procedures[fpId];
       }
+      console.log("idgui", p);
       return p;
     });
+    console.log("newProc", newProc);
     component.procedures = newProc;
     await component.save();
     res.status(200).json({
