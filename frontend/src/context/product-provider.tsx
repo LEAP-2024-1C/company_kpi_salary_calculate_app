@@ -1,14 +1,8 @@
 "use client";
 
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  ReactNode,
-  useContext,
-} from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { IComponents, IProduct, IProductStat } from "@/utils/interfaces";
+import { IProduct, IProductStat } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 
 interface IContext {
@@ -44,7 +38,6 @@ export const ProductProvider = ({
     const productStat = response.data.productStat;
     setProductStat(productStat);
   };
-
 
   useEffect(() => {
     getAllProducts();

@@ -1,18 +1,10 @@
 "use client";
 
-import SavedTasksCard from "@/components/savedTasksCard";
 import { apiUrl } from "@/lib/utils";
-import {
-  IProduct,
-  ISavedProduct,
-  ISavedTasks,
-  ISaveTasks,
-  SavedTasks,
-} from "@/utils/interfaces";
+import { SavedTasks } from "@/utils/interfaces";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { RiDeleteBin6Line } from "react-icons/ri";
 
 const SalaryCalculator = () => {
   const [cartData, setCartData] = useState<SavedTasks>();

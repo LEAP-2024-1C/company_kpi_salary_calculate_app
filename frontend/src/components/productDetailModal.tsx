@@ -44,7 +44,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const [tasks, setTasks] = useState<IProcedures[]>([]);
   const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
   const [chooseTask, setChooseTask] = useState<IChooseTasks>();
-
+  console.log("first", saveProduct);
   const createSelectedTasks = async (saveProduct: ISavedProduct) => {
     try {
       const token = localStorage.getItem("token");
