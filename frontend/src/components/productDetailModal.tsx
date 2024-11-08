@@ -114,7 +114,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         components: [{ _id: cat_id, categoryName, procedures: tasks }],
       };
       console.log("Saved product:", newSaveTask);
-      // createSelectedTasks(newSaveTask);
+      createSelectedTasks(newSaveTask);
       return newSaveTask;
     });
     const deleteAssign = tasks.map((item) => {

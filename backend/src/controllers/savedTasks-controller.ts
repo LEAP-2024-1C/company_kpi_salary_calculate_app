@@ -52,10 +52,10 @@ export const createSavedTasks = async (req: Request, res: Response) => {
 };
 
 export const getCurrentTask = async (req: Request, res: Response) => {
-  const { product_id } = req.body;
-
+  const { id } = req.user;
+  console.log(id)
   try {
-    const cart = await SavedTasks.findOne({});
+    const cart = await SavedTasks.findOne({user:id});
     // console.log(id);
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
