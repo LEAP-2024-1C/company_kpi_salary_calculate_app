@@ -176,6 +176,7 @@ const UserInfoForm = () => {
                           <Input
                             type="file"
                             accept="image/*"
+                            {...field}
                             onChange={(e) =>
                               e.target.files &&
                               handleImageUpload(e.target.files[0])
