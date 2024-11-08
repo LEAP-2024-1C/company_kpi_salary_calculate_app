@@ -33,15 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ProductProvider>
-          <UserProvider>
-            {/* <Header /> */}
+        <UserProvider>
+          <ProductProvider>
+            <Header />
             <div className=" flex flex-col items-center bg-gray-100 w-screen h-screen">
               {children}
               <ToastContainer />
             </div>
-          </UserProvider>
-        </ProductProvider>
+          </ProductProvider>
+        </UserProvider>
       </body>
     </html>
   );

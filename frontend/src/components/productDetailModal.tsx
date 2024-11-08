@@ -15,6 +15,8 @@ import { IChooseTasks, IProcedures, ISavedProduct } from "@/utils/interfaces";
 
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
+import { useUser } from "@/context/user-provider";
+import { toast } from "react-toastify";
 
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
@@ -37,9 +39,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   setPro,
   categoryName,
 }) => {
-  // const [count, setCount] = useState<number[]>(
-  //   new Array(totalTasks.length).fill(0)
-  // );
+  const { setRefresh } = useUser();
 
   const [tasks, setTasks] = useState<IProcedures[]>([]);
   const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
@@ -59,16 +59,40 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
-        console.log("success");
+        setRefresh((prev) => !prev);
+        toast.success("Таны сонгосон ажилбарууд амжилттай бүртгэгдлээ");
+        console.log("created new employee task success");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const updateProducts = async (updateComp: IChooseTasks) => {
+    try {
+      if (!chooseTask) {
+        return chooseTask;
+      }
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `${apiUrl}comp/update`,
+        {
+          updateComp,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.status === 200) {
+        setRefresh((prev) => !prev);
+        console.log("updated components success");
       }
     } catch (error) {
       console.error(error);
     }
   };
   const handleAdd = (i: number) => {
-    console.log("idx", i);
     setPro(cat_idx, i, "add");
-
     setTasks((prev) => {
       if (!prev) return prev;
       const newTask = [...prev];
@@ -78,29 +102,28 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       if (!findDuplicate) {
         newTask.push(totalTasks[i]);
       }
-      // newTask[i].status.progress = totalTasks[i].status.progress;
       console.log("newTask", newTask);
       return newTask;
     });
   };
   const handleSub = (i: number) => {
-    console.log("handleSub called for index:", i);
+    // console.log("handleSub called for index:", i);
     setPro(cat_idx, i, "sub");
     setTasks((prev) => {
       if (prev.length === 0) {
-        console.error("Index out of bounds:", i);
+        // console.error("Index out of bounds:", i);
         return prev;
       }
       const newTask = [...prev];
-      console.log("Before removing, tasks:", prev);
-      const assignStatus = totalTasks[i]?.status?.assign;
+      // console.log("Before removing, tasks:", prev);
+      const assignStatus = newTask[i]?.status?.assign;
       const findIndex = newTask.findIndex(
         (item) => item._id === totalTasks[i]._id
       );
       if (assignStatus === 0) {
         newTask.splice(findIndex, 1);
       }
-      console.log("Updated tasks:", newTask);
+      // console.log("Updated tasks:", newTask);
       return newTask;
     });
   };
@@ -126,14 +149,16 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         },
       };
     });
-    console.log("deleteAssign", deleteAssign);
-    setChooseTask({
+
+    const updatedTask = {
       ...chooseTask,
       component_id: cat_id,
       procedures: deleteAssign,
-    });
+    };
+    updateProducts(updatedTask);
+    setChooseTask(updatedTask);
   };
-  console.log("choose", chooseTask);
+
   return (
     <div className="flex ">
       <Table>
@@ -197,7 +222,16 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Авсан ажлуудын үнэлгээ</TableCell>
-            <TableCell className="text-right">{}₮</TableCell>
+            <TableCell className="text-right">
+              {tasks
+                .map((el) => {
+                  let total = 0;
+                  total = el.quantity * el.unitPrice * el.status.assign;
+                  return total;
+                })
+                .reduce((acc, total) => acc + total, 0)}
+              ₮
+            </TableCell>
             <TableCell className="text-right">
               <Button
                 variant="outline"
