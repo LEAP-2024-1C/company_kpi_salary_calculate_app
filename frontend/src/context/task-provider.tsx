@@ -1,14 +1,8 @@
 "use client";
 
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  ReactNode,
-  useContext,
-} from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { IComponents, IProduct, ISavedTasks } from "@/utils/interfaces";
+import { IComponents, ISavedTasks } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 import { toast } from "react-toastify";
 
@@ -18,7 +12,6 @@ interface IContext {
 
 export const TaskContext = createContext<IContext>({
   tasks: null,
-  // oneProduct: null,
 });
 
 export const ProductProvider = ({

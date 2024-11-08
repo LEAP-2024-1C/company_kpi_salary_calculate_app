@@ -1,23 +1,14 @@
 "use client";
 
 import { useUser } from "@/context/user-provider";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { FaRegEdit } from "react-icons/fa";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 const UserInfo = () => {
   const router = useRouter();
   const { user } = useUser();
-  const { id } = useParams();
   const edit = () => {
     router.push("/edit-profile");
   };

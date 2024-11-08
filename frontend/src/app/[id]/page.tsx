@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +15,7 @@ import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
 
 const TaskDetail = () => {
-  const { user, refresh } = useUser();
+  const { refresh } = useUser();
   const { id } = useParams();
   const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null);
 

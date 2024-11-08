@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import React from "react";
 
 // import { CiSearch } from "react-icons/ci";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 
 import { DropdownMenuDemo } from "./drowdown";
 
