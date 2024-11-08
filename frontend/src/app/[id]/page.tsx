@@ -42,7 +42,6 @@ const TaskDetail = () => {
         if (nP.components[pId].procedures[catId].status.pending < 1) {
           return nP;
         }
-
         nP.components[pId].procedures[catId].status.pending -= 1;
         nP.components[pId].procedures[catId].status.progress += 1;
         nP.components[pId].procedures[catId].status.assign += 1;

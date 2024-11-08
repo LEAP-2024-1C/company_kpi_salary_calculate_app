@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
   Table,
@@ -44,6 +44,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const [tasks, setTasks] = useState<IProcedures[]>([]);
   const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
   const [chooseTask, setChooseTask] = useState<IChooseTasks>();
+  const [isSave, setIsSave] = useState<boolean>(false);
 
   const createSelectedTasks = async (saveProduct: ISavedProduct) => {
     try {
@@ -69,10 +70,8 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   };
   const updateProducts = async (updateComp: IChooseTasks) => {
     try {
-      if (!chooseTask) {
-        return chooseTask;
-      }
       const token = localStorage.getItem("token");
+      console.log("hi check");
       const res = await axios.put(
         `${apiUrl}comp/update`,
         {
@@ -84,7 +83,9 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
+        setTasks([]);
         setRefresh((prev) => !prev);
+        setIsSave((prev) => !prev);
         console.log("updated components success");
       }
     } catch (error) {
@@ -94,6 +95,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const handleAdd = (i: number) => {
     setPro(cat_idx, i, "add");
     setTasks((prev) => {
+      console.log("prev", prev);
       if (!prev) return prev;
       const newTask = [...prev];
       const findDuplicate = newTask.some(
@@ -129,6 +131,25 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   };
 
   const handleSubmit = () => {
+    setChooseTask((prev) => {
+      const deleteAssign = tasks.map((item) => {
+        return {
+          ...item,
+          status: {
+            ...item.status,
+            assign: 0,
+          },
+        };
+      });
+      const updatedTask = {
+        ...prev,
+        component_id: cat_id,
+        procedures: deleteAssign,
+      };
+      console.log("updated task", updatedTask);
+      updateProducts(updatedTask); // async function
+      return updatedTask;
+    });
     setSaveProduct((prev) => {
       const newSaveTask = {
         ...prev,
@@ -137,27 +158,17 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         components: [{ _id: cat_id, categoryName, procedures: tasks }],
       };
       console.log("Saved product:", newSaveTask);
-      createSelectedTasks(newSaveTask);
+      // createSelectedTasks(newSaveTask); // async function
       return newSaveTask;
     });
-    const deleteAssign = tasks.map((item) => {
-      return {
-        ...item,
-        status: {
-          ...item.status,
-          assign: 0,
-        },
-      };
-    });
-
-    const updatedTask = {
-      ...chooseTask,
-      component_id: cat_id,
-      procedures: deleteAssign,
-    };
-    updateProducts(updatedTask);
-    setChooseTask(updatedTask);
   };
+  useEffect(() => {
+    if (!saveProduct) {
+      return saveProduct;
+    }
+    console.log("isave", saveProduct);
+    createSelectedTasks(saveProduct);
+  }, [isSave]);
 
   return (
     <div className="flex ">

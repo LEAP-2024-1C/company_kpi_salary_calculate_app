@@ -3,7 +3,7 @@ import Components, { ITask } from "../models/components.model";
 
 export const updateComponent = async (req: Request, res: Response) => {
   const { updateComp } = req.body;
-
+  console.log("first", updateComp);
   const { component_id, procedures } = updateComp;
   try {
     const component = await Components.findById(component_id);
