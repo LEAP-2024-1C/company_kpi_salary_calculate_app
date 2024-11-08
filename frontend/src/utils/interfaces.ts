@@ -7,17 +7,17 @@
 // }
 export interface IEmployee {
   _id: string;
-  firstName: String;
-  lastName: String;
-  email: String;
+  firstName: string;
+  lastName: string;
+  email: string;
   password: string;
-  role: String;
-  job_title: String;
-  phoneNumber?: String;
-  profile_img?: String;
-  address?: String;
-  otp?: String;
-  passwordResetToken?: String;
+  role: string;
+  job_title: string;
+  phoneNumber?: string;
+  profile_img?: string;
+  address?: string;
+  otp?: string;
+  passwordResetToken?: string;
   passwordResetTokenExpire?: Date;
   created_at: Date;
   updated_at: Date;
@@ -88,36 +88,38 @@ export interface ISavedComponents {
   procedures: ITask[];
 }
 
-export interface ISaveTasks{
-    _id:string;
-    taskName:string
-    unitPrice:number
-    quantity:number
-    selectedQuantity:number }
-  export interface ISavedTasks {
-    user: string;
-    products: ISavedProduct[];
-  }
-  export interface ISavedProduct {
-    product_id: string;
-    productName: string;
-    components: ISavedComponents[];
-  }
-  export  interface ISavedComponents {
-    _id: string;
-    categoryName: string;
-    procedures: ITask[];}
+export interface ISaveTasks {
+  _id: string;
+  taskName: string;
+  unitPrice: number;
+  quantity: number;
+  selectedQuantity: number;
+}
+export interface ISavedTasks {
+  user: string;
+  products: ISavedProduct[];
+}
+export interface ISavedProduct {
+  product_id: string;
+  productName: string;
+  components: ISavedComponents[];
+}
+export interface ISavedComponents {
+  _id: string;
+  categoryName: string;
+  procedures: ITask[];
+}
 
-    export interface ITask {
-      _id: string;
-      taskName: string;
-      quantity: number;
-      status: IStatus;
-      unitPrice: number;
-    }
-  export interface SavedTasks{
-    products: ISavedProduct
-  }
+export interface ITask {
+  _id: string;
+  taskName: string;
+  quantity: number;
+  status: IStatus;
+  unitPrice: number;
+}
+export interface SavedTasks {
+  products: ISavedProduct;
+}
 export interface ITask {
   _id: string;
   taskName: string;

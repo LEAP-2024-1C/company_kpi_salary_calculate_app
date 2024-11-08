@@ -60,7 +60,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     getCurrentProduct();
-  }, [refresh]);
+  }, [id, refresh]);
 
   return (
     <>

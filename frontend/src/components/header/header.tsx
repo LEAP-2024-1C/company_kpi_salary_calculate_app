@@ -6,6 +6,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 import { DropdownMenuDemo } from "./drowdown";
+import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const Header = () => {
         className="flex items-center justify-start gap-5 text-white"
         onClick={handleClick}
       >
-        <img src="" alt="company logo" />
+        <Image src="" alt="company logo" />
       </div>
       <div className="flex items-center gap-3  text-center justify-center">
         {/* <CiSearch className="text-gray-100" /> */}

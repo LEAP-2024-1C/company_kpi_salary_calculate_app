@@ -26,7 +26,7 @@ interface TaskTrackerProps {
   cat_id: string;
   cat_idx: number;
   categoryName: string;
-  setPro: Function;
+  setPro: (pId: number, catId: number, type: "add" | "sub") => void;
 }
 
 const ProductDetailModal: React.FC<TaskTrackerProps> = ({
@@ -45,7 +45,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
   const [chooseTask, setChooseTask] = useState<IChooseTasks>();
   const [isSave, setIsSave] = useState<boolean>();
-  console.log("first", saveProduct);
+
   const createSelectedTasks = async (saveProduct: ISavedProduct) => {
     try {
       const token = localStorage.getItem("token");
@@ -150,6 +150,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       updateProducts(updatedTask); // async function
       return updatedTask;
     });
+    console.log("choosetask", chooseTask);
     setSaveProduct((prev) => {
       const newSaveTask = {
         ...prev,
