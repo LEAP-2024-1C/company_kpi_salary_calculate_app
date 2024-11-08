@@ -67,9 +67,7 @@ const TaskTracker = () => {
                         <ul key={cat_id}>
                           <li className="flex items-center gap-3">
                             <div>{categoryName}</div>
-                            <p>
-                              ({other}/ {total})
-                            </p>
+                            <p>{/* ({other}/ {total}) */}</p>
                           </li>
                         </ul>
                       )
@@ -79,7 +77,7 @@ const TaskTracker = () => {
               </AccordionItem>
             </Accordion>
             <div className="w-full flex ">
-              <StatusIndicator status="pending" />
+              {/* <StatusIndicator status="pending" /> */}
               {/* <p className="text-blue-500 justify-self-end">Төлөв: {status}</p> */}
             </div>
           </div>
