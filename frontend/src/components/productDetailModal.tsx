@@ -15,6 +15,8 @@ import { IChooseTasks, IProcedures, ISavedProduct } from "@/utils/interfaces";
 
 import axios from "axios";
 import { apiUrl } from "@/lib/utils";
+import { useUser } from "@/context/user-provider";
+import { toast } from "react-toastify";
 
 interface TaskTrackerProps {
   totalTasks: IProcedures[];
@@ -37,9 +39,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   setPro,
   categoryName,
 }) => {
-  // const [count, setCount] = useState<number[]>(
-  //   new Array(totalTasks.length).fill(0)
-  // );
+  const { setRefresh } = useUser();
 
   const [tasks, setTasks] = useState<IProcedures[]>([]);
   const [saveProduct, setSaveProduct] = useState<ISavedProduct>();
@@ -59,6 +59,8 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
+        setRefresh((prev) => !prev);
+        toast.success("Таны сонгосон ажилбарууд амжилттай бүртгэгдлээ");
         console.log("created new employee task success");
       }
     } catch (error) {
@@ -82,6 +84,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       );
 
       if (res.status === 200) {
+        setRefresh((prev) => !prev);
         console.log("updated components success");
       }
     } catch (error) {
@@ -89,9 +92,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
     }
   };
   const handleAdd = (i: number) => {
-    console.log("idx", i);
     setPro(cat_idx, i, "add");
-
     setTasks((prev) => {
       if (!prev) return prev;
       const newTask = [...prev];
@@ -101,7 +102,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       if (!findDuplicate) {
         newTask.push(totalTasks[i]);
       }
-      // newTask[i].status.progress = totalTasks[i].status.progress;
       console.log("newTask", newTask);
       return newTask;
     });
@@ -155,7 +155,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       component_id: cat_id,
       procedures: deleteAssign,
     };
-    // updateProducts(updatedTask);
+    updateProducts(updatedTask);
     setChooseTask(updatedTask);
   };
 

@@ -15,7 +15,7 @@ import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
 
 const TaskDetail = () => {
-  const { user } = useUser();
+  const { user, refresh } = useUser();
   const { id } = useParams();
   const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null);
 
@@ -61,7 +61,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     getCurrentProduct();
-  }, []);
+  }, [refresh]);
 
   return (
     <>
