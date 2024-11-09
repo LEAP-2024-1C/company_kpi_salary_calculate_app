@@ -1,22 +1,16 @@
 'use client';
-import { Button } from '@/components/ui/button';
+
 import { DataTable2 } from '@/components/ui/data-table2';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
-import { IProductStat, IUser } from '@/constants/data';
+import { IProductStat } from '@/constants/data';
 import { apiUrl } from '@/lib/utils';
 import axios from 'axios';
-import { da } from 'date-fns/locale';
-import { Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+
 import { useEffect, useState } from 'react';
 
-interface ProductsClientProps {
-  data: IUser[];
-}
-
-export const ProjectClient: React.FC<ProductsClientProps> = ({ data }) => {
+export const ProjectClient = () => {
   const [productData, setProductData] = useState<IProductStat[]>([]);
   const getAllProduct = async () => {
     try {
