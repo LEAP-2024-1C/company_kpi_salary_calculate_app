@@ -43,12 +43,14 @@ export const CellAction: React.FC<CellActionProps> = ({
   c_id,
   t_id,
   setCellconfirm,
-  handleInput
+  handleInput,
+  data
 }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { setRefresh, refresh } = useProducts();
+  const [editedData, setEditedData] = useState(data);
 
   const handleEdit = (rowIndex: number, field: string, value: any) => {
     const updatedData = [...editedData];
