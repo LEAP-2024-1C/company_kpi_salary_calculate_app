@@ -321,6 +321,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                                 handleSaveChanges(t_id, c_id, rowData[t_id])
                               }
                             >
+                              {/* {console.log('rowdata', rowData[t_id])} */}
                               Save
                             </Button>
                           ) : (

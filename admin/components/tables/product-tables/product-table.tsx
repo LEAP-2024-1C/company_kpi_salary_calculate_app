@@ -4,59 +4,65 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Product } from '@/constants/data';
 import { CellAction } from './cell-action';
-
+import { Label } from '@radix-ui/react-label';
 interface DataTableProps {
-  data: Product[];
+  productsData: Product[];
   searchKey: string;
 }
 
-export function ProductTable({ data, searchKey }: DataTableProps) {
+export function ProductTable({ productsData, searchKey }: DataTableProps) {
+  console.log('prosd', productsData);
+
   return (
     <>
       <Input
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
       />
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.productName}</TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>{product.price}$</TableCell>
-                <TableCell>{product.qty}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>
+      <ScrollArea className="h-[calc(86vh-220px)] rounded-md border bg-gray-100">
+        <div className="flex flex-wrap gap-4">
+          {productsData.map((product, index) => (
+            <button key={index}>
+              <Card className="w-[350px]">
+                <div className="flex items-center justify-around">
+                  <button className="rounded-md p-2 duration-150 ease-in-out hover:bg-[#cc716a]">
+                    +
+                  </button>
+                  <CardHeader>
+                    <CardTitle>{product.productName}</CardTitle>
+                    <CardDescription>{product.description}</CardDescription>
+                  </CardHeader>
+
                   <CellAction id={product.id} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </div>
+                <CardContent>
+                  <form>
+                    <img src={product.images[0]} alt="big image" />
+                  </form>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Label>Quantity:{product.quantity}</Label>
+                  <Label>Status:{product.status}</Label>
+                </CardFooter>
+              </Card>
+            </button>
+          ))}
+        </div>
+
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+
       <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
         <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
           <div className="flex items-center space-x-2">
