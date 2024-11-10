@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
-import Category from "../models/category.model";
-import Components, { ICategory } from "../models/components.model";
-import Product, { IComponent, IProduct } from "../models/product.model";
+
+import Components from "../models/components.model";
+import Product, { IComponent } from "../models/product.model";
 
 export const createProduct = async (req: Request, res: Response) => {
   const { components, productForm, images } = req.body;
   try {
-    console.log("first", components);
-
     const createdComp = await Components.insertMany(components);
-    console.log("createdcomp", createdComp);
+
     const compIDs = createdComp.map((item) => item._id);
-    console.log("res", res);
+
     const { productName, description, quantity } = productForm;
     const createProduct = await Product.create({
       productName,
@@ -32,7 +30,7 @@ export const createProduct = async (req: Request, res: Response) => {
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find().populate("components");
-    console.log("product", products);
+
     res.status(200).json({ message: "success", products });
   } catch (error) {
     res.status(401).json({ error });
@@ -43,9 +41,9 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getCurrentProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-  
+
     const oneProductDatas = await Product.findById(id).populate("components");
-console.log("oneProductDatas",oneProductDatas)
+
     res
       .status(200)
       .json({ message: "Success to get a product", oneProductDatas });
@@ -56,47 +54,6 @@ console.log("oneProductDatas",oneProductDatas)
     });
   }
 };
-// export const getAllProductsStat = async (req: Request, res: Response) => {
-//   try {
-//     const products = await Product.find().populate<IComponent>("components");
-//     const productStat = products.map((c) => {
-//       const comps = c.components
-//         .map((x) => {
-//           const status = {
-//             pending: x.procedures.filter((s) => s.status === "pending").length,
-//             progress: x.procedures.filter((s) => s.status === "progress")
-//               .length,
-//             done: x.procedures.filter((s) => s.status === "done").length,
-//             review: x.procedures.filter((s) => s.status === "review").length,
-//           };
-//           return { status };
-//         })
-//         .reduce(
-//           (acc, component) => {
-//             acc.pending += component.status.pending;
-//             acc.progress += component.status.progress;
-//             acc.done += component.status.done;
-//             acc.review += component.status.review;
-//             return acc;
-//           },
-//           { pending: 0, progress: 0, done: 0, review: 0 }
-//         );
-//       const total = comps.done + comps.pending + comps.progress + comps.review;
-//       return {
-//         components: comps,
-//         total: total,
-//         productName: c.productName,
-//         description: c.description,
-//         image: c.images,
-//       };
-//     });
-
-//     res.status(200).json({ message: "success", productStat });
-//   } catch (error) {
-//     res.status(401).json({ error });
-//     console.error(error);
-//   }
-// };
 
 export const getAllProductsStatEmployee = async (
   req: Request,
@@ -106,10 +63,6 @@ export const getAllProductsStatEmployee = async (
     const products = await Product.find().populate<IComponent>("components");
     const productStat = products.map((c) => {
       const comps = c.components.map((x) => {
-        // let pending = 0;
-        // let progress = 0;
-        // let done = 0;
-        // let review = 0;
         let status = {
           pending: 0,
           progress: 0,
@@ -133,7 +86,7 @@ export const getAllProductsStatEmployee = async (
         productName: c.productName,
         description: c.description,
         image: c.images,
-        _id:c._id
+        _id: c._id,
       };
     });
 
@@ -178,6 +131,7 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
       return {
         components: comps,
         total: total,
+        product_id: c._id,
         productName: c.productName,
         description: c.description,
         image: c.images,
@@ -191,6 +145,22 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
     console.error(error);
   }
 };
+
+// export const updateProdct = async (req: Request, res: Response) => {
+//   const { component_id, pro } = req.body;
+//   const { _id } = pro;
+//   const products = await Components.findById(component_id);
+
+//   const newProc = products?.procedures.map((p) => {
+//     const fpId = pro.findIndex((f) => f._id === p._id);
+//     if (fpId > -1) {
+//       return pro[fpId];
+//     }
+//     return p;
+//   }); // [1,2,3,4]
+//   products?.procedures = newProc;
+//   products?.save();
+// };
 
 // export const getAllProductsStatEmployee = async (
 //   req: Request,

@@ -10,7 +10,7 @@ export type User = {
   status: string;
 };
 export interface IUser {
-  id: number;
+  _id: string;
   lastName: string;
   firstName: string;
   email: string;
@@ -19,97 +19,17 @@ export interface IUser {
   verified: boolean;
   status: string;
 }
-export const users: User[] = [
-  {
-    id: 1,
-    name: 'Candice Schiner',
-    company: 'Dell',
-    job_title: 'Frontend Developer',
-    verified: false,
-    status: 'Active'
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    company: 'TechCorp',
-    job_title: 'Backend Developer',
-    verified: true,
-    status: 'Active'
-  },
-  {
-    id: 3,
-    name: 'Alice Johnson',
-    company: 'WebTech',
-    job_title: 'UI Designer',
-    verified: true,
-    status: 'Active'
-  },
-  {
-    id: 4,
-    name: 'David Smith',
-    company: 'Innovate Inc.',
-    job_title: 'Fullstack Developer',
-    verified: false,
-    status: 'Inactive'
-  },
-  {
-    id: 5,
-    name: 'Emma Wilson',
-    company: 'TechGuru',
-    job_title: 'Product Manager',
-    verified: true,
-    status: 'Active'
-  },
-  {
-    id: 6,
-    name: 'James Brown',
-    company: 'CodeGenius',
-    job_title: 'QA Engineer',
-    verified: false,
-    status: 'Active'
-  },
-  {
-    id: 7,
-    name: 'Laura White',
-    company: 'SoftWorks',
-    job_title: 'UX Designer',
-    verified: true,
-    status: 'Active'
-  },
-  {
-    id: 8,
-    name: 'Michael Lee',
-    company: 'DevCraft',
-    job_title: 'DevOps Engineer',
-    verified: false,
-    status: 'Active'
-  },
-  {
-    id: 9,
-    name: 'Olivia Green',
-    company: 'WebSolutions',
-    job_title: 'Frontend Developer',
-    verified: true,
-    status: 'Active'
-  },
-  {
-    id: 10,
-    name: 'Robert Taylor',
-    company: 'DataTech',
-    job_title: 'Data Analyst',
-    verified: false,
-    status: 'Active'
-  }
-];
 
 export interface IStatus {
   pending: number;
   progress: number;
   done: number;
   review: number;
+  assign: number;
 }
 
 export interface IProductStat {
+  product_id: string;
   components: IStatus;
   total: number;
   description: string;

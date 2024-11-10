@@ -55,6 +55,10 @@ const savedTasksSchema = new Schema<ISavedTasks>(
                   required: [true],
                 },
                 status: {
+                  assign: {
+                    type: Number,
+                    default: 0,
+                  },
                   pending: {
                     type: Number,
                     default: 0,
@@ -75,6 +79,11 @@ const savedTasksSchema = new Schema<ISavedTasks>(
                 unitPrice: {
                   type: Number,
                   required: [true],
+                },
+                taskStatus: {
+                  type: String,
+                  enum: ["progress", "review", "done"],
+                  default: "progress",
                 },
               },
             ],

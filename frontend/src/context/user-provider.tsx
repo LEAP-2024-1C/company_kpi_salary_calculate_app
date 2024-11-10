@@ -2,7 +2,14 @@
 
 import { apiUrl } from "@/lib/utils";
 import axios from "axios";
-import React, { useContext, useState, createContext, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  createContext,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { toast } from "react-toastify";
 
 interface IEmployee {
@@ -16,9 +23,11 @@ interface IEmployee {
 
 interface IContext {
   user: IEmployee | null;
-  setUser: React.Dispatch<React.SetStateAction<IEmployee | null>>;
+  setUser: Dispatch<SetStateAction<IEmployee | null>>;
   loading: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  setRefresh: Dispatch<SetStateAction<boolean>>;
+  refresh: boolean;
 }
 
 export const UserContext = createContext<IContext>({
@@ -26,12 +35,15 @@ export const UserContext = createContext<IContext>({
   setUser: () => {},
   loading: true,
   setIsLoggedIn: () => false,
+  setRefresh: () => {},
+  refresh: false,
 });
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IEmployee | null>(null);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setIsLoggedIn] = useState(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -43,7 +55,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (response.status === 200) {
           const { user } = response.data;
           setUser(user);
-          console.log(user);
+          console.log("user", user);
         }
       } else {
         setUser(null);
@@ -60,7 +72,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, [loggedIn]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading, setIsLoggedIn }}>
+    <UserContext.Provider
+      value={{ user, setUser, loading, setIsLoggedIn, setRefresh, refresh }}
+    >
       {children}
     </UserContext.Provider>
   );

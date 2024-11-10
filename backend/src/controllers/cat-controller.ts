@@ -8,7 +8,7 @@ export const createCategory = async (req: Request, res: Response) => {
     if (!categoryName || !procedures) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
-    console.log("first");
+
     const findCategory = await Category.findOne({ categoryName });
     if (!findCategory) {
       const category = await Category.create({
@@ -127,7 +127,6 @@ export const updateProcedure = async (req: Request, res: Response) => {
     }
 
     const findCategory = await Category.findById(c_id);
-    console.log("FC", findCategory);
 
     if (!findCategory) {
       return res.status(404).json({ message: "Ангилал олдсонгүй." });
@@ -159,7 +158,6 @@ export const updateProcedure = async (req: Request, res: Response) => {
 
 export const deleteProcedure = async (req: Request, res: Response) => {
   const data = req.body;
-  console.log(data);
 
   try {
     const { c_id, t_id } = data;
@@ -172,7 +170,6 @@ export const deleteProcedure = async (req: Request, res: Response) => {
     }
 
     const findCategory = await Category.findById(c_id);
-    console.log("FC", findCategory);
 
     if (!findCategory) {
       return res.status(404).json({ message: "Ангилал олдсонгүй." });

@@ -28,8 +28,6 @@ const employeeSchema = new Schema<IEmployee>({
   },
   password: {
     type: String,
-    minlength: [8, "Хэрэглэгчийн пасс хамгийн багадаа 8 тэмдэгт байна"],
-    required: [true, "Хэрэглэгчийн түлхүүр үг оруулах"],
   },
   role: {
     type: String,
