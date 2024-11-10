@@ -1,14 +1,7 @@
 'use client';
-import { TrendingUp } from 'lucide-react';
+
 import { Pie, PieChart } from 'recharts';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
@@ -17,20 +10,9 @@ import {
 } from '@/components/ui/chart';
 
 import { Input } from './input';
-import {
-  Category,
-  IProduct,
-  IProductStat,
-  IUser,
-  products
-} from '@/constants/data';
-
+import { IProductStat } from '@/constants/data';
 import Link from 'next/link';
-import axios from 'axios';
-import { apiUrl } from '@/lib/utils';
-import { toast } from './use-toast';
-import { useState, useEffect } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState } from 'react';
 import { format } from 'date-fns';
 
 interface DataTableProps {
@@ -73,12 +55,12 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               ? item
               : item.productName.toLowerCase().includes(search);
           })
-          .map(({ productName, components, createdAt, total }) => (
+          .map(({ productName, components, createdAt, total, product_id }) => (
             <Card>
               <div className="flex flex-col gap-2 pl-4 pt-3">
                 <div className="flex items-center justify-between gap-10">
                   <p className="text-2xl font-semibold">
-                    project name: {productName}
+                    Бүтээгдэхүүний нэр: {productName}
                   </p>
                   <p className="pr-4 text-gray-500">
                     {format(new Date(createdAt), 'yyyy:MM:dd')}
@@ -88,18 +70,21 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                   <div className="flex flex-col justify-center gap-2">
                     {/* <div className="text-xl font-semibold">performence: 15%</div> */}
                     <div>
-                      pending: ({components.pending}/{total})
+                      хүлээгдэж байна : ({components.pending}/{total})
                     </div>
                     <div>
-                      inprogress: ({components.progress}/{total})
+                      хийгдэж байна: ({components.progress}/{total})
                     </div>
                     <div>
-                      done: ({components.done}/{total})
+                      хянах: ({components.review}/{total})
                     </div>
                     <div>
-                      review: ({components.review}/{total})
+                      бүрэн дууссан: ({components.done}/{total})
                     </div>
-                    <Link href={'/dashboard/employee-task'}>employees</Link>
+
+                    <Link href={`/dashboard/employee-task/${product_id}`}>
+                      employees
+                    </Link>
                   </div>
 
                   <CardContent className="flex-1 pb-0">

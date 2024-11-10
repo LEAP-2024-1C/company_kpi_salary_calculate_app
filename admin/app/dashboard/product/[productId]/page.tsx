@@ -16,25 +16,8 @@ const breadcrumbItems = [
 ];
 
 export default function Page() {
-  // const [categories, setCategories] = useState<Category[]>([]);
-  // const getAllCategories = async () => {
-  //   try {
-  //     const res = await axios.get(`${apiUrl}cat/get/category`);
-  //     if (res.status === 200) {
-  //       const { categories } = res.data;
-  //       console.log('categories', categories);
-  //       setCategories(categories);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getAllCategories();
-  // }, []);
-
   return (
-    <ScrollArea className="h-[calc(100vh-60px)] ">
+    <ScrollArea className="h-[calc(100vh-60px)]">
       <div className="ml-7 mt-4">
         <Breadcrumbs items={breadcrumbItems} />
         <ProductForm initialData={null} key={null} />

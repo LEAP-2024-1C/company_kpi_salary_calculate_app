@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -177,6 +176,7 @@ const UserInfoForm = () => {
                           <Input
                             type="file"
                             accept="image/*"
+                            {...field}
                             onChange={(e) =>
                               e.target.files &&
                               handleImageUpload(e.target.files[0])

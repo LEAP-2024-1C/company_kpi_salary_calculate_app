@@ -5,11 +5,10 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 // import { CiSearch } from "react-icons/ci";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 
 import { DropdownMenuDemo } from "./drowdown";
+import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
