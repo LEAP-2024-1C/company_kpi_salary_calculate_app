@@ -49,7 +49,7 @@ const TaskTracker = () => {
                 </Link>
               </AccordionTrigger>
               <AccordionContent>
-                <Link href={"/" + _id}>
+                <Link href={`/${_id}`}>
                   {components.map(({ categoryName, cat_id, total, other }) => (
                     <ul key={cat_id}>
                       <li className="flex items-center gap-3">
@@ -70,35 +70,6 @@ const TaskTracker = () => {
           </div>
         </div>
       ))}
-                  <Link href={"/" + _id}>
-                    <h1 className="text-3xl font-bold ">
-                      {productName}({components.length})
-                    </h1>
-                  </Link>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <Link href={"/" + _id}>
-                    {components.map(
-                      ({ categoryName, cat_id, total, other }) => (
-                        <ul key={cat_id}>
-                          <li className="flex items-center gap-3">
-                            <div>{categoryName}</div>
-                            <p>{/* ({other}/ {total}) */}</p>
-                          </li>
-                        </ul>
-                      )
-                    )}
-                  </Link>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            <div className="w-full flex ">
-              {/* <StatusIndicator status="pending" /> */}
-              {/* <p className="text-blue-500 justify-self-end">Төлөв: {status}</p> */}
-            </div>
-          </div>
-        )
-      )}
     </>
   );
 };

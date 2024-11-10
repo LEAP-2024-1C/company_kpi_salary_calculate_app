@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/header/header";
 import UserProvider from "@/context/user-provider";
 import { ProductProvider } from "@/context/product-provider";
 import { ToastContainer } from "react-toastify";

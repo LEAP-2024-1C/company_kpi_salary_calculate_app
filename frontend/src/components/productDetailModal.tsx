@@ -58,11 +58,9 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (res.status === 200) {
         setRefresh((prev) => !prev);
         toast.success("Таны сонгосон ажилбарууд амжилттай бүртгэгдлээ");
-        console.log("created new employee task success");
       }
     } catch (error) {
       console.error(error);
@@ -71,7 +69,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const updateProducts = async (updateComp: IChooseTasks) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("hi check");
       const res = await axios.put(
         `${apiUrl}comp/update`,
         {
@@ -81,14 +78,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (res.status === 200) {
         setTasks([]);
-        setRefresh((prev) => !prev);
         setIsSave((prev) => !prev);
-        console.log("updated components success");
       }
     } catch (error) {
+      toast.success("Мэдээллээ шинэчилнэ үү");
       console.error(error);
     }
   };
@@ -125,7 +120,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       if (assignStatus === 0) {
         newTask.splice(findIndex, 1);
       }
-      // console.log("Updated tasks:", newTask);
       return newTask;
     });
   };
@@ -146,11 +140,10 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         component_id: cat_id,
         procedures: deleteAssign,
       };
-      console.log("updated task", updatedTask);
       updateProducts(updatedTask); // async function
       return updatedTask;
     });
-    console.log("choosetask", chooseTask);
+
     setSaveProduct((prev) => {
       const newSaveTask = {
         ...prev,
@@ -158,8 +151,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         productName,
         components: [{ _id: cat_id, categoryName, procedures: tasks }],
       };
-      console.log("Saved product:", newSaveTask);
-      // createSelectedTasks(newSaveTask); // async function
+
       return newSaveTask;
     });
   };
@@ -167,7 +159,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
     if (!saveProduct) {
       return saveProduct;
     }
-    console.log("isave", saveProduct);
     createSelectedTasks(saveProduct);
   }, [isSave]);
 
@@ -190,24 +181,12 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         <TableBody>
           {totalTasks.map((task, idx) => (
             <TableRow key={task._id}>
-              <TableCell className="font-medium ">
-                <label htmlFor="">{task.taskName}</label>
-              </TableCell>
-              <TableCell>
-                <label htmlFor="">{task.unitPrice}</label>
-              </TableCell>
-              <TableCell>
-                <label htmlFor="">{task.quantity}</label>
-              </TableCell>
-              <TableCell>
-                <label htmlFor="">{quantity}</label>
-              </TableCell>
-              <TableCell>
-                <label htmlFor="">{task.status.pending}</label>
-              </TableCell>
-              <TableCell>
-                <label htmlFor="">{task.status.assign}</label>
-              </TableCell>
+              <TableCell className="font-medium ">{task.taskName}</TableCell>
+              <TableCell>{task.unitPrice}</TableCell>
+              <TableCell>{task.quantity}</TableCell>
+              <TableCell>{quantity}</TableCell>
+              <TableCell>{task.status.pending}</TableCell>
+              <TableCell>{task.status.assign}</TableCell>
               <TableCell className="text-right">
                 <div className="flex gap-2 ">
                   <Button
