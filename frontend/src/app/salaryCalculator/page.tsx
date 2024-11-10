@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { apiUrl } from "@/lib/utils";
-import { ITask, ISavedTasks, ISavedProduct } from "@/utils/interfaces";
+import { ISavedTasks, ISavedProduct, IProcedures } from "@/utils/interfaces";
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+
 type SentData = {
   component_id: string;
   task_id: string;
@@ -149,13 +149,6 @@ const SalaryCalculator = () => {
               className="bg-white shadow-lg rounded-xl p-6 flex flex-col border border-green-200 hover:shadow-2xl transition-shadow"
             >
               <div className="flex items-center gap-4">
-                <Image
-                  width={80}
-                  height={80}
-                  src={`${product.image ?? ""}`}
-                  alt="img"
-                  className="w-[80px] h-[80px] rounded-xl bg-gray-200"
-                ></Image>
                 <h1 className="text-2xl font-semibold text-green-700">
                   {product.productName}
                 </h1>
@@ -191,44 +184,46 @@ const SalaryCalculator = () => {
                               {component.categoryName}
                             </TableCell>
                           </TableRow>
-                          {component.procedures.map((task: ITask, taskIdx) => (
-                            <TableRow
-                              key={`${compIdx}-${taskIdx}`}
-                              className="hover:bg-gray-50"
-                            >
-                              <TableCell>{task.taskName}</TableCell>
-                              <TableCell>₮{task.unitPrice}</TableCell>
-                              <TableCell>{task.quantity}</TableCell>
-                              <TableCell>{task.status.assign}</TableCell>
-                              <TableCell>{task.taskStatus}</TableCell>
-                              <TableCell>
-                                {task.unitPrice *
-                                  task.status.assign *
-                                  task.quantity}
-                                ₮
-                              </TableCell>
-                              <TableCell>
-                                <button
-                                  className={`px-4 py-2 text-white ${
-                                    task.taskStatus === "done"
-                                      ? "cursor-not-allowed bg-gray-500"
-                                      : " bg-green-100 text-green-700 hover:bg-green-200"
-                                  }`}
-                                  disabled={task.taskStatus === "done"}
-                                  onClick={() =>
-                                    handleStatus(
-                                      component._id,
-                                      task._id,
-                                      task.status.assign,
-                                      product.product_id
-                                    )
-                                  }
-                                >
-                                  Change Status
-                                </button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {component.procedures.map(
+                            (task: IProcedures, taskIdx) => (
+                              <TableRow
+                                key={`${compIdx}-${taskIdx}`}
+                                className="hover:bg-gray-50"
+                              >
+                                <TableCell>{task.taskName}</TableCell>
+                                <TableCell>₮{task.unitPrice}</TableCell>
+                                <TableCell>{task.quantity}</TableCell>
+                                <TableCell>{task.status.assign}</TableCell>
+                                <TableCell>{task.taskStatus}</TableCell>
+                                <TableCell>
+                                  {task.unitPrice *
+                                    task.status.assign *
+                                    task.quantity}
+                                  ₮
+                                </TableCell>
+                                <TableCell>
+                                  <button
+                                    className={`px-4 py-2 text-white ${
+                                      task.taskStatus === "done"
+                                        ? "cursor-not-allowed bg-gray-500"
+                                        : " bg-green-100 text-green-700 hover:bg-green-200"
+                                    }`}
+                                    disabled={task.taskStatus === "done"}
+                                    onClick={() =>
+                                      handleStatus(
+                                        component._id,
+                                        task._id,
+                                        task.status.assign,
+                                        product.product_id
+                                      )
+                                    }
+                                  >
+                                    Change Status
+                                  </button>
+                                </TableCell>
+                              </TableRow>
+                            )
+                          )}
                         </React.Fragment>
                       ))}
                     </TableBody>
