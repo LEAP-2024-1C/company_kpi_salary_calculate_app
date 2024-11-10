@@ -31,12 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
         <UserProvider>
           <ProductProvider>
-            <Header />
-            <div className=" flex flex-col items-center bg-gray-100 w-screen h-screen">
+            <div className=" flex flex-col items-center bg-gray-100 ">
               {children}
               <ToastContainer />
             </div>

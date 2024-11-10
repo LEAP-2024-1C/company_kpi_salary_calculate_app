@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import { CgWorkAlt } from "react-icons/cg";
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 // import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
@@ -14,29 +16,32 @@ const Header = () => {
   const handleClick = () => {
     router.push("/dashboard");
   };
+  const handleWork = () => {
+    router.push("/salaryCalculator");
+  };
   return (
     <div className="bg-gray-900 p-5 flex w-full justify-between items-center">
       <div
         className="flex items-center justify-start gap-5 text-white"
         onClick={handleClick}
       >
-        <Image src="" alt="company logo" />
+        <img
+          src="./images/clothing.logo.jpg"
+          alt="company logo"
+          className="h-[50px] w-[50px] rounded-xl"
+        />
       </div>
       <div className="flex items-center gap-3  text-center justify-center">
-        {/* <CiSearch className="text-gray-100" /> */}
         {/* <Input
           className="bg-gray-400 rounded-full text-gray-400 w-1/7 border-none"
           placeholder="Боломжит ажлуудыг хайх"
-        /> */}
+          /> */}
       </div>
-      <div className=" ">
-        {/* <Button
-          className=" w-[50px] h-[50px] rounded-full  bg-cover"
-          style={{
-            backgroundImage: `url("/images/defaultProfilePic.jpg")`,
-          }}
-          // onClick={handleChange}
-        ></Button> */}
+      <div className=" flex gap-8 items-center">
+        <CgWorkAlt
+          className="text-gray-400 w-[40px] h-[40px]"
+          onClick={handleWork}
+        />
         <DropdownMenuDemo />
       </div>
     </div>
