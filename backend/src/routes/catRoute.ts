@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addToCategory,
   createCategory,
   deleteProcedure,
   getAllCategories,
@@ -10,6 +11,10 @@ import {
 const router = Router();
 
 router.route("/category").post(createCategory);
-router.route("/procedure").delete(deleteProcedure).put(updateProcedure);
+router
+  .route("/procedure")
+  .delete(deleteProcedure)
+  .put(updateProcedure)
+  .post(addToCategory);
 router.route("/get/category").get(getAllCategories);
 export default router;

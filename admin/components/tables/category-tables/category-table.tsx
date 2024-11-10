@@ -10,6 +10,15 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Category } from '@/constants/data';
@@ -39,14 +48,38 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
     procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   });
 
-  const handleInput = (taskId: string) => {
-    setEditingRow(taskId);
+  const handleInput = (t_id: string) => {
+    setEditingRow(t_id);
     setLoading(false);
   };
 
-  const handleSaveChanges = (taskId: string) => {
-    setEditingRow(null);
-    setLoading(true);
+  const handleSaveChanges = async (
+    t_id: string,
+    c_id: string,
+    rowData: {
+      [key: string]: any;
+    }
+  ) => {
+    try {
+      const response = await axios.put(`${apiUrl}cat/procedure`, {
+        t_id: t_id,
+        c_id: c_id,
+        updatedData: rowData
+      });
+      if (response.status === 200) {
+        toast({ title: 'Procedure updated successfully' });
+        // Optionally, refresh the category list (you might want to use your state management or a refetching strategy)
+        setEditingRow(null);
+        setLoading(true);
+      }
+    } catch (error) {
+      console.error('Error adding category:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was an error adding the category.'
+      });
+    }
   };
 
   const handleChange = (
@@ -139,18 +172,27 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   return (
     <>
       <Button onClick={handleAddCategoryToggle} className="mb-4">
-        {showAddCategoryForm ? 'Cancel' : 'Add Category'}
+        {showAddCategoryForm ? 'Cancel' : 'Add to Category'}
       </Button>
 
       {showAddCategoryForm && (
         <div className="mb-4 rounded-md bg-gray-100 p-4 shadow">
           <h2 className="mb-2 text-xl font-semibold">Add New Category</h2>
-          <Input
-            value={newCategory.categoryName}
-            onChange={(e) => handleNewCategoryChange(e, 'categoryName')}
-            placeholder="Category Name"
-            className="mb-4"
-          />
+
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {data.map((category) => {
+                  <SelectItem value={category._id}>
+                    {category.categoryName}
+                  </SelectItem>;
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <div className="mb-4">
             <h3 className="mb-2 text-lg font-semibold">Procedures</h3>
             {newCategory.procedures.map((procedure, index) => (
@@ -217,7 +259,6 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                 <h1 className="pl-2 text-left text-xl font-semibold">
                   {product.categoryName}
                 </h1>
-                <Button>+</Button>
               </div>
               <Table>
                 <TableHeader>
@@ -231,31 +272,31 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                 </TableHeader>
                 <TableBody>
                   {product.procedures.map((task) => {
-                    const taskId = task._id;
-                    const formData = rowData[taskId] || {
+                    const t_id = task._id;
+                    const c_id = product._id;
+                    const formData = rowData[t_id] || {
                       taskName: task.taskName,
                       unit: task.quantity,
                       unitPrice: task.unitPrice
                     };
-
                     return (
-                      <TableRow key={taskId}>
+                      <TableRow key={t_id}>
                         <TableCell className="w-1/2">
                           <Input
                             name="taskName"
-                            onChange={(e) => handleChange(e, taskId)}
+                            onChange={(e) => handleChange(e, t_id)}
                             type="text"
                             value={formData.taskName}
-                            disabled={loading && editingRow !== taskId}
+                            disabled={loading && editingRow !== t_id}
                           />
                         </TableCell>
                         <TableCell className="w-20">
                           <Input
                             name="quantity"
-                            onChange={(e) => handleChange(e, taskId)}
+                            onChange={(e) => handleChange(e, t_id)}
                             type="number"
                             value={formData.unit}
-                            disabled={loading && editingRow !== taskId}
+                            disabled={loading && editingRow !== t_id}
                             className="w-20 text-center"
                           />
                         </TableCell>
@@ -263,29 +304,31 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                           <div className="flex w-20 items-center">
                             <Input
                               name="unitPrice"
-                              onChange={(e) => handleChange(e, taskId)}
+                              onChange={(e) => handleChange(e, t_id)}
                               type="number"
                               value={formData.unitPrice}
-                              disabled={loading && editingRow !== taskId}
+                              disabled={loading && editingRow !== t_id}
                               className="w-20 text-center"
                             />
                             ₮
                           </div>
                         </TableCell>
                         <TableCell className="w-5">
-                          {editingRow === taskId ? (
+                          {editingRow === t_id ? (
                             <Button
                               className="w-10"
-                              onClick={() => handleSaveChanges(taskId)}
+                              onClick={() =>
+                                handleSaveChanges(t_id, c_id, rowData[t_id])
+                              }
                             >
                               Save
                             </Button>
                           ) : (
                             <CellAction
-                              t_id={taskId}
-                              c_id={product._id}
+                              t_id={t_id}
+                              c_id={c_id}
                               setCellconfirm={() => {}}
-                              handleInput={() => handleInput(taskId)}
+                              handleInput={() => handleInput(t_id)}
                               data={product.procedures}
                             />
                           )}
