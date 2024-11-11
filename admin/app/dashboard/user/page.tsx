@@ -3,7 +3,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
 import { UserClient } from '@/components/tables/user-tables/client';
 import { toast } from '@/components/ui/use-toast';
-import { IUser, users } from '@/constants/data';
+import { IUser } from '@/constants/data';
 import { apiUrl } from '@/lib/utils';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -22,7 +22,7 @@ export type User = {
   verified: boolean;
   status: string;
 };
-export default function page() {
+export default function Page() {
   const [employeeData, setEmployeeData] = useState<IUser[]>([]);
   const getEmployee = async () => {
     try {
@@ -43,7 +43,6 @@ export default function page() {
     }
   };
   useEffect(() => {
-    console.log('first');
     getEmployee();
   }, []);
   return (
