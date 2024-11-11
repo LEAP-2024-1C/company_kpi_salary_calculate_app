@@ -1,5 +1,6 @@
 import Header from '@/components/layout/header';
 import Sidebar from '@/components/layout/sidebar';
+import { AdminContext, AdminProvider } from '@/context/admin-context';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,11 +15,13 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex">
-      <Sidebar />
-      <main className="w-full flex-1">
-        <Header />
-        {children}
-      </main>
+      <AdminProvider>
+        <Sidebar />
+        <main className="w-full flex-1">
+          <Header />
+          {children}
+        </main>
+      </AdminProvider>
     </div>
   );
 }

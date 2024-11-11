@@ -11,7 +11,6 @@ import {
 interface ProductFormProps {
   pro: FieldArrayWithId<
     {
-      categoryName: string;
       procedures: {
         quantity: number;
         unitPrice: number;
@@ -28,7 +27,6 @@ interface ProductFormProps {
         unitPrice: number;
         taskName: string;
       }[];
-      categoryName: string;
     },
     any,
     undefined
