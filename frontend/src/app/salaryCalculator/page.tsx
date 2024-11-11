@@ -16,16 +16,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-type SentData = {
-  component_id: string;
-  task_id: string;
-  product_id: string;
-};
+// type SentData = {
+//   component_id: string;
+//   task_id: string;
+//   product_id: string;
+// };
 
 const SalaryCalculator = () => {
   const [cartData, setCartData] = useState<ISavedTasks | null>(null);
   const [open, setOpen] = useState<boolean[]>([]);
-  const [data, setData] = useState<SentData | null>(null);
+  // const [data, setData] = useState<SentData | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -49,20 +49,29 @@ const SalaryCalculator = () => {
   const updateComponentStatus = async (
     component_id: string,
     task_id: string,
-    assign: number
+    assign: number,
+    product_id: string
   ) => {
     try {
+      const token = localStorage.getItem("token");
       setIsLoading(true);
-      const res = await axios.put(`${apiUrl}comp/update/status/employee`, {
-        compStatus: {
-          component_id,
-          task_id,
-          assign,
+      const res = await axios.put(
+        `${apiUrl}comp/update/status/employee`,
+        {
+          compStatus: {
+            product_id,
+            component_id,
+            task_id,
+            assign,
+          },
         },
-      });
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (res.status === 200) {
-        setIsLoading(true);
         setRefresh((prev) => !prev);
+        setIsLoading(true);
         toast.success("succes");
         console.log("succes");
       }
@@ -71,30 +80,31 @@ const SalaryCalculator = () => {
       console.error(error);
     }
   };
-  const updateEmployeeStatus = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      setIsLoading(true);
-      const res = await axios.put(
-        `${apiUrl}picked/employee`,
-        {
-          data,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (res.status === 200) {
-        setIsLoading(false);
-        setData(null);
-        setRefresh((prev) => !prev);
-        console.log("succes");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error(error);
-    }
-  };
+  console.log("object", isLoading);
+  // const updateEmployeeStatus = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     setIsLoading(true);
+  //     const res = await axios.put(
+  //       `${apiUrl}picked/employee`,
+  //       {
+  //         data,
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     if (res.status === 200) {
+  //       setIsLoading(false);
+  //       setData(null);
+  //       setRefresh((prev) => !prev);
+  //       console.log("succes");
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     console.error(error);
+  //   }
+  // };
 
   const handleOpen = (proId: number) => {
     setOpen((prev) =>
@@ -107,12 +117,11 @@ const SalaryCalculator = () => {
     assign: number,
     pro_id: string
   ) => {
-    updateComponentStatus(comp_id, task_id, assign);
-    setData({
-      component_id: comp_id,
-      task_id: task_id,
-      product_id: pro_id,
-    });
+    updateComponentStatus(comp_id, task_id, assign, pro_id);
+    console.log("pro_id", pro_id);
+    console.log("comp_id", comp_id);
+    console.log("task_id", task_id);
+    console.log("assign", assign);
   };
   const calculateProductTotal = (product: ISavedProduct): number => {
     return product.components.reduce((productTotal, component) => {
@@ -127,13 +136,13 @@ const SalaryCalculator = () => {
   };
   useEffect(() => {
     getCartData();
-  }, []);
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    updateEmployeeStatus();
   }, [refresh]);
+  // useEffect(() => {
+  //   if (!data) {
+  //     return;
+  //   }
+  //   updateEmployeeStatus();
+  // }, [refresh]);
 
   return (
     <div className="bg-gray-50 min-h-screen w-full p-10">

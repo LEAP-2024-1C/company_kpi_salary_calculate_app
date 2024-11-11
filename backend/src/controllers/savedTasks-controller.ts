@@ -135,110 +135,110 @@ export const getAllSavedTasks = async (req: Request, res: Response) => {
   }
 };
 
-export const updateSavedTasksEmployee = async (req: Request, res: Response) => {
-  const { id } = req.user;
-  const { data } = req.body;
-  const { component_id, product_id, task_id } = data;
-  if (!product_id || !component_id || !task_id) {
-    return res.status(400).json({
-      message: "Missing required fields: product_id, comp_id, or task_id",
-    });
-  }
-  try {
-    const savedTasks = await SavedTasks.findOne({ user: id });
-    if (!savedTasks) {
-      return res.status(400).json({
-        message: "not found saved tasks",
-      });
-    }
-    const findProductId = savedTasks.products.findIndex(
-      (pro) => pro.product_id.toString() === product_id.toString()
-    );
-    if (findProductId < 0) {
-      return res
-        .status(400)
-        .json({ message: "not found product in saved tasks" });
-    }
-    const product = savedTasks.products[findProductId];
+// export const updateSavedTasksEmployee = async (req: Request, res: Response) => {
+//   const { id } = req.user;
+//   const { data } = req.body;
+//   const { component_id, product_id, task_id } = data;
+//   if (!product_id || !component_id || !task_id) {
+//     return res.status(400).json({
+//       message: "Missing required fields: product_id, comp_id, or task_id",
+//     });
+//   }
+//   try {
+//     const savedTasks = await SavedTasks.findOne({ user: id });
+//     if (!savedTasks) {
+//       return res.status(400).json({
+//         message: "not found saved tasks",
+//       });
+//     }
+//     const findProductId = savedTasks.products.findIndex(
+//       (pro) => pro.product_id.toString() === product_id.toString()
+//     );
+//     if (findProductId < 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "not found product in saved tasks" });
+//     }
+//     const product = savedTasks.products[findProductId];
 
-    const findCompId = product.components.findIndex(
-      (item) => item._id.toString() === component_id.toString()
-    );
-    if (findCompId < 0) {
-      return res
-        .status(400)
-        .json({ message: "not found component in product" });
-    }
+//     const findCompId = product.components.findIndex(
+//       (item) => item._id.toString() === component_id.toString()
+//     );
+//     if (findCompId < 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "not found component in product" });
+//     }
 
-    const component = product.components[findCompId];
-    const findTaskid = component.procedures.findIndex(
-      (item) => item._id.toString() === task_id.toString()
-    );
-    const procedure = component.procedures[findTaskid];
-    procedure.taskStatus = "review";
-    const updatedSavedTasks = await savedTasks.save();
-    res.status(200).json({
-      message: "updated saved tasks",
-      updatedSavedTasks,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      message: "failed to get saved tasks",
-    });
-  }
-};
+//     const component = product.components[findCompId];
+//     const findTaskid = component.procedures.findIndex(
+//       (item) => item._id.toString() === task_id.toString()
+//     );
+//     const procedure = component.procedures[findTaskid];
+//     procedure.taskStatus = "review";
+//     const updatedSavedTasks = await savedTasks.save();
+//     res.status(200).json({
+//       message: "updated saved tasks",
+//       updatedSavedTasks,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({
+//       message: "failed to get saved tasks",
+//     });
+//   }
+// };
 
-export const updateSavedTasksAdmin = async (req: Request, res: Response) => {
-  const { product_id } = req.params;
-  const { data } = req.body;
-  const { component_id, task_id, user_id } = data;
-  if (!product_id || !component_id || !task_id || !user_id) {
-    return res.status(400).json({
-      message: "Missing required fields: product_id, comp_id, or task_id",
-    });
-  }
-  try {
-    const savedTasks = await SavedTasks.findOne({ user: user_id });
-    if (!savedTasks) {
-      return res.status(400).json({
-        message: "not found saved tasks",
-      });
-    }
-    const findProductId = savedTasks.products.findIndex(
-      (pro) => pro.product_id.toString() === product_id.toString()
-    );
-    if (findProductId < 0) {
-      return res
-        .status(400)
-        .json({ message: "not found product in saved tasks" });
-    }
-    const product = savedTasks.products[findProductId];
+// export const updateSavedTasksAdmin = async (req: Request, res: Response) => {
+//   const { product_id } = req.params;
+//   const { data } = req.body;
+//   const { component_id, task_id, user_id } = data;
+//   if (!product_id || !component_id || !task_id || !user_id) {
+//     return res.status(400).json({
+//       message: "Missing required fields: product_id, comp_id, or task_id",
+//     });
+//   }
+//   try {
+//     const savedTasks = await SavedTasks.findOne({ user: user_id });
+//     if (!savedTasks) {
+//       return res.status(400).json({
+//         message: "not found saved tasks",
+//       });
+//     }
+//     const findProductId = savedTasks.products.findIndex(
+//       (pro) => pro.product_id.toString() === product_id.toString()
+//     );
+//     if (findProductId < 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "not found product in saved tasks" });
+//     }
+//     const product = savedTasks.products[findProductId];
 
-    const findCompId = product.components.findIndex(
-      (item) => item._id.toString() === component_id.toString()
-    );
-    if (findCompId < 0) {
-      return res
-        .status(400)
-        .json({ message: "not found component in product" });
-    }
+//     const findCompId = product.components.findIndex(
+//       (item) => item._id.toString() === component_id.toString()
+//     );
+//     if (findCompId < 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "not found component in product" });
+//     }
 
-    const component = product.components[findCompId];
-    const findTaskid = component.procedures.findIndex(
-      (item) => item._id.toString() === task_id.toString()
-    );
-    const procedure = component.procedures[findTaskid];
-    procedure.taskStatus = "done";
-    const updatedSavedTasks = await savedTasks.save();
-    res.status(200).json({
-      message: "updated saved tasks",
-      updatedSavedTasks,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      message: "failed to get saved tasks",
-    });
-  }
-};
+//     const component = product.components[findCompId];
+//     const findTaskid = component.procedures.findIndex(
+//       (item) => item._id.toString() === task_id.toString()
+//     );
+//     const procedure = component.procedures[findTaskid];
+//     procedure.taskStatus = "done";
+//     const updatedSavedTasks = await savedTasks.save();
+//     res.status(200).json({
+//       message: "updated saved tasks",
+//       updatedSavedTasks,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({
+//       message: "failed to get saved tasks",
+//     });
+//   }
+// };
