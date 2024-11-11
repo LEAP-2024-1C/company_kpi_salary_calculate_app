@@ -18,6 +18,7 @@ export interface IUser {
   job_title: string;
   verified: boolean;
   status: string;
+  profile_img: string;
 }
 
 export interface IStatus {

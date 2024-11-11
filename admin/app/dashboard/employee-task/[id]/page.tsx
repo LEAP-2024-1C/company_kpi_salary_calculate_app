@@ -16,6 +16,7 @@ import {
 import { IStatus, IUser } from '@/constants/data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 
 type product = {
   product_id: string;
@@ -143,6 +144,7 @@ const ProductTaskDetail = () => {
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[100px]">Зураг</TableHead>
               <TableHead className="w-[100px]">Овог нэр</TableHead>
               <TableHead className="w-[100px]">Өөрийн нэр</TableHead>
               <TableHead>Утасны дугаар</TableHead>
@@ -164,6 +166,13 @@ const ProductTaskDetail = () => {
                     product.components.map((component) =>
                       component.procedures.map((procedure, procIdx) => (
                         <TableRow key={`${component._id}-${procIdx}`}>
+                          <TableCell>
+                            <img
+                              src={user.profile_img}
+                              alt=""
+                              className="h-12 w-12 rounded-full"
+                            />
+                          </TableCell>
                           <TableCell>{user.lastName}</TableCell>
                           <TableCell>{user.firstName}</TableCell>
                           <TableCell>{user.phoneNumber}</TableCell>
@@ -182,7 +191,7 @@ const ProductTaskDetail = () => {
                             ₮
                           </TableCell>
                           <TableCell>
-                            <button
+                            <Button
                               className={`px-4 py-2 text-white ${
                                 procedure.taskStatus === 'done'
                                   ? 'cursor-not-allowed bg-gray-500'
@@ -199,7 +208,7 @@ const ProductTaskDetail = () => {
                               }
                             >
                               Change Status
-                            </button>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))
