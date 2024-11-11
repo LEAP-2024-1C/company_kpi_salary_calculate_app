@@ -181,7 +181,22 @@ const ProductTaskDetail = () => {
                           <TableCell>{procedure.unitPrice}</TableCell>
                           <TableCell>{procedure.quantity}</TableCell>
                           <TableCell>{procedure.status.assign}</TableCell>
-                          <TableCell>{procedure.taskStatus}</TableCell>
+                          <TableCell>
+                            <Button
+                              className={`w-24 rounded-xl text-white ${
+                                procedure.taskStatus === 'done'
+                                  ? 'bg-green-400'
+                                  : procedure.taskStatus === 'progress'
+                                  ? 'bg-red-400'
+                                  : procedure.taskStatus === 'review'
+                                  ? 'bg-yellow-400'
+                                  : ''
+                              }`}
+                            >
+                              {' '}
+                              {procedure.taskStatus}
+                            </Button>
+                          </TableCell>
                           <TableCell className="text-right">
                             {(
                               procedure.unitPrice *
@@ -192,12 +207,16 @@ const ProductTaskDetail = () => {
                           </TableCell>
                           <TableCell>
                             <Button
-                              className={`px-4 py-2 text-white ${
-                                procedure.taskStatus === 'done'
+                              className={`text-white ${
+                                procedure.taskStatus === 'done' ||
+                                procedure.taskStatus === 'progress'
                                   ? 'cursor-not-allowed bg-gray-500'
                                   : 'bg-blue-500 hover:bg-blue-700'
                               }`}
-                              disabled={procedure.taskStatus === 'done'}
+                              disabled={
+                                procedure.taskStatus === 'done' ||
+                                procedure.taskStatus === 'progress'
+                              }
                               onClick={() =>
                                 handleStatus(
                                   component._id,
