@@ -73,6 +73,7 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         `${apiUrl}comp/update`,
         {
           updateComp,
+          chooseTask,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -90,7 +91,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
   const handleAdd = (i: number) => {
     setPro(cat_idx, i, "add");
     setTasks((prev) => {
-      console.log("prev", prev);
       if (!prev) return prev;
       const newTask = [...prev];
       const findDuplicate = newTask.some(
@@ -99,10 +99,10 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
       if (!findDuplicate) {
         newTask.push(totalTasks[i]);
       }
-      console.log("newTask", newTask);
       return newTask;
     });
   };
+
   const handleSub = (i: number) => {
     // console.log("handleSub called for index:", i);
     setPro(cat_idx, i, "sub");
@@ -140,10 +140,9 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         component_id: cat_id,
         procedures: deleteAssign,
       };
-      updateProducts(updatedTask); // async function
+      updateProducts(updatedTask);
       return updatedTask;
     });
-
     setSaveProduct((prev) => {
       const newSaveTask = {
         ...prev,
@@ -151,7 +150,6 @@ const ProductDetailModal: React.FC<TaskTrackerProps> = ({
         productName,
         components: [{ _id: cat_id, categoryName, procedures: tasks }],
       };
-
       return newSaveTask;
     });
   };

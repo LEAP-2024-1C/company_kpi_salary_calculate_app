@@ -11,6 +11,6 @@ const router = Router();
 
 router.route("/update").put(auth, updateComponent);
 router.route("/update/status/employee").put(auth, updateProductStatusEmployee);
-router.route("/update/status/admin").put(updateProductStatusAdmin);
+router.route("/update/status/admin/:pro_id").put(updateProductStatusAdmin);
 
 export default router;

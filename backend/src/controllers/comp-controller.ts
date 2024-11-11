@@ -72,9 +72,9 @@ export const updateProductStatusEmployee = async (
       throw new Error("Task not found in component");
     }
     const procedure = component.procedures[fIndx];
-    // if (procedure.status.progress > assign) {
-    //   throw new Error("Insufficient progress to reassign to review");
-    // }
+    if (procedure.status.progress < assign) {
+      throw new Error("Insufficient progress to reassign to review");
+    }
 
     procedure.status.progress -= assign;
     procedure.status.review += assign;
@@ -134,43 +134,84 @@ export const updateProductStatusEmployee = async (
 
 export const updateProductStatusAdmin = async (req: Request, res: Response) => {
   const { compStatus } = req.body;
-
-  if (
-    !compStatus ||
-    !compStatus.component_id ||
-    !compStatus.task_id ||
-    !compStatus.assign
-  ) {
+  const { pro_id } = req.params;
+  const { component_id, task_id, assign, user_id } = compStatus;
+  if (!component_id || !task_id || !assign || !user_id || !pro_id) {
     return res.status(400).json({ message: "Invalid input data" });
   }
-  const { component_id, assign, task_id } = compStatus;
+  const session = await mongoose.startSession();
   try {
-    const component = await Components.findById(component_id);
+    session.startTransaction();
+    const component = await Components.findById(component_id).session(session);
     if (!component) {
-      return res.status(404).json({ message: "Component not found" });
+      throw new Error("Component not found");
     }
     const fIndx = component.procedures.findIndex(
       (p) => p._id.toString() === task_id.toString()
     );
     if (fIndx < 0) {
-      return res.status(404).json({ message: "task not found in component" });
+      throw new Error("Task not found in component");
     }
     const procedure = component.procedures[fIndx];
-    if (procedure.status.progress > assign) {
-      return res
-        .status(400)
-        .json({ message: "Insufficient progress to reassign to review" });
+    console.log("review", procedure.status.review);
+    if (procedure.status.review < assign) {
+      throw new Error("Insufficient progress to reassign to review");
     }
 
     procedure.status.review -= assign;
     procedure.status.done += assign;
 
-    await component.save();
+    await component.save({ session });
+
+    const savedTasks = await SavedTasks.findOne({ user: user_id }).session(
+      session
+    );
+    if (!savedTasks) {
+      throw new Error("Saved tasks not found");
+    }
+
+    const productIndex = savedTasks.products.findIndex(
+      (pro) => pro.product_id.toString() === pro_id.toString()
+    );
+    if (productIndex < 0) {
+      throw new Error("Product not found in saved tasks");
+    }
+
+    const product = savedTasks.products[productIndex];
+    const componentIndex = product.components.findIndex(
+      (comp) => comp._id.toString() === component_id.toString()
+    );
+    if (componentIndex < 0) {
+      throw new Error("Component not found in product");
+    }
+
+    const savedComponent = product.components[componentIndex];
+    const taskIndex = savedComponent.procedures.findIndex(
+      (item) => item._id.toString() === task_id.toString()
+    );
+
+    if (taskIndex < 0) {
+      throw new Error("Task not found in saved component");
+    }
+
+    const savedProcedure = savedComponent.procedures[taskIndex];
+    savedProcedure.taskStatus = "done";
+
+    await savedTasks.save({ session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+
     res.status(200).json({
-      message: "Product updated successfully",
+      message: "Successfully updated task status",
       updatedComponent: component,
+      updatedSavedTasks: savedTasks,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update product", error });
+    await session.abortTransaction();
+    console.error(error);
+    res.status(500).json({ message: "Failed to update task status", error });
+  } finally {
+    session.endSession();
   }
 };

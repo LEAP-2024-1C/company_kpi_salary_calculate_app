@@ -16,16 +16,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-type SentData = {
-  component_id: string;
-  task_id: string;
-  product_id: string;
-};
+// type SentData = {
+//   component_id: string;
+//   task_id: string;
+//   product_id: string;
+// };
 
 const SalaryCalculator = () => {
   const [cartData, setCartData] = useState<ISavedTasks | null>(null);
   const [open, setOpen] = useState<boolean[]>([]);
-  const [data, setData] = useState<SentData | null>(null);
+  // const [data, setData] = useState<SentData | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -80,6 +80,7 @@ const SalaryCalculator = () => {
       console.error(error);
     }
   };
+  console.log("object", isLoading);
   // const updateEmployeeStatus = async () => {
   //   try {
   //     const token = localStorage.getItem("token");
@@ -117,11 +118,6 @@ const SalaryCalculator = () => {
     pro_id: string
   ) => {
     updateComponentStatus(comp_id, task_id, assign, pro_id);
-    // setData({
-    //   component_id: comp_id,
-    //   task_id: task_id,
-    //   product_id: pro_id,
-    // });
     console.log("pro_id", pro_id);
     console.log("comp_id", comp_id);
     console.log("task_id", task_id);
