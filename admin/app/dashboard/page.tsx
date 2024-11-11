@@ -2,20 +2,7 @@
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
-import { RecentSales } from '@/components/recent-sales';
 import { ProjectClient } from '@/components/tables/project-tables/client';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import { toast } from '@/components/ui/use-toast';
-import { IUser } from '@/constants/data';
-import { apiUrl } from '@/lib/utils';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },

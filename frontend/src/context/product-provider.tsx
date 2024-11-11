@@ -1,14 +1,8 @@
 "use client";
 
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  ReactNode,
-  useContext,
-} from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { IComponents, IProduct, IProductStat } from "@/utils/interfaces";
+import { IProduct, IProductStat } from "@/utils/interfaces";
 import { apiUrl } from "@/lib/utils";
 
 interface IContext {
@@ -33,22 +27,22 @@ export const ProductProvider = ({
   const [products, setProducts] = useState<IProduct[] | null>(null);
   const [productStat, setProductStat] = useState<IProductStat[] | null>(null);
 
-  // const getAllProducts = async () => {
-  //   const userToken = localStorage.getItem("token");
+  const getAllProducts = async () => {
+    const userToken = localStorage.getItem("token");
 
-  //   const response = await axios.get(`${apiUrl}product/stat/employee`, {
-  //     headers: { Authorization: `Bearer ${userToken}` },
-  //   });
-  //   const products = response.data.products;
-  //   setProducts(products);
-  //   const productStat = response.data.productStat;
-  //   setProductStat(productStat);
-  // };
+    const response = await axios.get(`${apiUrl}product/stat/employee`, {
+      headers: { Authorization: `Bearer ${userToken}` },
+    });
+    const products = response.data.products;
+    setProducts(products);
+    const productStat = response.data.productStat;
+    setProductStat(productStat);
+  };
 
-  // useEffect(() => {
-  //   getAllProducts();
-  //   // getProduct();
-  // }, []);
+  useEffect(() => {
+    getAllProducts();
+    // getProduct();
+  }, []);
 
   return (
     <ProductContext.Provider value={{ products, productStat }}>

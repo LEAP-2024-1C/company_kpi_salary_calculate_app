@@ -7,6 +7,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { Category } from '@/constants/data';
+import { useProducts } from '@/context/admin-context';
 import { apiUrl, cn } from '@/lib/utils';
 import axios from 'axios';
 import { Plus } from 'lucide-react';
@@ -18,8 +19,13 @@ const breadcrumbItems = [
   { title: 'Category', link: '/dashboard/category' }
 ];
 
+
+
 export default function Page() {
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const { setRefresh, refresh } = useProducts();
+
   const getAllCategories = async () => {
     try {
       const res = await axios.get(`${apiUrl}cat/get/category`);
@@ -34,7 +40,7 @@ export default function Page() {
   };
   useEffect(() => {
     getAllCategories();
-  }, []);
+  }, [refresh]);
   return (
     <PageContainer>
       <div className="space-y-4">
@@ -55,7 +61,10 @@ export default function Page() {
         </div>
         <Separator />
 
-        <CategoryTable searchKey="category" data={categories} />
+        <CategoryTable
+          searchKey="category"
+          data={categories}
+        />
       </div>
     </PageContainer>
   );

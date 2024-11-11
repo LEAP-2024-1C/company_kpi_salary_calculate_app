@@ -1,5 +1,6 @@
 'use client';
 import { AlertModal } from '@/components/modal/alert-modal';
+import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,27 +10,60 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { useProducts } from '@/context/admin-context';
 import { apiUrl } from '@/lib/utils';
 import axios from 'axios';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+
 interface CellActionProps {
   t_id: string;
   c_id: string;
+  setCellconfirm: Dispatch<SetStateAction<boolean>>;
+  handleInput: () => void;
+  data: any[]; // Assuming this prop contains the product's procedure data
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
+const formSchema = z.object({
+  procedures: z.array(
+    z.object({
+      taskName: z
+        .string()
+        .min(3, { message: 'Task Name must be at least 3 characters' }),
+      quantity: z.coerce.number(),
+      unitPrice: z.coerce.number()
+    })
+  )
+});
+
+type ProductFormValues = z.infer<typeof formSchema>;
+
+export const CellAction: React.FC<CellActionProps> = ({
+  c_id,
+  t_id,
+  setCellconfirm,
+  handleInput,
+  data
+}) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { setRefresh, refresh } = useProducts();
+  const [editedData, setEditedData] = useState(data);
 
-  const updateCategory = async (updatedData) => {
+  const handleEdit = (rowIndex: number, field: string, value: any) => {
+    const updatedData = [...editedData];
+    updatedData[rowIndex][field] = value;
+    setEditedData(updatedData);
+  };
+
+  const updateProcedure = async (updatedData: ProductFormValues) => {
     try {
       setLoading(true);
       const response = await axios.put(`${apiUrl}cat/category`, {
-        c_id,
-        t_id,
+        c_id: c_id,
+        t_id: t_id,
         ...updatedData // Spread the updated data into the request body
       });
 
@@ -51,7 +85,7 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
     }
   };
 
-  const deleteCategory = async () => {
+  const deleteProcedure = async () => {
     try {
       setLoading(true);
       const response = await axios.delete(`${apiUrl}cat/procedure`, {
@@ -63,6 +97,7 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
         console.log('Success: Category deleted');
         toast({ title: 'Deleted successfully' });
         router.push(`/dashboard/category`);
+        setRefresh((prev) => !prev);
       }
     } catch (error) {
       console.error('Error deleting category:', error); // Log the error for debugging
@@ -76,13 +111,19 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
     }
   };
 
-  const onConfirm = async () => {};
+  const onConfirm = () => {
+    // Call the updateProcedure with edited data
+    updateProcedure({ procedures: editedData });
+    setCellconfirm(false); // Close the confirmation state
+  };
 
   return (
     <>
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+        }}
         onConfirm={onConfirm}
         loading={loading}
       />
@@ -95,12 +136,10 @@ export const CellAction: React.FC<CellActionProps> = ({ c_id, t_id }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/category/${c_id}`)}
-          >
+          <DropdownMenuItem onClick={handleInput}>
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={deleteCategory}>
+          <DropdownMenuItem onClick={deleteProcedure}>
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

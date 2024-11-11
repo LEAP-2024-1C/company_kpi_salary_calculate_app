@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -13,9 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ISaveTasks } from "@/utils/interfaces";
-import { apiUrl } from "@/lib/utils";
-import axios from "axios";
-import { toast } from "react-toastify";
+
 interface SavedTasksCardProps {
   cartData: ISaveTasks[];
 }

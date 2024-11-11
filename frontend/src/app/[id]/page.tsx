@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +15,7 @@ import { IProduct } from "@/utils/interfaces";
 import ProductDetailModal from "@/components/productDetailModal";
 
 const TaskDetail = () => {
-  const { user } = useUser();
+  const { refresh } = useUser();
   const { id } = useParams();
   const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null);
 
@@ -42,7 +42,6 @@ const TaskDetail = () => {
         if (nP.components[pId].procedures[catId].status.pending < 1) {
           return nP;
         }
-
         nP.components[pId].procedures[catId].status.pending -= 1;
         nP.components[pId].procedures[catId].status.progress += 1;
         nP.components[pId].procedures[catId].status.assign += 1;
@@ -61,7 +60,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     getCurrentProduct();
-  }, []);
+  }, [id, refresh]);
 
   return (
     <>

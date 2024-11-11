@@ -28,6 +28,37 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
+export const addToCategory = async (req: Request, res: Response) => {
+  const { c_id, addProcedureData } = req.body;
+  console.log("data", req.body);
+  try {
+    if (!c_id) {
+      return res.status(400).json({ message: "Хэрэгтэй дата авч чадсангүй" });
+    }
+    const findCategory = await Category.findById(c_id);
+    console.log("ficat", findCategory);
+    if (!findCategory) {
+      return res.status(400).json({
+        message: "Категори олдсонгүй",
+      });
+    }
+    if (findCategory) {
+      const procedures = findCategory?.procedures;
+      const addProcedure = await procedures.push(addProcedureData);
+      await findCategory.save();
+      return res.status(200).json({
+        message: "added to category successfully",
+        addProcedure,
+      });
+    }
+    res
+      .status(401)
+      .json({ message: "Категорийн нэр давхацаж байна нэрээ өөрчилнө үү" });
+  } catch (error) {
+    res.status(404).json({ error, message: "sdad" });
+  }
+};
+
 export const updateCategory = async (req: Request, res: Response) => {
   const { data } = req.body;
   try {

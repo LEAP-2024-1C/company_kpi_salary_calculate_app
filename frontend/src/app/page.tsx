@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { apiUrl } from "@/lib/utils";
@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import { formPage } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import exp from "constants";
 interface IPage {
   email: string;
   password: string;

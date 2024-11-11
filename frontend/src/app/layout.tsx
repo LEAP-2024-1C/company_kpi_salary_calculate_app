@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/header/header";
 import UserProvider from "@/context/user-provider";
 import { ProductProvider } from "@/context/product-provider";
 import { ToastContainer } from "react-toastify";
@@ -31,17 +30,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
       >
-        <ProductProvider>
-          <UserProvider>
-            <Header />
-            <div className=" flex flex-col items-center bg-gray-100">
+        <UserProvider>
+          <ProductProvider>
+            <div className=" flex flex-col items-center bg-gray-100 ">
               {children}
               <ToastContainer />
             </div>
-          </UserProvider>
-        </ProductProvider>
+          </ProductProvider>
+        </UserProvider>
       </body>
     </html>
   );
