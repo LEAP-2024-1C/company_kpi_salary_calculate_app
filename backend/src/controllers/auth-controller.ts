@@ -28,6 +28,30 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
+
+export const signup = async (req: Request, res: Response) => {
+  try {
+    const { firstname, lastname, email, password } = req.body;
+
+    if (!firstname || !lastname || !email || !password) {
+      res.status(400).json({ message: "Hooson utga baij bolohgui." });
+    }
+
+    const createdUser = await Employee.create({
+      firstname,
+      lastname,
+      email,
+      password,
+    });
+
+    console.log("create user", createdUser);
+
+    res.status(201).json({ message: "create user is successful" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error });
+  }
+};
+
 export const getCurrentUser = async (req: Request, res: Response) => {
   const { id } = req.user;
 
@@ -168,15 +192,16 @@ export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
     const { email, firstName, lastName, phoneNumber, address, profile_img } =
-    req.body;
-    console.log("phoneNumber",firstName, lastName, phoneNumber, address, profile_img)
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phoneNumber ||
-      !address
-    ) {
+      req.body;
+    console.log(
+      "phoneNumber",
+      firstName,
+      lastName,
+      phoneNumber,
+      address,
+      profile_img
+    );
+    if (!firstName || !lastName || !email || !phoneNumber || !address) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
 
