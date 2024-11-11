@@ -49,7 +49,7 @@ const TaskTracker = () => {
                 </Link>
               </AccordionTrigger>
               <AccordionContent>
-                <Link href={"/" + _id}>
+                <Link href={`/${_id}`}>
                   {components.map(({ categoryName, cat_id, total, other }) => (
                     <ul key={cat_id}>
                       <li className="flex items-center gap-3">
@@ -65,7 +65,7 @@ const TaskTracker = () => {
             </AccordionItem>
           </Accordion>
           <div className="w-full flex ">
-            <StatusIndicator status="pending" />
+            {/* <StatusIndicator status="pending" /> */}
             {/* <p className="text-blue-500 justify-self-end">Төлөв: {status}</p> */}
           </div>
         </div>

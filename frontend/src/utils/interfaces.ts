@@ -58,6 +58,7 @@ export interface IProcedures {
   status: IStatus;
   unitPrice: number;
   _id: string;
+  taskStatus: string;
 }
 export interface IStatus {
   pending: number;
@@ -67,25 +68,10 @@ export interface IStatus {
   assign: number;
 }
 
-export interface ISaveTasks {
-  _id: string;
-  taskName: string;
-  unitPrice: number;
-  quantity: number;
-  selectedQuantity: number;
-}
-// export interface ISavedTasks {
-//   products: ISavedProduct[];
-// }
-export interface ISavedProduct {
-  product_id: string;
-  productName: string;
-  components: ISavedComponents[];
-}
 export interface ISavedComponents {
   _id: string;
   categoryName: string;
-  procedures: ITask[];
+  procedures: IProcedures[];
 }
 
 export interface ISaveTasks {
@@ -104,29 +90,7 @@ export interface ISavedProduct {
   productName: string;
   components: ISavedComponents[];
 }
-export interface ISavedComponents {
-  _id: string;
-  categoryName: string;
-  procedures: ITask[];
-}
 
-export interface ITask {
-  _id: string;
-  taskName: string;
-  quantity: number;
-  status: IStatus;
-  unitPrice: number;
-}
-export interface SavedTasks {
-  products: ISavedProduct;
-}
-export interface ITask {
-  _id: string;
-  taskName: string;
-  quantity: number;
-  status: IStatus;
-  unitPrice: number;
-}
 export interface IChooseTasks {
   component_id: string;
   procedures: IProcedures[];

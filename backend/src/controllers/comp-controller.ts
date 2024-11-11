@@ -3,12 +3,24 @@ import Components, { ITask } from "../models/components.model";
 
 export const updateComponent = async (req: Request, res: Response) => {
   const { updateComp } = req.body;
-  console.log("first", updateComp);
+
   const { component_id, procedures } = updateComp;
   try {
     const component = await Components.findById(component_id);
     if (!component) {
       return res.status(404).json({ message: "Component not found" });
+    }
+
+    for (const p of component.procedures) {
+      const updatedProc = procedures.find(
+        (f: ITask) => f._id.toString() === p._id.toString()
+      );
+      if (updatedProc && updatedProc.status.pending > p.status.pending) {
+        return res.status(400).json({
+          message:
+            "Update your data: pending value is lower than the current value.",
+        });
+      }
     }
     const newProc = component.procedures.map((p) => {
       const fpId = procedures.findIndex(
@@ -57,7 +69,7 @@ export const updateProductStatusEmployee = async (
       return res.status(404).json({ message: "task not found in component" });
     }
     const procedure = component.procedures[fIndx];
-    if (procedure.status.progress < assign) {
+    if (procedure.status.progress > assign) {
       return res
         .status(400)
         .json({ message: "Insufficient progress to reassign to review" });
@@ -78,7 +90,7 @@ export const updateProductStatusEmployee = async (
 
 export const updateProductStatusAdmin = async (req: Request, res: Response) => {
   const { compStatus } = req.body;
-  console.log("compstatus", compStatus);
+
   if (
     !compStatus ||
     !compStatus.component_id ||
@@ -100,7 +112,7 @@ export const updateProductStatusAdmin = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "task not found in component" });
     }
     const procedure = component.procedures[fIndx];
-    if (procedure.status.progress < assign) {
+    if (procedure.status.progress > assign) {
       return res
         .status(400)
         .json({ message: "Insufficient progress to reassign to review" });
