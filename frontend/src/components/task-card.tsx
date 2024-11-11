@@ -49,7 +49,7 @@ const TaskTracker = () => {
                 </Link>
               </AccordionTrigger>
               <AccordionContent>
-                <Link href={"/" + _id}>
+                <Link href={`/${_id}`}>
                   {components.map(({ categoryName, cat_id, total, other }) => (
                     <ul key={cat_id}>
                       <li className="flex items-center gap-3">

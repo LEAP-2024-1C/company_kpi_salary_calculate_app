@@ -1,14 +1,12 @@
 "use client";
 
 import { CgWorkAlt } from "react-icons/cg";
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import React from "react";
 
 // import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 
 import { DropdownMenuDemo } from "./drowdown";
-import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();

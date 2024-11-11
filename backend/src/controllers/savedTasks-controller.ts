@@ -86,7 +86,7 @@ export const getCurrentTask = async (req: Request, res: Response) => {
 
   try {
     const currentSavedTask = await SavedTasks.findOne({ user: id });
-    // console.log(id);
+
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
       cart: currentSavedTask,
@@ -137,8 +137,9 @@ export const getAllSavedTasks = async (req: Request, res: Response) => {
 
 export const updateSavedTasksEmployee = async (req: Request, res: Response) => {
   const { id } = req.user;
-  const { product_id, comp_id, task_id } = req.body;
-  if (!product_id || !comp_id || !task_id) {
+  const { data } = req.body;
+  const { component_id, product_id, task_id } = data;
+  if (!product_id || !component_id || !task_id) {
     return res.status(400).json({
       message: "Missing required fields: product_id, comp_id, or task_id",
     });
@@ -161,7 +162,7 @@ export const updateSavedTasksEmployee = async (req: Request, res: Response) => {
     const product = savedTasks.products[findProductId];
 
     const findCompId = product.components.findIndex(
-      (item) => item._id.toString() === comp_id.toString()
+      (item) => item._id.toString() === component_id.toString()
     );
     if (findCompId < 0) {
       return res
