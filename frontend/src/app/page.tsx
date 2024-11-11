@@ -107,6 +107,11 @@ const Login = () => {
               >
                 Нэвтрэх
               </Button>
+              <Link href={"/signup"}>
+                <Button className="btn bg-gray-400 text-white rounded-[20px] w-[334px] h-[36px] ">
+                  Админ бүртгүүлэх
+                </Button>
+              </Link>
               <div className="flex gap-3">
                 <p className="border-b text-gray-500">
                   <Link href={"/forgetpass/email"}>

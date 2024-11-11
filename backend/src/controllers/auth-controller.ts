@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import Employee from "../models/employee.model";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/generateToken";
-
 import crypto from "crypto";
 import { sendEmail } from "../utils/send-email";
 
@@ -28,6 +27,32 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
+
+export const signup = async (req: Request, res: Response) => {
+  try {
+    const { firstname, lastname, email, password, repassword } = req.body;
+
+    if (!firstname || !lastname || !email || !password || !repassword) {
+      res.status(400).json({ message: "Hooson utga baij bolohgui." });
+    }
+
+    const createdUser = await Employee.create({
+      firstname,
+      lastname,
+      email,
+      password,
+      repassword,
+      role: "admin",
+    });
+
+    console.log("create user", createdUser);
+
+    res.status(201).json({ message: "create user is successful" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error });
+  }
+};
+
 export const getCurrentUser = async (req: Request, res: Response) => {
   const { id } = req.user;
 
@@ -71,6 +96,7 @@ export const createEmployee = async (req: Request, res: Response) => {
     res.status(400).json({ message: error });
   }
 };
+
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     const employees = await Employee.find();

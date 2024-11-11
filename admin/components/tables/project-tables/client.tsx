@@ -12,11 +12,7 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-interface ProductsClientProps {
-  data: IUser[];
-}
-
-export const ProjectClient: React.FC<ProductsClientProps> = ({ data }) => {
+export const ProjectClient = () => {
   const [productData, setProductData] = useState<IProductStat[]>([]);
   const getAllProduct = async () => {
     try {
