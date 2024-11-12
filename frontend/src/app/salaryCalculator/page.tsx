@@ -83,7 +83,7 @@ const SalaryCalculator = () => {
       setIsLoading(false);
     }
   };
-  console.log("object", isLoading);
+  // console.log("object", isLoading);
   // const updateEmployeeStatus = async () => {
   //   try {
   //     const token = localStorage.getItem("token");
@@ -184,7 +184,7 @@ const SalaryCalculator = () => {
                   </TableRow>
                 </TableHeader>
                 <>
-                  {open[productIdx] && ( // Toggle visibility based on `open[productIdx]`
+                  {open[productIdx] && (
                     <TableBody>
                       {product.components.map((component, compIdx) => (
                         <React.Fragment key={compIdx}>

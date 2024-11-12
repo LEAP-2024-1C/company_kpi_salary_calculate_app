@@ -10,13 +10,13 @@ import {
 import StatusIndicator from "./status";
 
 const TaskTracker = () => {
-  // const getColor = () => {
-  //   const status = 1 / 5;
+  const getColor = () => {
+    const status = 1 / 5;
 
-  //   if (status === 1) return "green";
-  //   if (status >= 0.5) return "orange";
-  //   return "red";
-  // };
+    if (status === 0) return "green";
+    // if (status >= 0.5) return "blue";
+    return "blue";
+  };
 
   const { productStat } = useProducts();
   console.log("productStat", productStat);
@@ -26,7 +26,7 @@ const TaskTracker = () => {
         <div
           key={idx}
           className="bg-gray-200 rounded-xl p-5 flex flex-col border text-green-900"
-          // style={{ borderColor: getColor() }}
+          style={{ borderColor: getColor() }}
         >
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">

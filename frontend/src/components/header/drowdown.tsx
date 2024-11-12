@@ -48,12 +48,12 @@ export const DropdownMenuDemo = () => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard className="mr-2 h-4 w-4" />
-            <Link href="/salaryCalculator">Salary</Link>
+            <Link href="/salary-main">Salary</Link>
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Keyboard className="mr-2 h-4 w-4" />
-            <span>History</span>
+            <Link href="/history">History</Link>
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
