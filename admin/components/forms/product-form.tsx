@@ -14,6 +14,10 @@ import { apiUrl } from '@/lib/utils';
 interface ProductFormProps {
   initialData: any | null;
 }
+type NewCategoryForm = {
+  categoryName: string;
+  procedures: { taskName: string; quantity: number; unitPrice: number }[];
+};
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
@@ -22,6 +26,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategory, setNewCategory] = useState<NewCategoryForm>({
+    categoryName: '',
+    procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
+  });
   const [uploading, setUploading] = useState(false);
   const [images, setImage] = useState('');
 
@@ -137,6 +145,16 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     const value = checkedValues.filter((item) => item?.procedures.length !== 0);
     console.log('value', value);
     createProject(value);
+  };
+
+  const handleAddProcedure = () => {
+    setNewCategory((prev) => ({
+      ...prev,
+      procedures: [
+        ...prev.procedures,
+        { status: {}, taskName: '', quantity: 1, unitPrice: 100 }
+      ]
+    }));
   };
 
   const createProject = async (components: any) => {
@@ -298,7 +316,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                   />
                   <label>{categoryName}</label>
                 </div>
-                <Button className="rounded-full">+</Button>
+                <Button className="rounded-full" onClick={handleAddProcedure}>
+                  +
+                </Button>
               </div>
 
               {procedures.map(

@@ -33,7 +33,7 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
       <ScrollArea className="h-[calc(86vh-220px)] rounded-md border bg-gray-100">
         <div className="flex flex-wrap gap-4">
           {productsData.map((product, index) => (
-            <button key={index}>
+            <button key={index} onClick={() => {}}>
               <Card className="w-[350px]">
                 <div className="flex items-center justify-around">
                   <button className="rounded-md p-2 duration-150 ease-in-out hover:bg-[#cc716a]">
@@ -49,6 +49,17 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
                 <CardContent>
                   <form>
                     <img src={product.images[0]} alt="big image" />
+                    <div className="box-border flex">
+                      {product.images.slice(1).map((image, index) => (
+                        <div className="flex-1" key={index}>
+                          <img
+                            src={image}
+                            alt={`small image ${index + 1}`}
+                            className="w-[70px]"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </form>
                 </CardContent>
                 <CardFooter className="flex justify-between">

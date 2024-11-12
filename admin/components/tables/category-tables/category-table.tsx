@@ -40,6 +40,7 @@ type NewCategoryForm = {
 
 export function CategoryTable({ data, searchKey }: DataTableProps) {
   const [loading, setLoading] = useState(true);
+  const [addLoading, setAddLoading] = useState(true);
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [rowData, setRowData] = useState<{ [key: string]: any }>({});
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false); // Toggle for the form
@@ -47,6 +48,9 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
     categoryName: '',
     procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   });
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
 
   const handleInput = (t_id: string) => {
     setEditingRow(t_id);
@@ -98,13 +102,11 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
 
   const handleAddCategoryToggle = () => {
     setShowAddCategoryForm((prev) => !prev);
+    setAddLoading((prev) => !prev);
   };
 
-  const handleNewCategoryChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    const { value } = e.target;
+  const handleNewCategoryChange = (field: string, value: string) => {
+    setSelectedCategoryId(value);
     setNewCategory((prev) => ({
       ...prev,
       [field]: value
@@ -118,6 +120,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   ) => {
     const { value } = e.target;
     const updatedProcedures = [...newCategory.procedures];
+    console.log('udpro', updatedProcedures);
     updatedProcedures[index] = {
       ...updatedProcedures[index],
       [field]:
@@ -127,6 +130,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       ...prev,
       procedures: updatedProcedures
     }));
+    console.log('respnes', newCategory);
   };
 
   const handleAddProcedure = () => {
@@ -149,13 +153,27 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   };
 
   const handleSubmitNewCategory = async () => {
+    if (!selectedCategoryId) {
+      toast({
+        variant: 'destructive',
+        title: 'No category selected',
+        description: 'Please select a category before submitting.'
+      });
+      return;
+    }
+
+    const categoryData = {
+      ...newCategory,
+      c_id: selectedCategoryId // Attach the selected category ID to the submission
+    };
+    console.log('categorydata', categoryData);
+
     try {
-      setLoading(true);
-      const response = await axios.post(`${apiUrl}cat/category`, newCategory);
+      console.log('first');
+      const response = await axios.post(`${apiUrl}cat/procedure`, categoryData);
       if (response.status === 200) {
         toast({ title: 'Category added successfully' });
-        // Optionally, refresh the category list (you might want to use your state management or a refetching strategy)
-        setShowAddCategoryForm(false);
+        setShowAddCategoryForm(false); // Optionally close the form
       }
     } catch (error) {
       console.error('Error adding category:', error);
@@ -164,8 +182,6 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         title: 'Uh oh! Something went wrong.',
         description: 'There was an error adding the category.'
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -179,20 +195,25 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         <div className="mb-4 rounded-md bg-gray-100 p-4 shadow">
           <h2 className="mb-2 text-xl font-semibold">Add New Category</h2>
 
-          <Select>
+          <Select
+            onValueChange={(value) =>
+              handleNewCategoryChange('categoryName', value)
+            }
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {data.map((category) => {
-                  <SelectItem value={category._id}>
+                {data.map((category) => (
+                  <SelectItem key={category._id} value={category._id}>
                     {category.categoryName}
-                  </SelectItem>;
-                })}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
+
           <div className="mb-4">
             <h3 className="mb-2 text-lg font-semibold">Procedures</h3>
             {newCategory.procedures.map((procedure, index) => (
@@ -244,9 +265,9 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
           <Button
             onClick={handleSubmitNewCategory}
             className="w-full"
-            disabled={loading}
+            disabled={addLoading}
           >
-            {loading ? 'Saving...' : 'Save Category'}
+            {addLoading ? 'Saving...' : 'Add Category'}
           </Button>
         </div>
       )}
