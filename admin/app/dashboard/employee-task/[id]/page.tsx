@@ -65,40 +65,21 @@ const ProductTaskDetail = () => {
   const updateComponentStatus = async (
     component_id: string,
     task_id: string,
-    assign: number
+    assign: number,
+    user_id: string
   ) => {
     try {
       setIsLoading(true);
-      const res = await axios.put(`${apiUrl}comp/update/status/admin`, {
+      const res = await axios.put(`${apiUrl}comp/update/status/admin/${id}`, {
         compStatus: {
           component_id,
           task_id,
-          assign
+          assign,
+          user_id
         }
       });
       if (res.status === 200) {
-        setIsLoading(true);
-        setRefresh((prev) => !prev);
-        toast({
-          title: 'амжилттай шинэчлэгдлээ.',
-          description: 'There was a problem with your request.'
-        });
-        console.log('succes');
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error(error);
-    }
-  };
-  const updateEmployeeStatus = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.put(`${apiUrl}picked/employee/${id}`, {
-        data
-      });
-      if (res.status === 200) {
         setIsLoading(false);
-        setData(null);
         setRefresh((prev) => !prev);
         toast({
           title: 'амжилттай шинэчлэгдлээ.',
@@ -111,18 +92,39 @@ const ProductTaskDetail = () => {
       console.error(error);
     }
   };
+  // const updateEmployeeStatus = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const res = await axios.put(`${apiUrl}picked/employee/${id}`, {
+  //       data
+  //     });
+  //     if (res.status === 200) {
+  //       setIsLoading(false);
+  //       setData(null);
+  //       setRefresh((prev) => !prev);
+  //       toast({
+  //         title: 'амжилттай шинэчлэгдлээ.',
+  //         description: 'There was a problem with your request.'
+  //       });
+  //       console.log('succes');
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     console.error(error);
+  //   }
+  // };
   const handleStatus = (
     comp_id: string,
     task_id: string,
     assign: number,
     user_id: string
   ) => {
-    updateComponentStatus(comp_id, task_id, assign);
-    setData({
-      component_id: comp_id,
-      task_id: task_id,
-      user_id: user_id
-    });
+    updateComponentStatus(comp_id, task_id, assign, user_id);
+    // setData({
+    //   component_id: comp_id,
+    //   task_id: task_id,
+    //   user_id: user_id
+    // });
     // console.log('comp_id', comp_id);
     // console.log('task', task_id);
     // console.log('assign', assign);
@@ -130,12 +132,7 @@ const ProductTaskDetail = () => {
   useEffect(() => {
     getTaskDetail();
   }, [refresh]);
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    updateEmployeeStatus();
-  }, [refresh]);
+
   return (
     <ScrollArea className="h-[calc(100vh-60px)]">
       <div className="ml-10">
