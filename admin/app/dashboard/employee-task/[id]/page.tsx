@@ -16,6 +16,7 @@ import {
 import { IStatus, IUser } from '@/constants/data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 
 type product = {
   product_id: string;
@@ -140,7 +141,7 @@ const ProductTaskDetail = () => {
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Овог нэр</TableHead>
+              <TableHead className="w-[100px]">Зураг</TableHead>
               <TableHead className="w-[100px]">Өөрийн нэр</TableHead>
               <TableHead>Утасны дугаар</TableHead>
               <TableHead>Эд ангийн нэр</TableHead>
@@ -161,7 +162,13 @@ const ProductTaskDetail = () => {
                     product.components.map((component) =>
                       component.procedures.map((procedure, procIdx) => (
                         <TableRow key={`${component._id}-${procIdx}`}>
-                          <TableCell>{user.lastName}</TableCell>
+                          <TableCell>
+                            <img
+                              src={user.profile_img}
+                              alt=""
+                              className="h-12 w-12 rounded-full"
+                            />
+                          </TableCell>
                           <TableCell>{user.firstName}</TableCell>
                           <TableCell>{user.phoneNumber}</TableCell>
                           <TableCell>{component.categoryName}</TableCell>
@@ -169,7 +176,22 @@ const ProductTaskDetail = () => {
                           <TableCell>{procedure.unitPrice}</TableCell>
                           <TableCell>{procedure.quantity}</TableCell>
                           <TableCell>{procedure.status.assign}</TableCell>
-                          <TableCell>{procedure.taskStatus}</TableCell>
+                          <TableCell>
+                            <div
+                              className={`flex w-20 justify-center rounded-lg  text-white ${
+                                procedure.taskStatus === 'done'
+                                  ? 'border-2 border-green-400 text-green-400'
+                                  : procedure.taskStatus === 'progress'
+                                  ? 'border-2 border-red-400 text-red-400'
+                                  : procedure.taskStatus === 'review'
+                                  ? 'border-2 border-yellow-400 text-yellow-400'
+                                  : ''
+                              }`}
+                            >
+                              {' '}
+                              {procedure.taskStatus}
+                            </div>
+                          </TableCell>
                           <TableCell className="text-right">
                             {(
                               procedure.unitPrice *
@@ -179,13 +201,17 @@ const ProductTaskDetail = () => {
                             ₮
                           </TableCell>
                           <TableCell>
-                            <button
-                              className={`px-4 py-2 text-white ${
-                                procedure.taskStatus === 'done'
+                            <Button
+                              className={`text-white ${
+                                procedure.taskStatus === 'done' ||
+                                procedure.taskStatus === 'progress'
                                   ? 'cursor-not-allowed bg-gray-500'
                                   : 'bg-blue-500 hover:bg-blue-700'
                               }`}
-                              disabled={procedure.taskStatus === 'done'}
+                              disabled={
+                                procedure.taskStatus === 'done' ||
+                                procedure.taskStatus === 'progress'
+                              }
                               onClick={() =>
                                 handleStatus(
                                   component._id,
@@ -196,7 +222,7 @@ const ProductTaskDetail = () => {
                               }
                             >
                               Change Status
-                            </button>
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))

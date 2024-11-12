@@ -1,5 +1,4 @@
 import { NavItem } from '@/types';
-import exp from 'constants';
 
 export type User = {
   id: number;
@@ -18,6 +17,7 @@ export interface IUser {
   job_title: string;
   verified: boolean;
   status: string;
+  profile_img: string;
 }
 
 export interface IStatus {
@@ -206,12 +206,7 @@ export const navItems: NavItem[] = [
     icon: 'profile',
     label: 'profile'
   },
-  {
-    title: 'Project',
-    href: '/dashboard/project',
-    icon: 'project',
-    label: 'project'
-  },
+
   {
     title: 'Login',
     href: '/',

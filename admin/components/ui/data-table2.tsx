@@ -56,11 +56,15 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               : item.productName.toLowerCase().includes(search);
           })
           .map(
-            (
-              { productName, components, createdAt, total, product_id },
-              idx
-            ) => (
-              <Card key={idx}>
+            ({
+              productName,
+              components,
+              createdAt,
+              total,
+              product_id,
+              description
+            }) => (
+              <Card>
                 <div className="flex flex-col gap-2 pl-4 pt-3">
                   <div className="flex items-center justify-between gap-10">
                     <p className="text-2xl font-semibold">
@@ -73,17 +77,24 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                   <div className="flex">
                     <div className="flex flex-col justify-center gap-2">
                       {/* <div className="text-xl font-semibold">performence: 15%</div> */}
-                      <div>
-                        хүлээгдэж байна : ({components.pending}/{total})
+                      <h1 className="text-xl">({description})</h1>
+                      <div className="flex items-center gap-2">
+                        <div>
+                          хүлээгдэж байна : ({components.pending}/{total})
+                        </div>
+                        <div className="h-3 w-3 bg-[#E76E50]"></div>
                       </div>
-                      <div>
+                      <div className="flex items-center gap-2">
                         хийгдэж байна: ({components.progress}/{total})
+                        <div className="h-3 w-3 bg-[#2A9C90]"></div>
                       </div>
-                      <div>
+                      <div className="flex items-center gap-2">
                         хянах: ({components.review}/{total})
+                        <div className="h-3 w-3 bg-[#E9C469]"></div>
                       </div>
-                      <div>
+                      <div className="flex items-center gap-2">
                         бүрэн дууссан: ({components.done}/{total})
+                        <div className="h-3 w-3 bg-[#264853]"></div>
                       </div>
 
                       <Link href={`/dashboard/employee-task/${product_id}`}>
