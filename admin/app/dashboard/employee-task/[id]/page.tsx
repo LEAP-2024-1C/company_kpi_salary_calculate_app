@@ -145,7 +145,6 @@ const ProductTaskDetail = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Зураг</TableHead>
-              <TableHead className="w-[100px]">Овог нэр</TableHead>
               <TableHead className="w-[100px]">Өөрийн нэр</TableHead>
               <TableHead>Утасны дугаар</TableHead>
               <TableHead>Эд ангийн нэр</TableHead>
@@ -173,7 +172,6 @@ const ProductTaskDetail = () => {
                               className="h-12 w-12 rounded-full"
                             />
                           </TableCell>
-                          <TableCell>{user.lastName}</TableCell>
                           <TableCell>{user.firstName}</TableCell>
                           <TableCell>{user.phoneNumber}</TableCell>
                           <TableCell>{component.categoryName}</TableCell>
@@ -182,20 +180,20 @@ const ProductTaskDetail = () => {
                           <TableCell>{procedure.quantity}</TableCell>
                           <TableCell>{procedure.status.assign}</TableCell>
                           <TableCell>
-                            <Button
-                              className={`w-24 rounded-xl text-white ${
+                            <div
+                              className={`flex w-20 justify-center rounded-lg  text-white ${
                                 procedure.taskStatus === 'done'
-                                  ? 'bg-green-400'
+                                  ? 'border-2 border-green-400 text-green-400'
                                   : procedure.taskStatus === 'progress'
-                                  ? 'bg-red-400'
+                                  ? 'border-2 border-red-400 text-red-400'
                                   : procedure.taskStatus === 'review'
-                                  ? 'bg-yellow-400'
+                                  ? 'border-2 border-yellow-400 text-yellow-400'
                                   : ''
                               }`}
                             >
                               {' '}
                               {procedure.taskStatus}
-                            </Button>
+                            </div>
                           </TableCell>
                           <TableCell className="text-right">
                             {(
