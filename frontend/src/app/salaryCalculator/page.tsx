@@ -67,8 +67,11 @@ const SalaryCalculator = () => {
         console.log("succes");
       }
     } catch (error) {
-      setIsLoading(false);
+      // setIsLoading(false);
       console.error(error);
+      toast.error("Failed to update status");
+    } finally {
+      setIsLoading(false);
     }
   };
   const updateEmployeeStatus = async () => {
@@ -157,13 +160,13 @@ const SalaryCalculator = () => {
               <Table className="mt-6">
                 <TableHeader>
                   <TableRow className="bg-green-50">
-                    <TableHead>Category</TableHead>
-                    <TableHead>Task Name</TableHead>
-                    <TableHead>Unit Price</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Assigned</TableHead>
-                    <TableHead>Task Status</TableHead>
-                    <TableHead>Cost</TableHead>
+                    <TableHead>Хэсгүүд</TableHead>
+                    <TableHead>Ажилбарууд</TableHead>
+                    <TableHead>Нэгжийн үнэ</TableHead>
+                    <TableHead>Тоо ширхэг</TableHead>
+                    <TableHead>Миний авсан</TableHead>
+                    <TableHead>Ажлын статус</TableHead>
+                    <TableHead>Нийт үнэлгээ</TableHead>
                     <TableHead>
                       <Button onClick={() => handleOpen(productIdx)}>
                         {open[productIdx] ? "Close" : "Open"}
@@ -191,7 +194,7 @@ const SalaryCalculator = () => {
                                 className="hover:bg-gray-50"
                               >
                                 <TableCell>{task.taskName}</TableCell>
-                                <TableCell>₮{task.unitPrice}</TableCell>
+                                <TableCell>{task.unitPrice}₮</TableCell>
                                 <TableCell>{task.quantity}</TableCell>
                                 <TableCell>{task.status.assign}</TableCell>
                                 <TableCell>{task.taskStatus}</TableCell>
@@ -206,9 +209,15 @@ const SalaryCalculator = () => {
                                     className={`px-4 py-2 text-white ${
                                       task.taskStatus === "done"
                                         ? "cursor-not-allowed bg-gray-500"
+                                        : task.taskStatus === "review"
+                                        ? "cursor-not-allowed bg-blue-500"
                                         : " bg-green-100 text-green-700 hover:bg-green-200"
                                     }`}
-                                    disabled={task.taskStatus === "done"}
+                                    disabled={
+                                      task.taskStatus === "done" ||
+                                      task.taskStatus === "review" ||
+                                      isLoading
+                                    }
                                     onClick={() =>
                                       handleStatus(
                                         component._id,
@@ -218,8 +227,22 @@ const SalaryCalculator = () => {
                                       )
                                     }
                                   >
-                                    Change Status
-                                  </Button>
+                                    {/* {task.taskStatus === "review"
+                                      ? "In review"
+                                      : task.taskStatus === "done"
+                                      ? "Task complete"
+                                      : "Send to review"} */}
+                                    {isLoading ? (
+                                      <span className="loader loader-spinner loading-md"></span>
+                                    ) : task.taskStatus === "review" ? (
+                                      "In review"
+                                    ) : task.taskStatus === "done" ? (
+                                      "Task complete"
+                                    ) : (
+                                      "Send to review"
+                                    )}
+                                  </Button>{" "}
+                                  <span className="loader loader-spinner loading-md "></span>
                                 </TableCell>
                               </TableRow>
                             )
@@ -235,7 +258,7 @@ const SalaryCalculator = () => {
                       Total:
                     </TableCell>
                     <TableCell className="font-bold text-green-700">
-                      ₮{productTotal}
+                      {productTotal} ₮
                     </TableCell>
                   </TableRow>
                 </TableFooter>
