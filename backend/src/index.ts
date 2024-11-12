@@ -27,7 +27,7 @@ app.use("/api/v1", taskRoute);
 app.use("/api/v1/comp", compRoute);
 
 app.get("/", async (req: Request, res: Response) => {
-  res.send("Welcome E-Commerce API Server");
+  res.send("Welcome to Company API Server");
 });
 
 // server
