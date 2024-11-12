@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 //   product_id: string;
 // };
 
-const SalaryCalculator = () => {
+const MyTasks = () => {
   const [cartData, setCartData] = useState<ISavedTasks | null>(null);
   const [open, setOpen] = useState<boolean[]>([]);
   // const [data, setData] = useState<SentData | null>(null);
@@ -168,7 +168,7 @@ const SalaryCalculator = () => {
 
               <Table className="mt-6">
                 <TableHeader>
-                  <TableRow className="bg-green-50">
+                  <TableRow className="bg-teal-100">
                     <TableHead>Хэсгүүд</TableHead>
                     <TableHead>Ажилбарууд</TableHead>
                     <TableHead>Нэгжийн үнэ</TableHead>
@@ -176,95 +176,89 @@ const SalaryCalculator = () => {
                     <TableHead>Миний авсан</TableHead>
                     <TableHead>Ажлын статус</TableHead>
                     <TableHead>Нийт үнэлгээ</TableHead>
-                    <TableHead>
-                      <Button onClick={() => handleOpen(productIdx)}>
-                        {open[productIdx] ? "Close" : "Open"}
-                      </Button>
-                    </TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
-                <>
-                  {open[productIdx] && (
-                    <TableBody>
-                      {product.components.map((component, compIdx) => (
-                        <React.Fragment key={compIdx}>
-                          <TableRow>
-                            <TableCell
-                              rowSpan={component.procedures.length + 1}
-                              className="font-medium text-green-600"
-                            >
-                              {component.categoryName}
+
+                <TableBody>
+                  {product.components.map((component, compIdx) => (
+                    <React.Fragment key={compIdx}>
+                      <TableRow>
+                        <TableCell
+                          rowSpan={component.procedures.length + 1}
+                          className="font-medium text-green-600"
+                        >
+                          {component.categoryName}
+                        </TableCell>
+                      </TableRow>
+                      {component.procedures.map(
+                        (task: IProcedures, taskIdx) => (
+                          <TableRow
+                            key={`${compIdx}-${taskIdx}`}
+                            className="hover:bg-gray-50"
+                          >
+                            <TableCell>{task.taskName}</TableCell>
+                            <TableCell>{task.unitPrice}₮</TableCell>
+                            <TableCell>{task.quantity}</TableCell>
+                            <TableCell>{task.status.assign}</TableCell>
+                            <TableCell>{task.taskStatus}</TableCell>
+                            <TableCell>
+                              {task.unitPrice *
+                                task.status.assign *
+                                task.quantity}
+                              ₮
                             </TableCell>
-                          </TableRow>
-                          {component.procedures.map(
-                            (task: IProcedures, taskIdx) => (
-                              <TableRow
-                                key={`${compIdx}-${taskIdx}`}
-                                className="hover:bg-gray-50"
+                            <TableCell>
+                              <Button
+                                className={`px-4 py-2 text-white w-[120px] ${
+                                  task.taskStatus === "done"
+                                    ? "cursor-not-allowed bg-gray-500"
+                                    : task.taskStatus === "review"
+                                    ? "cursor-not-allowed bg-blue-500"
+                                    : " bg-green-100 text-green-700 hover:bg-green-200"
+                                }`}
+                                disabled={
+                                  task.taskStatus === "done" ||
+                                  task.taskStatus === "review" ||
+                                  isLoading
+                                }
+                                onClick={() =>
+                                  handleStatus(
+                                    component._id,
+                                    task._id,
+                                    task.status.assign,
+                                    product.product_id
+                                  )
+                                }
                               >
-                                <TableCell>{task.taskName}</TableCell>
-                                <TableCell>{task.unitPrice}₮</TableCell>
-                                <TableCell>{task.quantity}</TableCell>
-                                <TableCell>{task.status.assign}</TableCell>
-                                <TableCell>{task.taskStatus}</TableCell>
-                                <TableCell>
-                                  {task.unitPrice *
-                                    task.status.assign *
-                                    task.quantity}
-                                  ₮
-                                </TableCell>
-                                <TableCell>
-                                  <Button
-                                    className={`px-4 py-2 text-white ${
-                                      task.taskStatus === "done"
-                                        ? "cursor-not-allowed bg-gray-500"
-                                        : task.taskStatus === "review"
-                                        ? "cursor-not-allowed bg-blue-500"
-                                        : " bg-green-100 text-green-700 hover:bg-green-200"
-                                    }`}
-                                    disabled={
-                                      task.taskStatus === "done" ||
-                                      task.taskStatus === "review" ||
-                                      isLoading
-                                    }
-                                    onClick={() =>
-                                      handleStatus(
-                                        component._id,
-                                        task._id,
-                                        task.status.assign,
-                                        product.product_id
-                                      )
-                                    }
-                                  >
-                                    {/* {task.taskStatus === "review"
+                                {/* {task.taskStatus === "review"
                                       ? "In review"
                                       : task.taskStatus === "done"
                                       ? "Task complete"
                                       : "Send to review"} */}
-                                    {isLoading ? (
-                                      <span className="loader loader-spinner loading-md"></span>
-                                    ) : task.taskStatus === "review" ? (
-                                      "In review"
-                                    ) : task.taskStatus === "done" ? (
-                                      "Task complete"
-                                    ) : (
-                                      "Send to review"
-                                    )}
-                                  </Button>{" "}
-                                  <span className="loader loader-spinner loading-md "></span>
-                                </TableCell>
-                              </TableRow>
-                            )
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </TableBody>
-                  )}
-                </>
+                                {isLoading ? (
+                                  <span className="loader loader-spinner loading-md"></span>
+                                ) : task.taskStatus === "review" ? (
+                                  "In review"
+                                ) : task.taskStatus === "done" ? (
+                                  "Task complete"
+                                ) : (
+                                  "Send to review"
+                                )}
+                              </Button>{" "}
+                              <span className="loader loader-spinner loading-md "></span>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+
                 <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={4} className="font-bold text-right">
-                      Total:
+                    <TableCell colSpan={7} className="font-bold text-right">
+                      Авсан ажлын үнэлгээ:
                     </TableCell>
                     <TableCell className="font-bold text-green-700">
                       {productTotal} ₮
@@ -280,4 +274,4 @@ const SalaryCalculator = () => {
   );
 };
 
-export default SalaryCalculator;
+export default MyTasks;

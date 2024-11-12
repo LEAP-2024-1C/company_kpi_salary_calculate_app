@@ -30,9 +30,9 @@ export const DropdownMenuDemo = () => {
           <AvatarImage
             src={user?.profile_img}
             alt="@shadcn"
-            className="bg-center bg-contain"
+            className="bg-center bg-contain "
           />
-          <AvatarFallback className="bg-gray-500">
+          <AvatarFallback className="bg-gray-50">
             {user?.lastName[0]} {user?.firstName[0]}
           </AvatarFallback>
         </Avatar>
