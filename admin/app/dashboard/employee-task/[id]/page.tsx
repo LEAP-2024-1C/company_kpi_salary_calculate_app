@@ -183,11 +183,11 @@ const ProductTaskDetail = () => {
                             <div
                               className={`flex w-20 justify-center rounded-lg  text-white ${
                                 procedure.taskStatus === 'done'
-                                  ? 'border-2 border-green-400 text-green-500'
+                                  ? 'border-2 border-green-600 text-green-600'
                                   : procedure.taskStatus === 'progress'
-                                  ? 'border-2 border-red-400 text-red-500'
+                                  ? 'border-2 border-red-600 text-red-600'
                                   : procedure.taskStatus === 'review'
-                                  ? 'border-2 border-yellow-400 text-yellow-500'
+                                  ? 'border-2 border-yellow-600 text-yellow-600'
                                   : ''
                               }`}
                             >
