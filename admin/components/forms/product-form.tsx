@@ -448,7 +448,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           ))}
         </div>
         <Button className="w-1/4 text-center" onClick={getCheckedValues}>
-          submit
+          Үүсгэх
         </Button>
       </section>
     </div>
