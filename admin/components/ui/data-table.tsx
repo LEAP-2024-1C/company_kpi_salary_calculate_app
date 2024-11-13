@@ -40,14 +40,14 @@ export function DataTable({ searchKey, data }: DataTableProps) {
           </TableHeader>
           <TableBody>
             {data?.map((employeeData) => (
-              <TableRow key={employeeData.id}>
+              <TableRow key={employeeData._id}>
                 <TableCell>{employeeData.lastName}</TableCell>
                 <TableCell>{employeeData.firstName}</TableCell>
                 <TableCell>{employeeData.email}</TableCell>
                 <TableCell>{employeeData.phoneNumber}</TableCell>
                 <TableCell>{employeeData.job_title}</TableCell>
                 <TableCell>
-                  <CellAction id={employeeData.id} />
+                  <CellAction id={employeeData._id} />
                 </TableCell>
               </TableRow>
             ))}

@@ -27,6 +27,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';
 import { apiUrl } from '@/lib/utils';
+import { useProducts } from '@/context/admin-context';
 
 interface DataTableProps {
   data: Category[];
@@ -34,19 +35,22 @@ interface DataTableProps {
 }
 
 type NewCategoryForm = {
-  categoryName: string;
   procedures: { taskName: string; quantity: number; unitPrice: number }[];
 };
 
 export function CategoryTable({ data, searchKey }: DataTableProps) {
   const [loading, setLoading] = useState(true);
+  const [addLoading, setAddLoading] = useState(true);
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [rowData, setRowData] = useState<{ [key: string]: any }>({});
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false); // Toggle for the form
   const [newCategory, setNewCategory] = useState<NewCategoryForm>({
-    categoryName: '',
     procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   });
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
+  const { setRefresh } = useProducts();
 
   const handleInput = (t_id: string) => {
     setEditingRow(t_id);
@@ -60,6 +64,11 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       [key: string]: any;
     }
   ) => {
+    if (!rowData) {
+      setLoading(true);
+    }
+    console.log('rowdata', rowData);
+
     try {
       const response = await axios.put(`${apiUrl}cat/procedure`, {
         t_id: t_id,
@@ -98,13 +107,11 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
 
   const handleAddCategoryToggle = () => {
     setShowAddCategoryForm((prev) => !prev);
+    setAddLoading((prev) => !prev);
   };
 
-  const handleNewCategoryChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    const { value } = e.target;
+  const handleNewCategoryChange = (field: string, value: string) => {
+    setSelectedCategoryId(value);
     setNewCategory((prev) => ({
       ...prev,
       [field]: value
@@ -118,6 +125,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   ) => {
     const { value } = e.target;
     const updatedProcedures = [...newCategory.procedures];
+    console.log('udpro', updatedProcedures);
     updatedProcedures[index] = {
       ...updatedProcedures[index],
       [field]:
@@ -127,6 +135,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       ...prev,
       procedures: updatedProcedures
     }));
+    console.log('respnes', newCategory);
   };
 
   const handleAddProcedure = () => {
@@ -149,13 +158,33 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   };
 
   const handleSubmitNewCategory = async () => {
+    if (!selectedCategoryId) {
+      toast({
+        variant: 'destructive',
+        title: 'No category selected',
+        description: 'Please select a category before submitting.'
+      });
+      return;
+    }
+
+    const categoryData = {
+      ...newCategory,
+      c_id: selectedCategoryId // Attach the selected category ID to the submission
+    };
+    console.log('categorydata', categoryData);
+
     try {
-      setLoading(true);
-      const response = await axios.post(`${apiUrl}cat/category`, newCategory);
+      console.log('first');
+      const response = await axios.post(`${apiUrl}cat/procedure`, categoryData);
       if (response.status === 200) {
         toast({ title: 'Category added successfully' });
-        // Optionally, refresh the category list (you might want to use your state management or a refetching strategy)
-        setShowAddCategoryForm(false);
+        setShowAddCategoryForm(false); // Optionally close the form
+        setRefresh((prevData) => !prevData);
+
+        // Optionally clear the form after submission
+        setNewCategory({
+          procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
+        });
       }
     } catch (error) {
       console.error('Error adding category:', error);
@@ -164,8 +193,6 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         title: 'Uh oh! Something went wrong.',
         description: 'There was an error adding the category.'
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -179,24 +206,29 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
         <div className="mb-4 rounded-md bg-gray-100 p-4 shadow">
           <h2 className="mb-2 text-xl font-semibold">Add New Category</h2>
 
-          <Select>
+          <Select
+            onValueChange={(value) =>
+              handleNewCategoryChange('categoryName', value)
+            }
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {data.map((category) => {
-                  <SelectItem value={category._id}>
+                {data.map((category) => (
+                  <SelectItem key={category._id} value={category._id}>
                     {category.categoryName}
-                  </SelectItem>;
-                })}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
+
           <div className="mb-4">
             <h3 className="mb-2 text-lg font-semibold">Procedures</h3>
             {newCategory.procedures.map((procedure, index) => (
-              <div key={index} className="mb-2 flex gap-2">
+              <div key={index} className="mb-2 flex items-center  gap-2">
                 <Input
                   value={procedure.taskName}
                   onChange={(e) =>
@@ -213,6 +245,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   }
                   placeholder="Quantity"
                   className="w-1/6"
+                  min={0}
                 />
                 <Input
                   type="number"
@@ -222,10 +255,10 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   }
                   placeholder="Unit Price"
                   className="w-1/6"
+                  min={0}
                 />
                 <Button
                   onClick={() => handleRemoveProcedure(index)}
-                  className="mt-4"
                   variant="destructive"
                 >
                   Remove
@@ -244,9 +277,9 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
           <Button
             onClick={handleSubmitNewCategory}
             className="w-full"
-            disabled={loading}
+            disabled={addLoading}
           >
-            {loading ? 'Saving...' : 'Save Category'}
+            {addLoading ? 'Saving...' : 'Add Category'}
           </Button>
         </div>
       )}
@@ -321,6 +354,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                                 handleSaveChanges(t_id, c_id, rowData[t_id])
                               }
                             >
+                              {/* {console.log('rowdata', rowData[t_id])} */}
                               Save
                             </Button>
                           ) : (

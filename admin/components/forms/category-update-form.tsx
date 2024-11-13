@@ -10,15 +10,14 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage
+  FormLabel
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
 import { useToast } from '../ui/use-toast';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
-import CategoryInput from '../inputs/category-inputs';
+import { Input } from '../ui/input';
 
 const formSchema = z.object({
   procedures: z.array(
@@ -140,16 +139,112 @@ export const CategoryUpdateForm: React.FC<ProductFormProps> = ({
         >
           {fields.map((pro, index) => {
             return (
-              <CategoryInput
-                key={pro.id}
-                pro={pro}
-                form={form}
-                index={index}
-                loading={loading}
-                handleSub={handleSub}
-                handleAdd={handleAdd}
-                remove={remove}
-              />
+              <div key={pro.id} className="flex items-end gap-3">
+                {/* start */}
+                <>
+                  <FormField
+                    control={form.control}
+                    name={`procedures.${index}.taskName`}
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel>Task Name</FormLabel>
+                          <FormControl className="w-[400px]">
+                            <Input
+                              disabled={loading}
+                              placeholder="Task Name"
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`procedures.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Unit</FormLabel>
+                        <div className="flex gap-2">
+                          <div>
+                            <Button
+                              className="rounded-full"
+                              onClick={() => handleSub(index, 'quantity')}
+                              type="button"
+                            >
+                              -
+                            </Button>
+                          </div>
+                          <FormControl className="w-10 rounded-full text-center">
+                            <Input
+                              type="number"
+                              disabled={loading}
+                              placeholder="Unit"
+                              {...field}
+                              min={0}
+                              className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                          </FormControl>
+                          <div>
+                            <Button
+                              className="rounded-full"
+                              onClick={() => handleAdd(index, 'quantity')}
+                              type="button"
+                            >
+                              +
+                            </Button>
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`procedures.${index}.unitPrice`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Unit Price</FormLabel>
+                        <div className="flex gap-2">
+                          <div>
+                            <Button
+                              className="rounded-full"
+                              onClick={() => handleSub(index, 'unitPrice')}
+                              type="button"
+                            >
+                              -
+                            </Button>
+                          </div>
+                          <FormControl className="w-20 rounded-full text-center">
+                            <Input
+                              type="number"
+                              disabled={loading}
+                              placeholder="Unit Price"
+                              {...field}
+                              min={0}
+                              className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                          </FormControl>
+                          <div>
+                            <Button
+                              className="rounded-full"
+                              onClick={() => handleAdd(index, 'unitPrice')}
+                              type="button"
+                            >
+                              +
+                            </Button>
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </>
+                {/* end */}
+
+                <Button type="button" onClick={() => remove(index)}>
+                  Remove
+                </Button>
+              </div>
             );
           })}
           <Button

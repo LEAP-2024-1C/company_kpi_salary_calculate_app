@@ -19,18 +19,17 @@ const breadcrumbItems = [
   { title: 'Category', link: '/dashboard/category' }
 ];
 
-
-
 export default function Page() {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const { setRefresh, refresh } = useProducts();
+  const { refresh } = useProducts();
 
   const getAllCategories = async () => {
     try {
       const res = await axios.get(`${apiUrl}cat/get/category`);
       if (res.status === 200) {
         const { categories } = res.data;
+
         console.log('categories', categories);
         setCategories(categories);
       }
@@ -61,10 +60,7 @@ export default function Page() {
         </div>
         <Separator />
 
-        <CategoryTable
-          searchKey="category"
-          data={categories}
-        />
+        <CategoryTable searchKey="" data={categories} />
       </div>
     </PageContainer>
   );
