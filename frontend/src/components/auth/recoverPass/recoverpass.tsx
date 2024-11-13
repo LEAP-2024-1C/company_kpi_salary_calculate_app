@@ -24,9 +24,9 @@ interface IPass {
 
 const RecoverPass = () => {
   const searchParams = useSearchParams();
-  const resetToken = searchParams.get("resetToken");
+  const resetToken = searchParams.get("resettoken");
   const router = useRouter();
-
+  console.log("resetToken", resetToken);
   const handleNewPassword = async (value: IPass) => {
     const { password, repassword } = value;
     if (!(password === repassword)) {

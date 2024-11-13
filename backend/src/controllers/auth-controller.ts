@@ -137,7 +137,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 export const verifyPassword = async (req: Request, res: Response) => {
   try {
     const { password, resetToken } = req.body;
-
+    console.log("first", password, resetToken);
     const hashedResetToken = crypto
       .createHash("sha256")
       .update(resetToken)
@@ -168,15 +168,16 @@ export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
     const { email, firstName, lastName, phoneNumber, address, profile_img } =
-    req.body;
-    console.log("phoneNumber",firstName, lastName, phoneNumber, address, profile_img)
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phoneNumber ||
-      !address
-    ) {
+      req.body;
+    console.log(
+      "phoneNumber",
+      firstName,
+      lastName,
+      phoneNumber,
+      address,
+      profile_img
+    );
+    if (!firstName || !lastName || !email || !phoneNumber || !address) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
 

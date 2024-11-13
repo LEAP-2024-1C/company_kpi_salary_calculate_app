@@ -97,9 +97,11 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                         <div className="h-3 w-3 bg-[#264853]"></div>
                       </div>
 
+                      {/* <div className="border-b-2 border-black"> */}
                       <Link href={`/dashboard/employee-task/${product_id}`}>
-                        employees
+                        ажилчидийн гүйцэтгэлийг харах
                       </Link>
+                      {/* </div> */}
                     </div>
 
                     <CardContent className="flex-1 pb-0">
