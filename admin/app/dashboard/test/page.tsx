@@ -50,7 +50,7 @@ const FormSchema = z.object({
   })
 });
 
-export function CheckboxReactHookFormMultiple() {
+export default function CheckboxReactHookFormMultiple() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {

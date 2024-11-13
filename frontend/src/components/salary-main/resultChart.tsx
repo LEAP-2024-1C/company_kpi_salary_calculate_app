@@ -21,7 +21,7 @@ const colorPalette = [
 ];
 
 export function ResultChart() {
-  const { cartData, calculateProductTotal } = useCart();
+  const { cartData } = useCart();
 
   const assignedData = React.useMemo(() => {
     return (

@@ -108,8 +108,7 @@ export const getSelectedTasks = async (req: Request, res: Response) => {
       );
       return { user: task.user, products: filteredPro };
     });
-    console.log("alltask", allTasks);
-    console.log("matching", matchingTasks);
+
     res.status(200).json({
       message: "Employee saved tasks is read successfully",
       matchingTasks,

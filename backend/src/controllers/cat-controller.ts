@@ -30,7 +30,6 @@ export const createCategory = async (req: Request, res: Response) => {
 
 export const addToCategory = async (req: Request, res: Response) => {
   const { c_id, procedures } = req.body;
-  console.log("data received:", req.body);
 
   try {
     if (!c_id) {
@@ -38,8 +37,6 @@ export const addToCategory = async (req: Request, res: Response) => {
     }
 
     const findCategory = await Category.findById(c_id);
-    console.log("Found category:", findCategory);
-
     if (!findCategory) {
       return res.status(404).json({
         message: "Category not found.",
@@ -124,7 +121,6 @@ export const getAllCategories = async (req: Request, res: Response) => {
 
 export const updateProcedure = async (req: Request, res: Response) => {
   const data = req.body;
-  console.log(data);
 
   try {
     const { c_id, t_id, updatedData } = data;

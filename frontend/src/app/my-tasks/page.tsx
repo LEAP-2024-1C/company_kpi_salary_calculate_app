@@ -25,7 +25,7 @@ import StatusIndicator from "@/components/status";
 
 const MyTasks = () => {
   const [cartData, setCartData] = useState<ISavedTasks | null>(null);
-  const [open, setOpen] = useState<boolean[]>([]);
+  // const [open, setOpen] = useState<boolean[]>([]);
   // const [data, setData] = useState<SentData | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,8 +39,8 @@ const MyTasks = () => {
       if (response.status === 200) {
         const data = response.data.cart;
         setCartData(data);
-        console.log("data", data);
-        setOpen(new Array(data.products.length).fill(false));
+
+        // setOpen(new Array(data.products.length).fill(false));
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -74,7 +74,6 @@ const MyTasks = () => {
         setRefresh((prev) => !prev);
         setIsLoading(true);
         toast.success("succes");
-        console.log("succes");
       }
     } catch (error) {
       // setIsLoading(false);
@@ -110,11 +109,11 @@ const MyTasks = () => {
   //   }
   // };
 
-  const handleOpen = (proId: number) => {
-    setOpen((prev) =>
-      prev.map((isOpen, index) => (index === proId ? !isOpen : isOpen))
-    );
-  };
+  // const handleOpen = (proId: number) => {
+  //   setOpen((prev) =>
+  //     prev.map((isOpen, index) => (index === proId ? !isOpen : isOpen))
+  //   );
+  // };
   const handleStatus = (
     comp_id: string,
     task_id: string,
@@ -122,10 +121,6 @@ const MyTasks = () => {
     pro_id: string
   ) => {
     updateComponentStatus(comp_id, task_id, assign, pro_id);
-    console.log("pro_id", pro_id);
-    console.log("comp_id", comp_id);
-    console.log("task_id", task_id);
-    console.log("assign", assign);
   };
   const calculateProductTotal = (product: ISavedProduct): number => {
     return product.components.reduce((productTotal, component) => {

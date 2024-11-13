@@ -50,7 +50,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const { data } = req.body;
-    console.log("data", req.body);
+
     const { email, firstName, lastName, job_title, phoneNumber } = data;
 
     if (!firstName || !lastName || !email || !job_title) {
@@ -137,7 +137,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 export const verifyPassword = async (req: Request, res: Response) => {
   try {
     const { password, resetToken } = req.body;
-    console.log("first", password, resetToken);
+
     const hashedResetToken = crypto
       .createHash("sha256")
       .update(resetToken)
@@ -157,7 +157,6 @@ export const verifyPassword = async (req: Request, res: Response) => {
     findUser.password = password;
     await findUser?.save();
     res.status(200).json({ message: "Нууц үг  амжилттэй сэргээлээ" });
-    console.log("one");
   } catch (error) {
     console.log(error);
     res.status(401).json({ message: error });
@@ -167,17 +166,8 @@ export const verifyPassword = async (req: Request, res: Response) => {
 export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
-    const { email, firstName, lastName, phoneNumber, address, profile_img } =
-      req.body;
-    console.log(
-      "phoneNumber",
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-      profile_img
-    );
-    if (!firstName || !lastName || !email || !phoneNumber || !address) {
+    const { email, firstName, lastName, phoneNumber, profile_img } = req.body;
+    if (!firstName || !lastName || !email || !phoneNumber || !profile_img) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
 
@@ -186,7 +176,6 @@ export const updateUserInfo = async (req: Request, res: Response) => {
       lastName,
       email,
       phoneNumber,
-      address,
       profile_img,
     };
     const updatedUser = await Employee.findByIdAndUpdate(id, update, {

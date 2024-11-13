@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+
 import { FiPhone } from "react-icons/fi";
 import { IoMailOutline } from "react-icons/io5";
 import { FaInstagram } from "react-icons/fa6";

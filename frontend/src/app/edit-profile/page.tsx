@@ -57,7 +57,6 @@ const UserInfoForm = () => {
     formData.append("upload_preset", "pisrslvb");
 
     try {
-      console.log("check");
       setUploading(true);
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
@@ -78,7 +77,7 @@ const UserInfoForm = () => {
       toast.warning("Authentication token is missing. Please log in.");
       return;
     }
-    console.log("values", values);
+
     try {
       const res = await axios.put(`${apiUrl}auth/update/profile`, values, {
         headers: {
@@ -171,14 +170,14 @@ const UserInfoForm = () => {
                     <FormField
                       control={form.control}
                       name="profile_img"
-                      render={({ field }) => (
+                      render={() => (
                         <FormItem>
                           <FormLabel>Профайл зураг</FormLabel>
                           <FormControl>
                             <Input
                               type="file"
                               accept="image/*"
-                              {...field}
+                              // {...field}
                               onChange={(e) =>
                                 e.target.files &&
                                 handleImageUpload(e.target.files[0])

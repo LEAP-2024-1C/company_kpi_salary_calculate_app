@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import StatusIndicator from "./status";
 
 const TaskTracker = () => {
   const getColor = () => {
