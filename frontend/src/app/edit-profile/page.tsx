@@ -64,6 +64,7 @@ const UserInfoForm = () => {
         formData
       );
       setImage(response.data.secure_url);
+      console.log("img", response.data.secure_url);
       form.setValue("profile_img", response.data.secure_url);
       setUploading(false);
     } catch (error) {

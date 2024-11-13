@@ -69,7 +69,7 @@ const TaskTracker = () => {
             </Accordion>
           </div>
           <div className="w-full flex ">
-            {/* <StatusIndicator status="pending" /> */}
+            {/* <StatusIndicator status="done" /> */}
             {/* <p className="text-blue-500 justify-self-end">Төлөв: {status}</p> */}
           </div>
         </div>

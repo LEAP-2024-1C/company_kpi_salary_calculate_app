@@ -37,7 +37,7 @@ const SalaryCalculator = () => {
     >
       <div className="w-full flex justify-center flex-col">
         <h1 className="text-green-900 font-bold text-4xl mb-8 text-center p-2 bg-gray-50 rounded-full">
-          Миний авсан ажилууд
+          Миний гүйцэтгэсэн ажлуудын түүх
         </h1>
         <div className="grid grid-cols-1 gap-8">
           {cartData?.products.map((product, productIdx) => {
@@ -61,7 +61,7 @@ const SalaryCalculator = () => {
                       <TableHead>Нэгжийн үнэ</TableHead>
                       <TableHead>Тоо ширхэг</TableHead>
                       <TableHead>Миний авсан</TableHead>
-                      <TableHead>Ажлын статус</TableHead>
+                      <TableHead>Ажлын төлөв</TableHead>
                       <TableHead>Нийт үнэлгээ</TableHead>
                       <TableHead></TableHead>
                     </TableRow>

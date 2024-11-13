@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import StatusIndicator from "@/components/status";
 
 // type SentData = {
 //   component_id: string;
@@ -174,7 +175,7 @@ const MyTasks = () => {
                     <TableHead>Нэгжийн үнэ</TableHead>
                     <TableHead>Тоо ширхэг</TableHead>
                     <TableHead>Миний авсан</TableHead>
-                    <TableHead>Ажлын статус</TableHead>
+                    <TableHead>Ажлын төлөв</TableHead>
                     <TableHead>Нийт үнэлгээ</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -201,7 +202,11 @@ const MyTasks = () => {
                             <TableCell>{task.unitPrice}₮</TableCell>
                             <TableCell>{task.quantity}</TableCell>
                             <TableCell>{task.status.assign}</TableCell>
-                            <TableCell>{task.taskStatus}</TableCell>
+                            <TableCell>
+                              <div className="p-1 text-center rounded-full">
+                                <StatusIndicator status={task.taskStatus} />
+                              </div>
+                            </TableCell>
                             <TableCell>
                               {task.unitPrice *
                                 task.status.assign *
