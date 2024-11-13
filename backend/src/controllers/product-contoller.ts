@@ -146,7 +146,40 @@ export const getAllProductsStat = async (req: Request, res: Response) => {
   }
 };
 
-// export const updateProdct = async (req: Request, res: Response) => {
+export const deleteProduct = async (req: Request, res: Response) => {
+  const { p_id } = req.body;
+
+  try {
+    // Validate input
+    if (!p_id) {
+      return res.status(400).json({
+        message: "Устгалт амжилтгүй: p_id  заавал байх ёстой.",
+      });
+    }
+
+    // Find the product by ID
+    const findProduct = await Product.findByIdAndDelete(p_id);
+
+    return res.status(200).json({
+      message: "Бүтээгдэхүүн амжилттай устгав.",
+      deletedProduct: findProduct,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Алдаа гарлаа." });
+  }
+};
+
+// export const getProductName = async (req: Request, res: Response) => {
+//   const data = req.body;
+//   console.log("req", req.body);
+//   try {
+//     const { productName } = data;
+//     const findProductName = await Product.find({ productName });
+//   } catch (error) {}
+// };
+
+// export const updateProduct = async (req: Request, res: Response) => {
 //   const { component_id, pro } = req.body;
 //   const { _id } = pro;
 //   const products = await Components.findById(component_id);

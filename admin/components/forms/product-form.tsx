@@ -7,13 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
 import { useToast } from '../ui/use-toast';
-import { Category, IProduct } from '@/constants/data';
+import { Category, IProduct, Procedures } from '@/constants/data';
 import axios from 'axios';
 import { apiUrl } from '@/lib/utils';
 
 interface ProductFormProps {
   initialData: any | null;
 }
+type NewCategoryForm = {
+  categoryName: string;
+  procedures: { taskName: string; quantity: number; unitPrice: number }[];
+};
 export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
@@ -22,6 +26,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategory, setNewCategory] = useState<NewCategoryForm>({
+    categoryName: '',
+    procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
+  });
   const [uploading, setUploading] = useState(false);
   const [images, setImage] = useState('');
 
@@ -38,7 +46,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       const res = await axios.get(`${apiUrl}cat/get/category`);
       if (res.status === 200) {
         const { categories } = res.data;
-        console.log('categories', categories);
         setCategories(categories);
       }
     } catch (error) {
@@ -60,42 +67,53 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProductForm({
-      ...productForm,
+
+    // Update product form fields
+    setProductForm((prev) => ({
+      ...prev,
       [name]: value
-    });
-    // categories.map((item) =>
-    //   item.procedures.map((pro) => (pro.status.pending = Number(value)))
-    // );
-    setCategories((prev) => {
-      const newCatForm = [...prev];
-      newCatForm.map((pro) =>
-        pro.procedures.map((task) => (task.status.pending = Number(value)))
-      );
-      return newCatForm;
-    });
+    }));
+
+    // Update categories' pending status in each procedure
+    setCategories((prevCategories) =>
+      prevCategories.map((category) => ({
+        ...category,
+        procedures: category.procedures.map((task) => ({
+          ...task,
+          // Ensure status object and pending property exist
+          status: {
+            ...task.status,
+            pending: Number(value) // Set pending to the value from the input
+          }
+        }))
+      }))
+    );
   };
+
   const handleInputChange = (
     catIndex: number,
     procIndex: number,
-    field: 'quantity' | 'unitPrice',
+    field: 'quantity' | 'unitPrice' | 'taskName',
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = e.target;
     setCategories((prev) => {
       const newCatForm = [...prev];
-      const updatedProcedures = [...newCatForm[catIndex]?.procedures];
+      const updatedProcedures = [...newCatForm[catIndex].procedures];
 
       if (field === 'quantity') {
         updatedProcedures[procIndex].quantity = Number(value);
-      } else {
+      } else if (field === 'unitPrice') {
         updatedProcedures[procIndex].unitPrice = Number(value);
+      } else if (field === 'taskName') {
+        updatedProcedures[procIndex].taskName = value;
       }
 
       newCatForm[catIndex].procedures = updatedProcedures;
       return newCatForm;
     });
   };
+
   const handleProCheckChange = (catIndex: number, procIndex: number) => {
     setCategories((prev) => {
       return prev.map((category, index) => {
@@ -139,8 +157,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     createProject(value);
   };
 
+  const handleAddProcedure = (catIndex: number) => {
+    setCategories((prevCategories: Category[]) =>
+      prevCategories.map((category: Category, index: number) =>
+        index === catIndex
+          ? {
+              ...category,
+              procedures: [
+                ...category.procedures,
+                { taskName: '', quantity: 1, unitPrice: 100 } as Procedures
+              ]
+            }
+          : category
+      )
+    );
+  };
+
   const createProject = async (components: any) => {
     const { productName, description, quantity } = productForm;
+
     if (!productName || !description || !quantity) {
       return toast({
         variant: 'destructive',
@@ -148,8 +183,27 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         description: 'There was a problem with your request.'
       });
     }
+
     try {
       setLoading(true);
+      // Step 1: Check if the project already exists
+      // const checkRes = await axios.get(`${apiUrl}pro/product/productName`, {
+      //   data: productName
+      // });
+
+      // console.log('checkres', checkRes);
+
+      // if (checkRes.status === 200 && checkRes.data.exists) {
+      //   // If project exists
+      //   toast({
+      //     variant: 'destructive',
+      //     title: 'Project with this name already exists.',
+      //     description: 'Please choose a different name for the project.'
+      //   });
+      //   return;
+      // }
+
+      // Step 2: Proceed with creating the project if not exists
       const res = await axios.post(`${apiUrl}pro/product`, {
         components,
         productForm,
@@ -158,8 +212,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
       if (res.status === 200) {
         console.log('success');
+        toast({ title: 'Successfully created project' });
+        router.push('/dashboard/product');
       }
     } catch (error: any) {
+      console.error(error); // Log the error for debugging purposes
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
@@ -283,45 +340,54 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         </div>
       </div>
 
-      <section className="flex flex-col">
-        <div className="ml-10 flex flex-col">
+      <section className="flex flex-col items-center gap-5">
+        <div className="mx-10 flex w-full flex-col">
           {categories.map(({ categoryName, procedures }, catIndex) => (
             <div key={catIndex}>
+              {/* Category title and checkbox */}
               <div className="flex justify-between px-8">
                 <div>
                   <input
                     value={categoryName}
                     type="checkbox"
-                    className="mr-2 "
+                    className="mr-2"
                     checked={isCheck[catIndex]}
                     onChange={(e) => handleChange(e, catIndex)}
                   />
                   <label>{categoryName}</label>
                 </div>
-                <Button className="rounded-full">+</Button>
+                <Button
+                  className="rounded-full"
+                  onClick={() => handleAddProcedure(catIndex)}
+                >
+                  +
+                </Button>
               </div>
 
               {procedures.map(
-                ({ taskName, quantity, unitPrice }, procIndex) => (
+                ({ taskName, quantity, unitPrice, proCheck }, procIndex) => (
                   <div
-                    className="ml-20 flex items-center gap-2"
+                    className="ml-20 flex items-center gap-10"
                     key={procIndex}
                   >
+                    {/* Procedure checkbox */}
                     <input
-                      checked={
-                        categories[catIndex]?.procedures[procIndex].proCheck
-                      }
-                      value={taskName}
                       type="checkbox"
-                      className="mr-2 "
+                      checked={proCheck || false}
+                      onChange={() => handleProCheckChange(catIndex, procIndex)}
+                      className="mr-2"
                       disabled={!isCheck[catIndex]}
-                      onChange={(e) =>
-                        handleProCheckChange(catIndex, procIndex)
-                      }
                     />
-
-                    <label className="w-80">{taskName}</label>
-                    <div>
+                    <input
+                      type="text"
+                      className="w-80 bg-inherit p-2"
+                      value={taskName}
+                      onChange={(e) =>
+                        handleInputChange(catIndex, procIndex, 'taskName', e)
+                      }
+                      disabled={!isCheck[catIndex]}
+                    />
+                    <div className="flex gap-1">
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
                         onClick={() =>
@@ -332,14 +398,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       </Button>
                       <input
                         type="number"
-                        className="w-20 bg-inherit p-2 text-center "
-                        value={
-                          categories[catIndex]?.procedures[procIndex].quantity
-                        }
-                        disabled={!isCheck[catIndex]}
+                        className="w-14 bg-inherit p-2 text-center"
+                        value={quantity}
                         onChange={(e) =>
                           handleInputChange(catIndex, procIndex, 'quantity', e)
                         }
+                        disabled={!isCheck[catIndex]}
                       />
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
@@ -362,13 +426,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <input
                         type="number"
                         className="w-20 bg-inherit p-2 text-center"
-                        value={
-                          categories[catIndex]?.procedures[procIndex].unitPrice
-                        }
-                        disabled={!isCheck[catIndex]}
+                        value={unitPrice}
                         onChange={(e) =>
                           handleInputChange(catIndex, procIndex, 'unitPrice', e)
                         }
+                        disabled={!isCheck[catIndex]}
                       />
                       <Button
                         className="h-8 w-8 rounded-full border border-black bg-transparent text-black dark:border-white dark:text-white"
@@ -385,7 +447,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             </div>
           ))}
         </div>
-        <button onClick={getCheckedValues}>sumbit</button>
+        <Button className="w-1/4 text-center" onClick={getCheckedValues}>
+          submit
+        </Button>
       </section>
     </div>
   );

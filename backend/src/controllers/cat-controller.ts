@@ -29,33 +29,44 @@ export const createCategory = async (req: Request, res: Response) => {
 };
 
 export const addToCategory = async (req: Request, res: Response) => {
-  const { c_id, addProcedureData } = req.body;
-  console.log("data", req.body);
+  const { c_id, procedures } = req.body;
+  console.log("data received:", req.body);
+
   try {
     if (!c_id) {
-      return res.status(400).json({ message: "Хэрэгтэй дата авч чадсангүй" });
+      return res.status(400).json({ message: "Category ID not provided." });
     }
+
     const findCategory = await Category.findById(c_id);
-    console.log("ficat", findCategory);
+    console.log("Found category:", findCategory);
+
     if (!findCategory) {
-      return res.status(400).json({
-        message: "Категори олдсонгүй",
+      return res.status(404).json({
+        message: "Category not found.",
       });
     }
-    if (findCategory) {
-      const procedures = findCategory?.procedures;
-      const addProcedure = await procedures.push(addProcedureData);
-      await findCategory.save();
-      return res.status(200).json({
-        message: "added to category successfully",
-        addProcedure,
-      });
+
+    // Ensure procedures is an array and add each procedure to the existing list
+    if (Array.isArray(procedures)) {
+      findCategory.procedures.push(...procedures);
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Procedures should be an array." });
     }
-    res
-      .status(401)
-      .json({ message: "Категорийн нэр давхацаж байна нэрээ өөрчилнө үү" });
+
+    // Save the updated category
+    const updatedCategory = await findCategory.save();
+    return res.status(200).json({
+      message: "Successfully added to category.",
+      updatedCategory,
+    });
   } catch (error) {
-    res.status(404).json({ error, message: "sdad" });
+    console.error("Error adding to category:", error);
+    return res.status(500).json({
+      message: "An error occurred while adding to the category.",
+      error: error,
+    });
   }
 };
 

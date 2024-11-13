@@ -1,20 +1,42 @@
+'use client';
+
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
 import { ProductTable } from '@/components/tables/product-tables/product-table';
 import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { products } from '@/constants/data';
-import { cn } from '@/lib/utils';
+import { useProducts } from '@/context/admin-context';
+import { apiUrl, cn } from '@/lib/utils';
+import axios from 'axios';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const breadcrumbItems = [
   { title: 'Dashboard', link: '/dashboard' },
   { title: 'Product', link: '/dashboard/product' }
 ];
 
-export default function page() {
+export default function Page() {
+  const [productsData, setProductsData] = useState<[]>([]);
+  const { refresh } = useProducts();
+
+  const getProductsData = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}pro/product`);
+      if (res.status === 200) {
+        const { products } = res.data;
+        setProductsData(products);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getProductsData();
+  }, [refresh]);
+
   return (
     <PageContainer>
       <div className="space-y-4">
@@ -22,7 +44,7 @@ export default function page() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Products (${products.length})`}
+            title={`Products ()`}
             description="Manage products (Server side table functionalities.)"
           />
 
@@ -35,7 +57,7 @@ export default function page() {
         </div>
         <Separator />
 
-        <ProductTable searchKey="product" data={products} />
+        <ProductTable searchKey="product" productsData={productsData} />
       </div>
     </PageContainer>
   );
