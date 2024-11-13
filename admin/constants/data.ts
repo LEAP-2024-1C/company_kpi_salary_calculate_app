@@ -10,6 +10,7 @@ export type User = {
 };
 export interface IUser {
   _id: string;
+
   lastName: string;
   firstName: string;
   email: string;

@@ -62,6 +62,7 @@ const ProductTaskDetail = () => {
       console.error(error);
     }
   };
+  console.log('protask', proTasks);
 
   const updateComponentStatus = async (
     component_id: string,
@@ -142,7 +143,8 @@ const ProductTaskDetail = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Зураг</TableHead>
-              <TableHead className="w-[100px]">Өөрийн нэр</TableHead>
+              <TableHead>Өөрийн нэр</TableHead>
+              <TableHead>Ажлийн байр</TableHead>
               <TableHead>Утасны дугаар</TableHead>
               <TableHead>Эд ангийн нэр</TableHead>
               <TableHead>Ажилбарууд</TableHead>
@@ -170,6 +172,7 @@ const ProductTaskDetail = () => {
                             />
                           </TableCell>
                           <TableCell>{user.firstName}</TableCell>
+                          <TableCell>{user.job_title}</TableCell>
                           <TableCell>{user.phoneNumber}</TableCell>
                           <TableCell>{component.categoryName}</TableCell>
                           <TableCell>{procedure.taskName}</TableCell>
@@ -180,11 +183,11 @@ const ProductTaskDetail = () => {
                             <div
                               className={`flex w-20 justify-center rounded-lg  text-white ${
                                 procedure.taskStatus === 'done'
-                                  ? 'border-2 border-green-400 text-green-400'
+                                  ? 'border-2 border-green-400 text-green-500'
                                   : procedure.taskStatus === 'progress'
-                                  ? 'border-2 border-red-400 text-red-400'
+                                  ? 'border-2 border-red-400 text-red-500'
                                   : procedure.taskStatus === 'review'
-                                  ? 'border-2 border-yellow-400 text-yellow-400'
+                                  ? 'border-2 border-yellow-400 text-yellow-500'
                                   : ''
                               }`}
                             >
@@ -221,7 +224,7 @@ const ProductTaskDetail = () => {
                                 )
                               }
                             >
-                              Change Status
+                              төлөв батлах
                             </Button>
                           </TableCell>
                         </TableRow>
