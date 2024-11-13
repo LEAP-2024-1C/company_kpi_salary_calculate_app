@@ -29,7 +29,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 // import FileUpload from "@/components/FileUpload";
 import { useToast } from '../ui/use-toast';
-import FileUpload from '../file-upload';
+// import FileUpload from '../file-upload';
 import { apiUrl } from '@/lib/utils';
 
 const ImgSchema = z.object({

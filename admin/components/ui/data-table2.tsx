@@ -56,15 +56,18 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               : item.productName.toLowerCase().includes(search);
           })
           .map(
-            ({
-              productName,
-              components,
-              createdAt,
-              total,
-              product_id,
-              description
-            }) => (
-              <Card>
+            (
+              {
+                productName,
+                components,
+                createdAt,
+                total,
+                product_id,
+                description
+              },
+              idx
+            ) => (
+              <Card key={idx}>
                 <div className="flex flex-col gap-2 pl-4 pt-3">
                   <div className="flex items-center justify-between gap-10">
                     <p className="text-2xl font-semibold">

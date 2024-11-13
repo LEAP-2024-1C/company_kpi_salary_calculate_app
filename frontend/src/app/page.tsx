@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { formPage } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useUser } from "@/context/user-provider";
 
 interface IPage {
   email: string;
@@ -26,6 +27,7 @@ interface IPage {
 }
 
 const Login = () => {
+  const { setIsLoggedIn } = useUser();
   const router = useRouter();
   const form = useForm<z.infer<typeof formPage>>({
     resolver: zodResolver(formPage),
@@ -46,6 +48,7 @@ const Login = () => {
         toast.success("амжилттай нэвтэрлээ", { autoClose: 1000 });
         const { token } = response.data;
         localStorage.setItem("token", token);
+        setIsLoggedIn((prev) => !prev);
         router.push("/dashboard");
       }
     } catch (error) {
@@ -55,7 +58,6 @@ const Login = () => {
 
   const onSubmit = (values: z.infer<typeof formPage>) => {
     logIn(values);
-    console.log("pass", values);
   };
 
   return (

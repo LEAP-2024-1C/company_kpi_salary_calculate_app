@@ -153,7 +153,7 @@ export const updateProductStatusAdmin = async (req: Request, res: Response) => {
       throw new Error("Task not found in component");
     }
     const procedure = component.procedures[fIndx];
-    console.log("review", procedure.status.review);
+
     if (procedure.status.review < assign) {
       throw new Error("Insufficient progress to reassign to review");
     }

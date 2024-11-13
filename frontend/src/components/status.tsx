@@ -1,13 +1,11 @@
 import React from "react";
 
-type Status = "review" | "in progress" | "done";
-
 interface StatusIndicatorProps {
-  status: Status;
+  status: string;
 }
 
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
-  const getStatusColor = (status: Status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "review":
         return "blue";
