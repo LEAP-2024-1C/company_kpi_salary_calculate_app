@@ -27,6 +27,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';
 import { apiUrl } from '@/lib/utils';
+import { useProducts } from '@/context/admin-context';
 
 interface DataTableProps {
   data: Category[];
@@ -34,7 +35,6 @@ interface DataTableProps {
 }
 
 type NewCategoryForm = {
-  categoryName: string;
   procedures: { taskName: string; quantity: number; unitPrice: number }[];
 };
 
@@ -45,12 +45,12 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   const [rowData, setRowData] = useState<{ [key: string]: any }>({});
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false); // Toggle for the form
   const [newCategory, setNewCategory] = useState<NewCategoryForm>({
-    categoryName: '',
     procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
+  const { setRefresh } = useProducts();
 
   const handleInput = (t_id: string) => {
     setEditingRow(t_id);
@@ -64,6 +64,11 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       [key: string]: any;
     }
   ) => {
+    if (!rowData) {
+      setLoading(true);
+    }
+    console.log('rowdata', rowData);
+
     try {
       const response = await axios.put(`${apiUrl}cat/procedure`, {
         t_id: t_id,
@@ -174,6 +179,12 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
       if (response.status === 200) {
         toast({ title: 'Category added successfully' });
         setShowAddCategoryForm(false); // Optionally close the form
+        setRefresh((prevData) => !prevData);
+
+        // Optionally clear the form after submission
+        setNewCategory({
+          procedures: [{ taskName: '', quantity: 1, unitPrice: 100 }]
+        });
       }
     } catch (error) {
       console.error('Error adding category:', error);
@@ -217,7 +228,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
           <div className="mb-4">
             <h3 className="mb-2 text-lg font-semibold">Procedures</h3>
             {newCategory.procedures.map((procedure, index) => (
-              <div key={index} className="mb-2 flex gap-2">
+              <div key={index} className="mb-2 flex items-center  gap-2">
                 <Input
                   value={procedure.taskName}
                   onChange={(e) =>
@@ -234,6 +245,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   }
                   placeholder="Quantity"
                   className="w-1/6"
+                  min={0}
                 />
                 <Input
                   type="number"
@@ -243,10 +255,10 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   }
                   placeholder="Unit Price"
                   className="w-1/6"
+                  min={0}
                 />
                 <Button
                   onClick={() => handleRemoveProcedure(index)}
-                  className="mt-4"
                   variant="destructive"
                 >
                   Remove

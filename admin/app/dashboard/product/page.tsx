@@ -27,9 +27,6 @@ export default function Page() {
       const res = await axios.get(`${apiUrl}pro/product`);
       if (res.status === 200) {
         const { products } = res.data;
-
-        console.log('products', products);
-
         setProductsData(products);
       }
     } catch (error) {

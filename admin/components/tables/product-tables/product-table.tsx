@@ -16,13 +16,16 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Product } from '@/constants/data';
 import { CellAction } from './cell-action';
 import { Label } from '@radix-ui/react-label';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
 interface DataTableProps {
   productsData: Product[];
   searchKey: string;
 }
 
 export function ProductTable({ productsData, searchKey }: DataTableProps) {
-  console.log('prosd', productsData);
+  const router = useRouter();
 
   return (
     <>
@@ -32,19 +35,26 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
       />
       <ScrollArea className="h-[calc(86vh-220px)] rounded-md border bg-gray-100">
         <div className="flex flex-wrap gap-4">
-          {productsData.map((product, index) => (
-            <button key={index} onClick={() => {}}>
-              <Card className="w-[350px]">
+          {productsData.map((product, index) => {
+            return (
+              <Card
+                key={product._id}
+                className="w-[350px]"
+                onClick={() => {
+                  router.push(`/dashboard/product/${product._id}`);
+                }}
+              >
                 <div className="flex items-center justify-around">
-                  <button className="rounded-md p-2 duration-150 ease-in-out hover:bg-[#cc716a]">
+                  <button className="z-50 rounded-md p-2 duration-150 ease-in-out hover:bg-[#cc716a]">
                     +
                   </button>
                   <CardHeader>
                     <CardTitle>{product.productName}</CardTitle>
                     <CardDescription>{product.description}</CardDescription>
                   </CardHeader>
-
-                  <CellAction id={product.id} />
+                  <div className="z-50 ">
+                    <CellAction id={product._id} />
+                  </div>
                 </div>
                 <CardContent>
                   <form>
@@ -67,8 +77,8 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
                   <Label>Status:{product.status}</Label>
                 </CardFooter>
               </Card>
-            </button>
-          ))}
+            );
+          })}
         </div>
 
         <ScrollBar orientation="horizontal" />

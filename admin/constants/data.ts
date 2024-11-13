@@ -38,7 +38,7 @@ export interface IProductStat {
 }
 
 export type Product = {
-  id: string;
+  _id: string;
   productName: string;
   quantity: number;
   images: string[];
