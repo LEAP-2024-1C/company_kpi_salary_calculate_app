@@ -14,6 +14,7 @@ import { ScrollArea, ScrollBar } from './scroll-area';
 import { CellAction } from '../tables/user-tables/cell-action';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { IUser } from '@/constants/data';
+import { useState } from 'react';
 
 interface DataTableProps {
   searchKey: string;
@@ -21,36 +22,45 @@ interface DataTableProps {
 }
 
 export function DataTable({ searchKey, data }: DataTableProps) {
+  const [search, setSearch] = useState<string>('');
+
   return (
     <>
       <Input
         placeholder={`Search ${searchKey}...`}
         className="w-full md:max-w-sm"
+        onChange={(e) => setSearch(e.target.value)}
       />
       <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
         <Table className="relative">
           <TableHeader>
             <TableRow>
-              <TableHead>Last Name</TableHead>
-              <TableHead>First Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone Number</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>Овог</TableHead>
+              <TableHead>Нэр</TableHead>
+              <TableHead>И-Мэйл</TableHead>
+              <TableHead>Утасны дугаар</TableHead>
+              <TableHead>Тушаал</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((employeeData) => (
-              <TableRow key={employeeData._id}>
-                <TableCell>{employeeData.lastName}</TableCell>
-                <TableCell>{employeeData.firstName}</TableCell>
-                <TableCell>{employeeData.email}</TableCell>
-                <TableCell>{employeeData.phoneNumber}</TableCell>
-                <TableCell>{employeeData.job_title}</TableCell>
-                <TableCell>
-                  <CellAction id={employeeData._id} />
-                </TableCell>
-              </TableRow>
-            ))}
+            {data
+              ?.filter((item) => {
+                return search.toLowerCase() === ''
+                  ? item
+                  : item.firstName.toLowerCase().includes(search);
+              })
+              .map((employeeData) => (
+                <TableRow key={employeeData._id}>
+                  <TableCell>{employeeData.lastName}</TableCell>
+                  <TableCell>{employeeData.firstName}</TableCell>
+                  <TableCell>{employeeData.email}</TableCell>
+                  <TableCell>{employeeData.phoneNumber}</TableCell>
+                  <TableCell>{employeeData.job_title}</TableCell>
+                  <TableCell>
+                    <CellAction id={employeeData._id} />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

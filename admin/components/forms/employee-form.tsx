@@ -75,10 +75,12 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? 'Edit product' : 'Create product';
-  const description = initialData ? 'Edit a product.' : 'Add a new product';
+  const title = initialData ? 'Edit user' : 'Create user';
+  const description = initialData
+    ? 'Хэрэглэгчийн мэдээлэл засварлах.'
+    : 'Шинэ хэрэглэгч үүсгэх';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
-  const action = initialData ? 'Save changes' : 'Create';
+  const action = initialData ? 'Хадгалах' : 'Үүсгэх';
 
   const defaultValues = initialData
     ? initialData
@@ -173,13 +175,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Нэр</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="First name"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="Нэр" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,13 +188,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>Овог</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Last name"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="Овог" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,9 +201,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>И-Мэйл</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Email" {...field} />
+                    <Input disabled={loading} placeholder="И-Мэйл" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,11 +214,11 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone number</FormLabel>
+                  <FormLabel>Утасны дугаар</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Phone number"
+                      placeholder="Утасны дугаар"
                       {...field}
                     />
                   </FormControl>
@@ -237,7 +231,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
               name="job_title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Job title</FormLabel>
+                  <FormLabel>Албан тушаал</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -248,7 +242,7 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a category"
+                          placeholder="Албан тушаал сонгох"
                         />
                       </SelectTrigger>
                     </FormControl>

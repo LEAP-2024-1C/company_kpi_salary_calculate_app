@@ -15,8 +15,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const breadcrumbItems = [
-  { title: 'Dashboard', link: '/dashboard' },
-  { title: 'Category', link: '/dashboard/category' }
+  { title: 'Хяналтын хуудас', link: '/dashboard' },
+  { title: 'Ангилал', link: '/dashboard/category' }
 ];
 
 export default function Page() {
@@ -47,20 +47,20 @@ export default function Page() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Categories (${categories?.length})`}
-            description="Manage products (Server side table functionalities.)"
+            title={`Ангилал (${categories?.length})`}
+            description="Ангилал үүсгэх (Сервер талын функц.)"
           />
 
           <Link
             href={'/dashboard/category/new'}
             className={cn(buttonVariants({ variant: 'default' }))}
           >
-            <Plus className="mr-2 h-4 w-4" /> Add New
+            <Plus className="mr-2 h-4 w-4" /> Шинэ ангилал үүсгэх
           </Link>
         </div>
         <Separator />
 
-        <CategoryTable searchKey="" data={categories} />
+        <CategoryTable searchKey="Ангилал" data={categories} />
       </div>
     </PageContainer>
   );

@@ -8,13 +8,14 @@ import {
   forgetPassword,
   verifyOtp,
   updateUserInfo,
+  deleteUser,
 } from "../controllers/auth-controller";
 
 import { auth } from "../middlewares/auth";
 
 const router = Router();
 
-router.route("/create/employee").post(createEmployee);
+router.route("/create/employee").post(createEmployee).delete(deleteUser);
 router.route("/get/employee").get(getAllEmployees);
 router.route("/login").post(login);
 router.route("/get-employee").get(auth, getCurrentUser);

@@ -14,8 +14,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const breadcrumbItems = [
-  { title: 'Dashboard', link: '/dashboard' },
-  { title: 'Product', link: '/dashboard/product' }
+  { title: 'Хяналтын хуудас', link: '/dashboard' },
+  { title: 'Бүтээгдэхүүн', link: '/dashboard/product' }
 ];
 
 export default function Page() {
@@ -44,20 +44,20 @@ export default function Page() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Products ()`}
-            description="Manage products (Server side table functionalities.)"
+            title={`Бүтээгдэхүүн (${productsData.length})`}
+            description="Бүтээгдэхүүн засварлах болон үүсгэх (Сервер талын функцууд.)"
           />
 
           <Link
             href={'/dashboard/product/new'}
             className={cn(buttonVariants({ variant: 'default' }))}
           >
-            <Plus className="mr-2 h-4 w-4" /> Add New
+            <Plus className="mr-2 h-4 w-4" /> Шинэ бүтээгдэхүүн үүсгэх
           </Link>
         </div>
         <Separator />
 
-        <ProductTable searchKey="product" productsData={productsData} />
+        <ProductTable searchKey="Бүтээгдэхүүн" productsData={productsData} />
       </div>
     </PageContainer>
   );
