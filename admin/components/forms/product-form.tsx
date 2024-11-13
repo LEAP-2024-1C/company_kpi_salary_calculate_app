@@ -173,9 +173,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     );
   };
 
-  const createProject = async (value: any) => {
+  const createProject = async (components: any) => {
     const { productName, description, quantity } = productForm;
-    console.log('dada', productForm);
 
     if (!productName || !description || !quantity) {
       return toast({
@@ -206,7 +205,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
       // Step 2: Proceed with creating the project if not exists
       const res = await axios.post(`${apiUrl}pro/product`, {
-        value,
+        components,
         productForm,
         images
       });
