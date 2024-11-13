@@ -310,7 +310,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       <div className="p-5">
         <div className="mb-5 flex gap-4">
           <Input
-            placeholder="Product name"
+            placeholder="Бүтээгдэхүүний нэр"
             onChange={handleLogForm}
             name="productName"
           />
@@ -326,13 +326,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         </div>
         <div className="mb-5 flex gap-4">
           <Input
-            placeholder="Description"
+            placeholder="Нэмэлт мэпээлэл"
             onChange={handleLogForm}
             name="description"
           />
           <Input
             type="number"
-            placeholder="Quantity"
+            placeholder="Тоо хэмжээ"
             className=""
             onChange={handleLogForm}
             name="quantity"

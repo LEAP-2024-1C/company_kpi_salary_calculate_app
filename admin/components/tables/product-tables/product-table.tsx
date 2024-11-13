@@ -37,13 +37,7 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
         <div className="flex flex-wrap gap-4">
           {productsData.map((product, index) => {
             return (
-              <Card
-                key={product._id}
-                className="w-[350px]"
-                onClick={() => {
-                  router.push(`/dashboard/product/${product._id}`);
-                }}
-              >
+              <Card key={product._id} className="w-[350px]">
                 <div className="flex items-center justify-around">
                   <button className="z-50 rounded-md p-2 duration-150 ease-in-out hover:bg-[#cc716a]">
                     +
@@ -74,7 +68,7 @@ export function ProductTable({ productsData, searchKey }: DataTableProps) {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Label>Quantity:{product.quantity}</Label>
-                  <Label>Status:{product.status}</Label>
+                  {/* <Label>Status:{product.status}</Label> */}
                 </CardFooter>
               </Card>
             );
