@@ -26,7 +26,7 @@ const RecoverPass = () => {
   const searchParams = useSearchParams();
   const resetToken = searchParams.get("resettoken");
   const router = useRouter();
-  console.log("resetToken", resetToken);
+
   const handleNewPassword = async (value: IPass) => {
     const { password, repassword } = value;
     if (!(password === repassword)) {
@@ -57,7 +57,6 @@ const RecoverPass = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     handleNewPassword(values);
-    console.log("pass", values);
   };
 
   return (

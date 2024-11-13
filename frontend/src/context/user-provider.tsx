@@ -55,13 +55,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (response.status === 200) {
           const { user } = response.data;
           setUser(user);
-          console.log("user", user);
         }
       } else {
         setUser(null);
       }
     } catch (error) {
-      toast.error("Failed to get current user data");
+      console.error(error);
     } finally {
       setLoading(false);
     }

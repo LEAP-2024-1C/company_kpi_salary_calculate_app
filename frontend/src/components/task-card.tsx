@@ -18,7 +18,7 @@ const TaskTracker = () => {
   };
 
   const { productStat } = useProducts();
-  console.log("productStat", productStat);
+
   return (
     <>
       {productStat?.map(({ productName, components, image, _id }, idx) => (
