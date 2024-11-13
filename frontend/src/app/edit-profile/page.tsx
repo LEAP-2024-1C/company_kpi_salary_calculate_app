@@ -64,6 +64,7 @@ const UserInfoForm = () => {
         formData
       );
       setImage(response.data.secure_url);
+      console.log("img", response.data.secure_url);
       form.setValue("profile_img", response.data.secure_url);
       setUploading(false);
     } catch (error) {
@@ -101,105 +102,107 @@ const UserInfoForm = () => {
 
   console.log("image", image);
   return (
-    <div className="w-full  flex justify-center items-center p-40 m-26">
-      <div className="w-[620px]">
-        <h1 className="font-bold text-xl text-foreground">
-          Хэрэглэгчийн хэсэг
-        </h1>
-        <div className="border-t border-gray-700 mt-6">
-          {user ? (
-            <>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="flex flex-col gap-2  w-full"
-                >
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Овог</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Нэр</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Имейл хаяг</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Утасны дугаар</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="profile_img"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Профайл зураг</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            {...field}
-                            onChange={(e) =>
-                              e.target.files &&
-                              handleImageUpload(e.target.files[0])
-                            }
-                          />
-                        </FormControl>
-                        {uploading && <p>Uploading...</p>}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+    <div className="w-full  flex justify-center items-center p-20 ">
+      <div className="bg-gray-50 rounded-xl p-20">
+        <div className="w-[620px]">
+          <h1 className="font-bold text-xl text-foreground">
+            Хэрэглэгчийн хэсэг
+          </h1>
+          <div className="border-t border-gray-700 mt-6">
+            {user ? (
+              <>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col gap-2  w-full"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Овог</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Нэр</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Имейл хаяг</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Утасны дугаар</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="profile_img"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Профайл зураг</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              {...field}
+                              onChange={(e) =>
+                                e.target.files &&
+                                handleImageUpload(e.target.files[0])
+                              }
+                            />
+                          </FormControl>
+                          {uploading && <p>Uploading...</p>}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <div className="flex justify-end">
-                    <Button variant={"myBtn"} type="submit">
-                      Мэдээлэл шинэчлэх
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </>
-          ) : (
-            <Loader />
-          )}
+                    <div className="flex justify-end">
+                      <Button variant={"myBtn"} type="submit">
+                        Мэдээлэл шинэчлэх
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </>
+            ) : (
+              <Loader />
+            )}
+          </div>
         </div>
       </div>
     </div>

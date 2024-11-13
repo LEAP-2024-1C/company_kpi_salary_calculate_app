@@ -15,10 +15,10 @@ const Header = () => {
     router.push("/dashboard");
   };
   const handleWork = () => {
-    router.push("/salaryCalculator");
+    router.push("/my-tasks");
   };
   return (
-    <div className="bg-gray-900 p-5 flex w-full justify-between items-center">
+    <div className="bg-teal-700 p-5 flex w-full justify-between items-center border-b">
       <div
         className="flex items-center justify-start gap-5 text-white"
         onClick={handleClick}
@@ -37,7 +37,7 @@ const Header = () => {
       </div>
       <div className=" flex gap-8 items-center">
         <CgWorkAlt
-          className="text-gray-400 w-[40px] h-[40px]"
+          className="text-gray-50 w-[40px] h-[40px]"
           onClick={handleWork}
         />
         <DropdownMenuDemo />

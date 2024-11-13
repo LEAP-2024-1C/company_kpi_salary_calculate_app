@@ -1,6 +1,6 @@
 import React from "react";
 
-type Status = "pending" | "in progress" | "complete";
+type Status = "review" | "in progress" | "done";
 
 interface StatusIndicatorProps {
   status: Status;
@@ -9,15 +9,12 @@ interface StatusIndicatorProps {
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
   const getStatusColor = (status: Status) => {
     switch (status) {
-      case "pending":
-        return "red";
-
+      case "review":
+        return "blue";
       case "in progress":
         return "orange";
-
-      case "complete":
+      case "done":
         return "green";
-
       default:
         return "gray";
     }
@@ -25,7 +22,14 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
 
   const color = getStatusColor(status);
 
-  return <div style={{ color }}>Төлөв: {status}</div>;
+  return (
+    <div
+      className="border-2 p-1 text-center rounded-full"
+      style={{ borderColor: color }}
+    >
+      {status}
+    </div>
+  );
 };
 
 export default StatusIndicator;
