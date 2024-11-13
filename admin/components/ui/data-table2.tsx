@@ -98,7 +98,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                       </div>
 
                       <Link href={`/dashboard/employee-task/${product_id}`}>
-                        employees
+                        Ажлын гүйцэтгэл харах
                       </Link>
                     </div>
 
