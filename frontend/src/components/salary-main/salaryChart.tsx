@@ -50,9 +50,9 @@ export function SalaryChart() {
   };
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col w-[500px]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Энэ сарын цалин</CardTitle>
+        <CardTitle>Энэ сарын үнэлгээ</CardTitle>
         <CardDescription>{}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -60,7 +60,7 @@ export function SalaryChart() {
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
         >
-          <PieChart>
+          <PieChart width={400} height={400}>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
@@ -70,7 +70,8 @@ export function SalaryChart() {
               dataKey="total"
               nameKey="name"
               innerRadius={60}
-              strokeWidth={5}
+              outerRadius={100}
+              paddingAngle={5}
             >
               <Label
                 content={({ viewBox }) => {
@@ -94,7 +95,7 @@ export function SalaryChart() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Нийт цалин
+                          Үнэлгээ
                         </tspan>
                       </text>
                     );

@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <div className="bg-teal-700  p-10 border-t">
       <div className=" flex justify-between p-5 mb-[50px] mx-[100px]">
-        <img src="./images/homeLogo.png" alt="" className="" />
+        <img src="" alt="" className="" />
         <div className=" flex gap-8">
           <div className="flex text-gray-200 items-center gap-4">
             <div className="p-2 border border-gray-700 rounded-full flex items-center justify-center">

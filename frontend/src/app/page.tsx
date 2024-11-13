@@ -69,7 +69,7 @@ const Login = () => {
               className="h-[100px] w-[100px] rounded-xl"
             />
             <h1 className="text-teal-700 text-5xl font-bold text-center ">
-              ... компанийн дотоод үйл ажиллагаа
+              ...
             </h1>
           </div>
           <p className="text-lg text-teal-800 text-center border-2 border-cyan-700 rounded-xl p-5 bg-gray-50">
