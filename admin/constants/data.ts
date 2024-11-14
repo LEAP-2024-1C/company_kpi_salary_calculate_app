@@ -77,31 +77,31 @@ export interface Status {
 
 export const navItems: NavItem[] = [
   {
-    title: 'Dashboard',
+    title: 'Хяналтын хуудас',
     href: '/dashboard',
     icon: 'dashboard',
     label: 'Dashboard'
   },
   {
-    title: 'User',
+    title: 'Хэрэглэгч',
     href: '/dashboard/user',
     icon: 'user',
     label: 'user'
   },
   {
-    title: 'Product',
+    title: 'Бүтээгдэхүүн',
     href: '/dashboard/product',
     icon: 'product',
     label: 'product'
   },
   {
-    title: 'Category',
+    title: 'Ангилал',
     href: '/dashboard/category',
     icon: 'category',
     label: 'category'
   },
   {
-    title: 'Profile',
+    title: 'Профайл',
     href: '/dashboard/profile',
     icon: 'profile',
     label: 'profile'

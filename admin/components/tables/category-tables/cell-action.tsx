@@ -135,12 +135,12 @@ export const CellAction: React.FC<CellActionProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Үйлдлүүд</DropdownMenuLabel>
           <DropdownMenuItem onClick={handleInput}>
-            <Edit className="mr-2 h-4 w-4" /> Update
+            <Edit className="mr-2 h-4 w-4" /> Шинэчлэх
           </DropdownMenuItem>
           <DropdownMenuItem onClick={deleteProcedure}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
+            <Trash className="mr-2 h-4 w-4" /> Устгах
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

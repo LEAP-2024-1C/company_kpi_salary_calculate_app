@@ -186,3 +186,26 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     res.status(400).json({ message: error });
   }
 };
+export const deleteUser = async (req: Request, res: Response) => {
+  const { u_id } = req.body;
+
+  console.log("req", req.body);
+
+  try {
+    if (!u_id) {
+      return res.status(400).json({
+        message: "Устгалт амжилтгүй: p_id  заавал байх ёстой.",
+      });
+    }
+
+    const findProduct = await Employee.findByIdAndDelete(u_id);
+
+    return res.status(200).json({
+      message: "Бүтээгдэхүүн амжилттай устгав.",
+      deletedProduct: findProduct,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Алдаа гарлаа." });
+  }
+};

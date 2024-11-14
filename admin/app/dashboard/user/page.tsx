@@ -9,8 +9,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const breadcrumbItems = [
-  { title: 'Dashboard', link: '/dashboard' },
-  { title: 'User', link: '/dashboard/user' }
+  { title: 'Хяналтын хуудас', link: '/dashboard' },
+  { title: 'Хэрэглэгчид', link: '/dashboard/user' }
 ];
 export type User = {
   id: number;

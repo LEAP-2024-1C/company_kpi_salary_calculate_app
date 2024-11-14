@@ -52,12 +52,14 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   // Set dynamic titles and descriptions based on if it's an edit or create action
-  const title = initialData ? 'Edit Category' : 'Create Category';
+  const title = initialData ? 'Ангилал засварлах' : 'Ангилал үүсгэх';
   const description = initialData
-    ? 'Edit an existing category.'
-    : 'Add a new category';
-  const toastMessage = initialData ? 'Category updated.' : 'Category created.';
-  const action = initialData ? 'Save Changes' : 'Create Category';
+    ? 'Хуучин ангилал засварлах.'
+    : 'Шинэ ангилал үүсгэх';
+  const toastMessage = initialData
+    ? 'Ангилал амжилттай шинэчилсэн.'
+    : 'Ангилал амжилттай үүсгэсэн.';
+  const action = initialData ? 'Өөрчлөлт хадгалах' : 'Ангилал үүсгэх';
 
   // Default form values
   const defaultValues = initialData
@@ -269,25 +271,35 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
               </>
               {/* end */}
 
-              <Button type="button" onClick={() => remove(index)}>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => remove(index)}
+              >
                 Remove
               </Button>
             </div>
           ))}
 
           {/* Add New Procedure Button */}
-          <Button
-            type="button"
-            onClick={() => append({ taskName: '', quantity: 1, unitPrice: 50 })}
-            disabled={loading}
-          >
-            + Add Procedure
-          </Button>
+          <div className="flex flex-col gap-4">
+            <Button
+              type="button"
+              onClick={() =>
+                append({ taskName: '', quantity: 1, unitPrice: 50 })
+              }
+              disabled={loading}
+              variant="outline"
+              className="w-60"
+            >
+              + Дамжлага нэмэх
+            </Button>
 
-          {/* Submit Button */}
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button>
+            {/* Submit Button */}
+            <Button disabled={loading} type="submit">
+              {action}
+            </Button>
+          </div>
         </form>
       </Form>
     </>

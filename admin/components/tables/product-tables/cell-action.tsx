@@ -88,7 +88,7 @@ export const CellAction: React.FC<CellActionProps> = ({ id }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Үйлдлүүд</DropdownMenuLabel>
           {/* Update action */}
           <DropdownMenuItem
             onClick={(e) => {
@@ -96,11 +96,11 @@ export const CellAction: React.FC<CellActionProps> = ({ id }) => {
               router.push(`/dashboard/product/${id}`);
             }}
           >
-            <Edit className="mr-2 h-4 w-4" /> Update
+            <Edit className="mr-2 h-4 w-4" /> Шинэчлэх
           </DropdownMenuItem>
           {/* Delete action: Open confirmation modal */}
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
+            <Trash className="mr-2 h-4 w-4" /> Устгах
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -199,12 +199,12 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
   return (
     <>
       <Button onClick={handleAddCategoryToggle} className="mb-4">
-        {showAddCategoryForm ? 'Cancel' : 'Add to Category'}
+        {showAddCategoryForm ? 'Цуцлах' : 'Ангилал дотор нэмэх'}
       </Button>
 
       {showAddCategoryForm && (
         <div className="mb-4 rounded-md bg-gray-100 p-4 shadow">
-          <h2 className="mb-2 text-xl font-semibold">Add New Category</h2>
+          <h2 className="mb-2 text-xl font-semibold">Ангилал сонголт</h2>
 
           <Select
             onValueChange={(value) =>
@@ -212,7 +212,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
             }
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Ангилал сонгох" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -226,7 +226,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
           </Select>
 
           <div className="mb-4">
-            <h3 className="mb-2 text-lg font-semibold">Procedures</h3>
+            <h3 className="mb-2 text-lg font-semibold">Дамжлага</h3>
             {newCategory.procedures.map((procedure, index) => (
               <div key={index} className="mb-2 flex items-center  gap-2">
                 <Input
@@ -234,7 +234,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   onChange={(e) =>
                     handleAddProcedureChange(e, index, 'taskName')
                   }
-                  placeholder="Task Name"
+                  placeholder="Дамжлага нэр"
                   className="w-1/3"
                 />
                 <Input
@@ -261,7 +261,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
                   onClick={() => handleRemoveProcedure(index)}
                   variant="destructive"
                 >
-                  Remove
+                  Устгах
                 </Button>
               </div>
             ))}
@@ -270,7 +270,7 @@ export function CategoryTable({ data, searchKey }: DataTableProps) {
               variant="outline"
               className="mb-4"
             >
-              Add Procedure
+              Дамжлага нэмэх
             </Button>
           </div>
 
