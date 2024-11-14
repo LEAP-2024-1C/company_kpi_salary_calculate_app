@@ -27,7 +27,7 @@ export function DataTable({ searchKey, data }: DataTableProps) {
   return (
     <>
       <Input
-        placeholder={`Search ${searchKey}...`}
+        placeholder={`${searchKey} хайх...`}
         className="w-full md:max-w-sm"
         onChange={(e) => setSearch(e.target.value)}
       />

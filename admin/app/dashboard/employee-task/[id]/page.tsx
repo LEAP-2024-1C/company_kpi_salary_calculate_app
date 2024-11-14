@@ -166,19 +166,19 @@ const ProductTaskDetail = () => {
                         <TableRow key={`${component._id}-${procIdx}`}>
                           <TableCell>
                             <img
-                              src={user.profile_img}
+                              src={user?.profile_img}
                               alt=""
                               className="h-12 w-12 rounded-full"
                             />
                           </TableCell>
-                          <TableCell>{user.firstName}</TableCell>
-                          <TableCell>{user.job_title}</TableCell>
-                          <TableCell>{user.phoneNumber}</TableCell>
-                          <TableCell>{component.categoryName}</TableCell>
-                          <TableCell>{procedure.taskName}</TableCell>
-                          <TableCell>{procedure.unitPrice}</TableCell>
-                          <TableCell>{procedure.quantity}</TableCell>
-                          <TableCell>{procedure.status.assign}</TableCell>
+                          <TableCell>{user?.firstName}</TableCell>
+                          <TableCell>{user?.job_title}</TableCell>
+                          <TableCell>{user?.phoneNumber}</TableCell>
+                          <TableCell>{component?.categoryName}</TableCell>
+                          <TableCell>{procedure?.taskName}</TableCell>
+                          <TableCell>{procedure?.unitPrice}</TableCell>
+                          <TableCell>{procedure?.quantity}</TableCell>
+                          <TableCell>{procedure?.status.assign}</TableCell>
                           <TableCell>
                             <div
                               className={`flex w-20 justify-center rounded-lg  text-white ${

@@ -154,11 +154,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
             name="categoryName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Category Name</FormLabel>
+                <FormLabel>Ангилалын нэр</FormLabel>
                 <FormControl>
                   <Input
                     disabled={loading}
-                    placeholder="Category name"
+                    placeholder="Ангилалын нэр"
                     {...field}
                   />
                 </FormControl>
@@ -178,11 +178,11 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <FormLabel>Task Name</FormLabel>
+                        <FormLabel>Дамжлагын нэр</FormLabel>
                         <FormControl className="w-[400px]">
                           <Input
                             disabled={loading}
-                            placeholder="Task Name"
+                            placeholder="Дамжлагын нэр"
                             {...field}
                           />
                         </FormControl>
@@ -195,7 +195,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   name={`procedures.${index}.quantity`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Unit</FormLabel>
+                      <FormLabel>Нэгж</FormLabel>
                       <div className="flex gap-2">
                         <div>
                           <Button
@@ -210,7 +210,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                           <Input
                             type="number"
                             disabled={loading}
-                            placeholder="Unit"
+                            placeholder="Нэгж"
                             {...field}
                             min={0}
                             className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -234,7 +234,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                   name={`procedures.${index}.unitPrice`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Unit Price</FormLabel>
+                      <FormLabel>Нэгжийн үнэ</FormLabel>
                       <div className="flex gap-2">
                         <div>
                           <Button
@@ -249,7 +249,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                           <Input
                             type="number"
                             disabled={loading}
-                            placeholder="Unit Price"
+                            placeholder="Нэгжийн үнэ"
                             {...field}
                             min={0}
                             className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -276,7 +276,7 @@ export const CategoryForm: React.FC<ProductFormProps> = ({
                 variant="destructive"
                 onClick={() => remove(index)}
               >
-                Remove
+                Устгах
               </Button>
             </div>
           ))}

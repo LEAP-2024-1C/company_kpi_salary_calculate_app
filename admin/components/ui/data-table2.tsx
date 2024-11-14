@@ -11,9 +11,10 @@ import {
 
 import { Input } from './input';
 import { IProductStat } from '@/constants/data';
-import Link from 'next/link';
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { Button } from './button';
 
 interface DataTableProps {
   searchKey: string;
@@ -41,10 +42,12 @@ const chartConfig = {
 
 export function DataTable2({ searchKey, data }: DataTableProps) {
   const [search, setSearch] = useState<string>('');
+  const router = useRouter();
+
   return (
     <>
       <Input
-        placeholder={`Search ${searchKey}...`}
+        placeholder={`${searchKey} хайх...`}
         className="w-full md:max-w-sm"
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -68,7 +71,7 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
               idx
             ) => (
               <Card key={idx}>
-                <div className="flex flex-col gap-2 pl-4 pt-3">
+                <div className="flex flex-col gap-2 py-3 pl-4">
                   <div className="flex items-center justify-between gap-10">
                     <p className="text-2xl font-semibold">
                       Бүтээгдэхүүний нэр: {productName}
@@ -101,9 +104,15 @@ export function DataTable2({ searchKey, data }: DataTableProps) {
                       </div>
 
                       {/* <div className="border-b-2 border-black"> */}
-                      <Link href={`/dashboard/employee-task/${product_id}`}>
-                        ажилчидийн гүйцэтгэлийг харах
-                      </Link>
+                      <Button
+                        className="font-semibold"
+                        variant="outline"
+                        onClick={() =>
+                          router.push(`/dashboard/employee-task/${product_id}`)
+                        }
+                      >
+                        Ажилчидийн гүйцэтгэлийг харах
+                      </Button>
                       {/* </div> */}
                     </div>
 

@@ -14,14 +14,14 @@ const Footer = () => {
         <img src="" alt="" className="" />
         <div className=" flex gap-8">
           <div className="flex text-gray-200 items-center gap-4">
-            <div className="p-2 border border-gray-700 rounded-full flex items-center justify-center">
-              <FiPhone className=" text-white" />
+            <div className="p-2 border border-gray-700 rounded-full flex items-center justify-center text-white">
+              <FiPhone />
             </div>
             <p>(976) 7000-0000</p>
           </div>
           <div className="flex text-gray-200 items-center gap-4">
-            <div className="p-2 border border-gray-700 rounded-full flex items-center justify-center">
-              <IoMailOutline className=" text-white" />
+            <div className="p-2 border border-gray-700 rounded-full flex items-center justify-center text-white">
+              <IoMailOutline />
             </div>
             <p>company@kpi.mn</p>
           </div>
