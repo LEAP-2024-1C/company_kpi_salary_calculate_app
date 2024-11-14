@@ -75,7 +75,9 @@ export const EmployeeForm: React.FC<ProductFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? 'Edit user' : 'Create user';
+  const title = initialData
+    ? 'Хэрэглэгчийн мэдээлэл засах'
+    : 'Хэрэглэгч шинээр үүсгэх';
   const description = initialData
     ? 'Хэрэглэгчийн мэдээлэл засварлах.'
     : 'Шинэ хэрэглэгч үүсгэх';

@@ -35,12 +35,12 @@ export const ProjectClient = () => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Projects (${productData?.length ?? 0})`}
-          description="Manage projects (Client side table functionalities.)"
+          title={`Захиалгат ажил (${productData?.length ?? 0})`}
+          description="Захиалгат ажлын хэсэг."
         />
       </div>
       <Separator />
-      <DataTable2 data={productData} searchKey="project" />
+      <DataTable2 data={productData} searchKey="Захиалгат ажил" />
     </>
   );
 };

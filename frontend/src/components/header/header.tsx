@@ -35,11 +35,10 @@ const Header = () => {
           placeholder="Боломжит ажлуудыг хайх"
           /> */}
       </div>
-      <div className=" flex gap-8 items-center">
-        <CgWorkAlt
-          className="text-gray-50 w-[40px] h-[40px]"
-          onClick={handleWork}
-        />
+      <div className=" flex gap-8 items-center ">
+        <div className="text-gray-50 w-[40px] h-[40px]" onClick={handleWork}>
+          <CgWorkAlt />
+        </div>
         <DropdownMenuDemo />
       </div>
     </div>
