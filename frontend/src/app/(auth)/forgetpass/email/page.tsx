@@ -73,44 +73,52 @@ const ForgetPassword = () => {
   }, [countDown]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-10">
-      {step === 1 && (
-        <>
-          <h1>Нууц үг сэргээх</h1>
-          <input
-            type="text"
-            placeholder="Имэйл хаяг оруулах"
-            className="w-[334px] h-[36px] bg-[#FFFFFF] rounded-[18px] pl-4 border"
-            onChange={handleEmail}
-          />
-          <Button
-            className="btn bg-[#0166FF] text-white rounded-[20px] w-[334px] h-[36px] "
-            onClick={handleSendOtp}
-          >
-            Илгээх
-          </Button>
-        </>
-      )}
-      {step === 2 && (
-        <div className="flex flex-col items-center justify-center h-screen gap-10 bg-gray-100">
-          <h1>Баталгаажуулах</h1>
-          <p>{`“${email}” хаягт илгээсэн баталгаажуулах кодыг оруулна уу`}</p>
-          <InputOTP maxLength={4} value={otpValue} onChange={handleConfirmOtp}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-            </InputOTPGroup>
-          </InputOTP>
-          <button
-            className="cursor-pointer text-muted-foreground mt-12 underline text-sm font-medium"
-            onClick={handleResendOtp}
-          >
-            Дахин илгээх ({countDown})
-          </button>
-        </div>
-      )}
+    <div className=" p-36 my-20">
+      <div className="bg-gray-50 p-20 rounded-lg flex flex-col items-center justify-center gap-8">
+        {step === 1 && (
+          <>
+            <h1 className=" p-2 rounded-full border border-cyan-700 text-center text-teal-700 font-bold">
+              Нууц үг сэргээх
+            </h1>
+            <input
+              type="text"
+              placeholder="Имэйл хаяг оруулах"
+              className="w-[334px] h-[36px] bg-[#FFFFFF] rounded-[18px] pl-4 border"
+              onChange={handleEmail}
+            />
+            <Button
+              className="btn bg-teal-700 text-white rounded-[20px] w-[334px] h-[36px] "
+              onClick={handleSendOtp}
+            >
+              Илгээх
+            </Button>
+          </>
+        )}
+        {step === 2 && (
+          <div className="flex flex-col items-center justify-center h-screen gap-10 bg-gray-100">
+            <h1>Баталгаажуулах</h1>
+            <p>{`“${email}” хаягт илгээсэн баталгаажуулах кодыг оруулна уу`}</p>
+            <InputOTP
+              maxLength={4}
+              value={otpValue}
+              onChange={handleConfirmOtp}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+              </InputOTPGroup>
+            </InputOTP>
+            <button
+              className="cursor-pointer text-muted-foreground mt-12 underline text-sm font-medium bg-teal-700"
+              onClick={handleResendOtp}
+            >
+              Дахин илгээх ({countDown})
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
