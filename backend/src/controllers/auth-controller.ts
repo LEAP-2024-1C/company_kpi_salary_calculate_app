@@ -129,7 +129,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
   await sendEmail(
     email,
-    `<a href="http://localhost:3000/forgetpass/newpass?resettoken=${resetToken}"&email=${email}>Нууц үг сэргээх холбоос</a>`
+    `<a href="https://company-kpi-salary-calculate-app-pjzk.vercel.app//forgetpass/newpass?resettoken=${resetToken}"&email=${email}>Нууц үг сэргээх холбоос</a>`
   );
   res.status(200).json({ message: "Нууц үг сэргээх имэйл илгээлээ" });
 };
