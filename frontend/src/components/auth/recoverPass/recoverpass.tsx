@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiUrl } from "@/lib/utils";
 interface IPass {
   password: string;
   repassword: string;
@@ -34,13 +35,10 @@ const RecoverPass = () => {
       return;
     }
     try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/auth/verify-password`,
-        {
-          password: password,
-          resetToken: resetToken,
-        }
-      );
+      const res = await axios.post(`${apiUrl}/auth/verify-password`, {
+        password: password,
+        resetToken: resetToken,
+      });
       if (res.status === 200) {
         toast.success("нууц үг амжилттай өөрчлөгдлөө");
         router.push("/");
