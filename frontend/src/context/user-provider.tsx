@@ -10,7 +10,6 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { toast } from "react-toastify";
 
 interface IEmployee {
   _id: string;
