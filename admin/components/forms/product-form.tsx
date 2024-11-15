@@ -335,7 +335,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           <Input
             type="number"
             placeholder="Тоо хэмжээ"
-            value={'1'}
             className=""
             onChange={handleLogForm}
             name="quantity"
