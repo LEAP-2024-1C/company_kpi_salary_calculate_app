@@ -37,9 +37,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     new Array(categories.length).fill(false)
   );
   const [productForm, setProductForm] = useState<IProduct>({
-    productName: '',
-    description: '',
-    quantity: ''
+    productName: 'Даашинз',
+    description: 'Зуны',
+    quantity: '20'
   });
   const getAllCategories = async () => {
     try {
@@ -310,8 +310,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       <div className="p-5">
         <div className="mb-5 flex gap-4">
           <Input
+            defaultValue="Даашинз"
             placeholder="Бүтээгдэхүүний нэр"
-            value={'Даашинз'}
             onChange={handleLogForm}
             name="productName"
           />
@@ -327,14 +327,15 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
         </div>
         <div className="mb-5 flex gap-4">
           <Input
+            defaultValue="Зуны"
             placeholder="Нэмэлт мэдээлэл"
-            value={'Зуны'}
             onChange={handleLogForm}
             name="description"
           />
           <Input
             type="number"
             placeholder="Тоо хэмжээ"
+            value={20}
             className=""
             onChange={handleLogForm}
             name="quantity"
