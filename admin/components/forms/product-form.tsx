@@ -37,9 +37,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     new Array(categories.length).fill(false)
   );
   const [productForm, setProductForm] = useState<IProduct>({
-    productName: '',
-    description: '',
-    quantity: ''
+    productName: 'Даашинз',
+    description: 'Зуны',
+    quantity: '1'
   });
   const getAllCategories = async () => {
     try {
