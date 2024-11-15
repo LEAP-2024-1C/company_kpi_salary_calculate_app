@@ -39,7 +39,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const [productForm, setProductForm] = useState<IProduct>({
     productName: 'Даашинз',
     description: 'Зуны',
-    quantity: '20'
+    quantity: ''
   });
   const getAllCategories = async () => {
     try {
@@ -335,7 +335,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           <Input
             type="number"
             placeholder="Тоо хэмжээ"
-            value={20}
             className=""
             onChange={handleLogForm}
             name="quantity"
