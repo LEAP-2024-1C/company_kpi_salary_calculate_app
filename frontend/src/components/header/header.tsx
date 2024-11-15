@@ -36,7 +36,7 @@ const Header = () => {
           /> */}
       </div>
       <div className=" flex gap-8 items-center ">
-        <div className="text-gray-50 w-[40px] h-[40px]" onClick={handleWork}>
+        <div className="text-gray-50 text-4xl" onClick={handleWork}>
           <CgWorkAlt />
         </div>
         <DropdownMenuDemo />
